@@ -1,0 +1,27 @@
+{
+  "name": "Fighting-memes",
+  "version": "1.0.0",
+  "description": "A game using memes as different roles with fighting system.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./node_modules/.bin/webpack",
+    "watch": "node ./node_modules/.bin/webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RSzyh/Fighting-memes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RSzyh/Fighting-memes/issues"
+  },
+  "homepage": "https://github.com/RSzyh/Fighting-memes#readme",
+  "devDependencies": {
+    "ts-loader": "^3.4.0",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
+  }
+}
