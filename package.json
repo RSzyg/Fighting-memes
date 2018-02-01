@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ./node_modules/.bin/webpack",
-    "watch": "node ./node_modules/.bin/webpack --watch"
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "lint": "tslint ./src/Main.ts"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,9 @@
   "homepage": "https://github.com/RSzyh/Fighting-memes#readme",
   "devDependencies": {
     "ts-loader": "^3.4.0",
-    "typescript": "^2.6.2",
+    "tslint": "^5.9.1",
+    "tslint-loader": "^3.5.3",
+    "typescript": "^2.7.1",
     "webpack": "^3.10.0"
   }
 }

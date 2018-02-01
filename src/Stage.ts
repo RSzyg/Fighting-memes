@@ -1,10 +1,10 @@
 export default class Stage {
     public element: HTMLElement;
-    private _width: number;
-    private _height: number;
-    private _color: string;
+    private selfwidth: number;
+    private selfheight: number;
+    private selfcolor: string;
     constructor() {
-        this.element = document.getElementById('main');
+        this.element = document.getElementById("main");
     }
     /**
      * 添加进场景
@@ -12,40 +12,40 @@ export default class Stage {
     public add(svgElement: SVGElement) {
         this.element.appendChild(svgElement);
     }
-    
+
     /**
      * this.width get & set
      */
-    public get width() : number {
-        return this._width;
+    public get width(): number {
+        return this.selfwidth;
     }
-    
-    public set width(newWidth : number) {
-        this._width = newWidth;
+
+    public set width(newWidth: number) {
+        this.selfwidth = newWidth;
         this.element.style.width = `${newWidth}px`;
     }
-    
+
     /**
      * this.height get & set
      */
-    public get height() : number {
-        return this._height;
+    public get height(): number {
+        return this.selfheight;
     }
-    
-    public set height(newHeight : number) {
-        this._height = newHeight;
+
+    public set height(newHeight: number) {
+        this.selfheight = newHeight;
         this.element.style.height = `${newHeight}px`;
     }
 
     /**
      * this.color get & set
      */
-    public get color() : string {
-        return this._color;
+    public get color(): string {
+        return this.selfcolor;
     }
-    
-    public set color(newColor : string) {
-        this._color = newColor;
+
+    public set color(newColor: string) {
+        this.selfcolor = newColor;
         this.element.style.background = newColor;
     }
 }
