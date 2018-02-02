@@ -31,8 +31,7 @@ export class Wall {
     }
 
     public set x(newX: number) {
-        this.selfX = newX;
-        this.element.x = `${newX}px`;
+        this.selfX = this.element.x = newX;
     }
 
     public get y(): number {
@@ -40,8 +39,7 @@ export class Wall {
     }
 
     public set y(newY: number) {
-        this.selfY = newY;
-        this.element.y = `${newY}px`;
+        this.selfY = this.element.y = newY;
     }
 
     public get width(): number {
@@ -49,8 +47,7 @@ export class Wall {
     }
 
     public set width(newWidth: number) {
-        this.selfWidth = newWidth;
-        this.element.width = `${newWidth}px`;
+        this.selfWidth = this.element.width = newWidth;
     }
 
     public get height(): number {
@@ -58,19 +55,15 @@ export class Wall {
     }
 
     public set height(newHeight: number) {
-        this.selfHeight = newHeight;
-        this.element.height = `${newHeight}px`;
+        this.selfHeight = this.element.height = newHeight;
     }
 
     public setStroke(color: string, width: number) {
-        this.strokeColor = color;
-        this.strokeWidth = width;
-        this.element.style.stroke = color;
-        this.element.style.strokeWidth = `${width}px`;
+        this.strokeColor = this.element.lineColor = color;
+        this.strokeWidth = this.element.lineWidth = width;
     }
 
     public setFillColor(color: string) {
-        this.fillColor = color;
-        this.element.style.fill = color;
+        this.fillColor = this.element.fill = color;
     }
 }
