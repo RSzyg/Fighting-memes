@@ -1,8 +1,8 @@
 export default class Stage {
     public element: HTMLElement;
-    private selfwidth: number;
-    private selfheight: number;
-    private selfcolor: string;
+    private selfWidth: number;
+    private selfHeight: number;
+    private selfColor: string;
     constructor() {
         this.element = document.getElementById("main");
     }
@@ -17,11 +17,11 @@ export default class Stage {
      * this.width get & set
      */
     public get width(): number {
-        return this.selfwidth;
+        return this.selfWidth;
     }
 
     public set width(newWidth: number) {
-        this.selfwidth = newWidth;
+        this.selfWidth = newWidth;
         this.element.style.width = `${newWidth}px`;
     }
 
@@ -29,11 +29,11 @@ export default class Stage {
      * this.height get & set
      */
     public get height(): number {
-        return this.selfheight;
+        return this.selfHeight;
     }
 
     public set height(newHeight: number) {
-        this.selfheight = newHeight;
+        this.selfHeight = newHeight;
         this.element.style.height = `${newHeight}px`;
     }
 
@@ -41,11 +41,11 @@ export default class Stage {
      * this.color get & set
      */
     public get color(): string {
-        return this.selfcolor;
+        return this.selfColor;
     }
 
     public set color(newColor: string) {
-        this.selfcolor = newColor;
+        this.selfColor = newColor;
         this.element.style.background = newColor;
     }
 }
