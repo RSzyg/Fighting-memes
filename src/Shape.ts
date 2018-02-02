@@ -1,9 +1,9 @@
 export class Rectangle {
     public element: SVGRectElement;
     private selfX: number;
-    private selfy: number;
-    private selfwidth: number;
-    private selfheight: number;
+    private selfY: number;
+    private selfWidth: number;
+    private selfHeight: number;
     private fillColor: string;
     private strokeColor: string;
     private strokeWidth: number;
@@ -32,11 +32,11 @@ export class Rectangle {
      * this.y get & set
      */
     public get y(): number {
-        return this.selfy;
+        return this.selfY;
     }
 
     public set y(newY: number) {
-        this.selfy = newY;
+        this.selfY = newY;
         this.element.setAttribute("y", `${newY}px`);
     }
 
@@ -44,11 +44,11 @@ export class Rectangle {
      * this.width get & set
      */
     public get width(): number {
-        return this.selfwidth;
+        return this.selfWidth;
     }
 
     public set width(newWidth: number) {
-        this.selfwidth = newWidth;
+        this.selfWidth = newWidth;
         this.element.setAttribute("width", `${newWidth}px`);
     }
 
@@ -56,11 +56,11 @@ export class Rectangle {
      * this.height get & set
      */
     public get height(): number {
-        return this.selfheight;
+        return this.selfHeight;
     }
 
     public set height(newHeight: number) {
-        this.selfheight = newHeight;
+        this.selfHeight = newHeight;
         this.element.setAttribute("height", `${newHeight}px`);
     }
 
