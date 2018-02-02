@@ -16,7 +16,7 @@ class Main {
     }
 }
 
-window.onload = function() {
+window.onload = () => {
     const main: Main = new Main();
     main.createScene();
 };
