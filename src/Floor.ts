@@ -1,11 +1,11 @@
 import { Rectangle } from "./Shape";
-export class Floor {
+export default class Floor {
     public element: Rectangle;
     private type: string;
     private selfX: number;
-    private selfy: number;
-    private selfwidth: number;
-    private selfheight: number;
+    private selfY: number;
+    private selfWidth: number;
+    private selfHeight: number;
     private fillColor: string;
     private strokeColor: string;
     private strokeWidth: number;
@@ -13,9 +13,9 @@ export class Floor {
     constructor(x: number, y: number, width: number, height: number, type: string) {
         this.element = new Rectangle(x, y, width, height);
         this.selfX = x;
-        this.selfy = y;
-        this.selfwidth = width;
-        this.selfheight = height;
+        this.selfY = y;
+        this.selfWidth = width;
+        this.selfHeight = height;
         this.type = type;
     }
 
@@ -24,46 +24,39 @@ export class Floor {
     }
 
     public set x(newX: number) {
-        this.selfX = newX;
-        this.element.element.setAttribute("x", `${newX}px`);
+        this.selfX = this.element.x = newX;
     }
 
     public get y(): number {
-        return this.selfy;
+        return this.selfY;
     }
 
     public set y(newY: number) {
-        this.selfy = newY;
-        this.element.element.setAttribute("y", `${newY}px`);
+        this.selfY = this.element.y = newY;
     }
 
     public get width(): number {
-        return this.selfwidth;
+        return this.selfWidth;
     }
 
     public set width(newWidth: number) {
-        this.selfwidth = newWidth;
-        this.element.element.setAttribute("width", `${newWidth}px`);
+        this.selfWidth = this.element.width = newWidth;
     }
 
     public get height(): number {
-        return this.selfheight;
+        return this.selfHeight;
     }
 
     public set height(newHeight: number) {
-        this.selfheight = newHeight;
-        this.element.element.setAttribute("height", `${newHeight}px`);
+        this.selfHeight = this.element.height = newHeight;
     }
 
     public setStroke(color: string, width: number) {
-        this.strokeColor = color;
-        this.strokeWidth = width;
-        this.element.element.style.stroke = color;
-        this.element.element.style.strokeWidth = `${width}px`;
+        this.strokeColor = this.element.lineColor = color;
+        this.strokeWidth = this.element.lineWidth = width;
     }
 
     public setFillColor(color: string) {
-        this.fillColor = color;
-        this.element.element.style.fill = color;
+        this.fillColor = this.element.fill = color;
     }
 }

@@ -1,18 +1,48 @@
-import { Rectangle } from "./Shape";
+import Floor from "./Floor";
 import Stage from "./Stage";
 
 class Main {
-    public stage: Stage;
-    public floor1: Rectangle;
+    private stage: Stage;
+    private floors: Floor[];
+    private stageWidth: number;
+    private stageHeight: number;
+    private floorSpacing: number;
     constructor() {
         this.stage = new Stage();
-        this.floor1 = new Rectangle(0, 0, 300, 300);
+        this.floors = [];
+        this.stageWidth = 1920;
+        this.stageHeight = 1080;
+        this.floorSpacing = 300;
     }
     public createScene() {
-        this.floor1.setStroke("#000000", 2);
-        this.floor1.setFillColor("#ffffff");
         this.stage.color = "#e8e8e8";
-        this.stage.add(this.floor1.element);
+        this.stage.width = this.stageWidth;
+        this.stage.height = this.stageHeight;
+        let y: number = this.stageHeight - this.floorSpacing - 90;
+        for (; y > 0; y -= (this.floorSpacing + 45)) {
+            let rs: number = Math.random() * 200;
+            while (rs < this.stageWidth) {
+                let re = rs + Math.random() * 800 + 300;
+                if (re > this.stageWidth) {
+                    re = this.stageWidth;
+                    if (re - rs < 200) {
+                        rs = re;
+                        continue;
+                    }
+                }
+                const floor: Floor = new Floor(rs, y, re - rs, 45, "basic");
+                floor.setFillColor("#ffffff");
+                floor.setStroke("#000000", 2);
+                this.floors.push(floor);
+                this.stage.add(floor.element.element);
+                rs = re + Math.random() * 300 + 200;
+            }
+        }
+        const ground: Floor = new Floor(0, this.stageHeight - 45, this.stageWidth, 45, "basic");
+        ground.setFillColor("#ffffff");
+        ground.setStroke("#000000", 2);
+        this.floors.push(ground);
+        this.stage.add(ground.element.element);
     }
 }
 

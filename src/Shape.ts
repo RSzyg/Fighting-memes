@@ -64,20 +64,29 @@ export class Rectangle {
         this.element.setAttribute("height", `${newHeight}px`);
     }
 
-    /**
-     * setStroke
-     */
-    public setStroke(color: string, width: number) {
-        this.strokeColor = color;
-        this.strokeWidth = width;
-        this.element.style.stroke = color;
-        this.element.style.strokeWidth = `${width}px`;
+
+    public get fill(): string {
+        return this.fillColor;
     }
-    /**
-     * setFillColor
-     */
-    public setFillColor(color: string) {
-        this.fillColor = color;
-        this.element.style.fill = color;
+
+    public set fill(color: string) {
+        this.fillColor = this.element.style.fill = color;
+    }
+
+    public get lineColor(): string {
+        return this.strokeColor;
+    }
+
+    public set lineColor(color: string) {
+        this.strokeColor = this.element.style.stroke = color;
+    }
+
+    public get lineWidth(): number {
+        return this.strokeWidth;
+    }
+
+    public set lineWidth(width: number) {
+        this.strokeWidth = width;
+        this.element.style.strokeWidth = `${width}px`;
     }
 }
