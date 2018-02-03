@@ -1,3 +1,5 @@
+import { Rectangle } from "./Shape";
+
 export default class Stage {
     public element: HTMLElement;
     private selfWidth: number;
@@ -9,8 +11,8 @@ export default class Stage {
     /**
      * 添加进场景
      */
-    public add(svgElement: SVGElement) {
-        this.element.appendChild(svgElement);
+    public add(shape: Rectangle) {
+        this.element.appendChild(shape.element);
     }
 
     /**

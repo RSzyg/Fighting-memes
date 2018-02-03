@@ -39,7 +39,7 @@ class Main {
                 floor.setFillColor("#ffffff");
                 floor.setStroke("#000000", 2);
                 this.floors.push(floor);
-                this.stage.add(floor.element.element);
+                this.stage.add(floor.element);
                 rs = re + Math.random() * 300 + 200;
             }
         }
@@ -47,7 +47,7 @@ class Main {
         ground.setFillColor("#ffffff");
         ground.setStroke("#000000", 2);
         this.floors.push(ground);
-        this.stage.add(ground.element.element);
+        this.stage.add(ground.element);
 
         this.createRole(groundY);
     }
@@ -56,7 +56,7 @@ class Main {
         const roleX: number = Math.random() * this.stageWidth;
         const roleY: number = groundY;
         this.selfRole = new Role(roleX, roleY, 0, "#66ccff");
-        this.stage.add(this.selfRole.element.element);
+        this.stage.add(this.selfRole.element);
     }
 }
 
