@@ -1,4 +1,5 @@
 import Floor from "./Floor";
+import Role from "./Role";
 import Stage from "./Stage";
 
 class Main {
@@ -8,6 +9,7 @@ class Main {
     private stageHeight: number;
     private verticalSpacing: number;
     private floorHeight: number;
+    private selfRole: Role;
     constructor() {
         this.stage = new Stage();
         this.floors = [];
@@ -46,6 +48,15 @@ class Main {
         ground.setStroke("#000000", 2);
         this.floors.push(ground);
         this.stage.add(ground.element.element);
+
+        this.createRole(groundY);
+    }
+
+    private createRole(groundY: number) {
+        const roleX: number = Math.random() * this.stageWidth;
+        const roleY: number = groundY;
+        this.selfRole = new Role(roleX, roleY, 0, "#66ccff");
+        this.stage.add(this.selfRole.element.element);
     }
 }
 
