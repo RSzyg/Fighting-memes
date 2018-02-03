@@ -4,6 +4,7 @@ export default class Role {
     public element: Rectangle;
     public power: number;
     public weight: number;
+    public moveSpeed: number;
     public up: boolean;
     public down: boolean;
     public left: boolean;
@@ -23,6 +24,7 @@ export default class Role {
             this.selfHeight = 60;
             this.weight = 3;
             this.power = 10;
+            this.moveSpeed = 3;
         }
         this.selfX = x;
         this.selfY = y - this.selfHeight;
