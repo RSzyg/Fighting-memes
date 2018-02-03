@@ -5,10 +5,12 @@ export default class Role {
     public power: number;
     public weight: number;
     public moveSpeed: number;
-    public up: boolean;
-    public down: boolean;
-    public left: boolean;
-    public right: boolean;
+    public jumpSpeed: number;
+    public upTimer: number;
+    public downTimer: number;
+    public leftTimer: number;
+    public rightTimer: number;
+    public jumpTimer: number;
     public weapon: number;
     private type: number;
     private selfX: number;
@@ -22,17 +24,18 @@ export default class Role {
         case 0:
             this.selfWidth = 20;
             this.selfHeight = 60;
-            this.weight = 3;
-            this.power = 10;
+            this.weight = 1;
+            this.jumpSpeed = this.power = 10;
             this.moveSpeed = 3;
         }
         this.selfX = x;
         this.selfY = y - this.selfHeight;
         this.type = type;
-        this.up = false;
-        this.down = false;
-        this.left = false;
-        this.right = false;
+        this.upTimer = undefined;
+        this.downTimer = undefined;
+        this.leftTimer = undefined;
+        this.rightTimer = undefined;
+        this.jumpTimer = undefined;
         this.element = new Rectangle(x, this.selfY, this.selfWidth, this.selfHeight);
         this.element.fill = color;
     }
@@ -67,5 +70,9 @@ export default class Role {
 
     public set height(newHeight: number) {
         this.selfHeight = this.element.height = newHeight;
+    }
+
+    public get footY(): number {
+        return this.y + this.height;
     }
 }
