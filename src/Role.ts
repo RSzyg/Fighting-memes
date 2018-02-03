@@ -2,23 +2,35 @@ import { Rectangle } from "./Shape";
 
 export default class Role {
     public element: Rectangle;
+    public power: number;
+    public weight: number;
+    public up: boolean;
+    public down: boolean;
+    public left: boolean;
+    public right: boolean;
+    public weapon: number;
     private type: number;
     private selfX: number;
     private selfY: number;
     private selfWidth: number;
     private selfHeight: number;
     private fillColor: string;
-    private weapon: number;
 
     constructor(x: number, y: number, type: number, color: string) {
         switch (type) {
         case 0:
             this.selfWidth = 20;
             this.selfHeight = 60;
+            this.weight = 3;
+            this.power = 10;
         }
         this.selfX = x;
         this.selfY = y - this.selfHeight;
         this.type = type;
+        this.up = false;
+        this.down = false;
+        this.left = false;
+        this.right = false;
         this.element = new Rectangle(x, this.selfY, this.selfWidth, this.selfHeight);
         this.element.fill = color;
     }
