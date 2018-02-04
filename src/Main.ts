@@ -9,6 +9,7 @@ class Main {
     private stageHeight: number;
     private verticalSpacing: number;
     private floorHeight: number;
+    private interval: number;
     private selfRole: Role;
     constructor() {
         this.stage = new Stage();
@@ -17,6 +18,7 @@ class Main {
         this.stageHeight = 1080;
         this.verticalSpacing = 200;
         this.floorHeight = 35;
+        this.interval = 17;
     }
     public createScene() {
         this.stage.color = "#e8e8e8";
