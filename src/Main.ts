@@ -109,7 +109,7 @@ class Main {
                     this.selfRole.downTimer = undefined;
                     break;
                 case 74:
-                    clearInterval(this.selfRole.leftTimer);
+                    clearInterval(this.selfRole.upTimer);
                     this.selfRole.upTimer = undefined;
                     break;
             }
@@ -125,9 +125,12 @@ class Main {
                 this.selfRole.x -= this.selfRole.moveSpeed;
                 break;
             // case 83:
-            // case 74:
-            //     this.selfRoleJump();
-            //     break;
+             case 74:
+                if (this.selfRole.jumpTimer === undefined) {
+                    this.selfRole.jumpSpeed = this.selfRole.power;
+                    this.selfRole.jumpTimer = setInterval(() => this.selfRoleJump(), this.interval);
+                }
+                break;
         }
     }
 
@@ -156,6 +159,42 @@ class Main {
             }
         }
         this.selfRole.y = nextY;
+    }
+
+    private selfRoleJump() {
+        let ladder: Floor;
+        let btmY: number;
+        this.selfRole.y -= this.selfRole.jumpSpeed;
+        this.selfRole.jumpSpeed -= this.selfRole.weight;
+        btmY = this.selfRole.y + this.selfRole.height;
+        if (this.selfRole.jumpSpeed === 0) {
+            let cell: number;
+            let re: number;
+            cell = (this.stageHeight - btmY) / (this.verticalSpacing + this.floorHeight);
+            re = (this.stageHeight - btmY) % (this.verticalSpacing + this.floorHeight);
+            if (re > this.floorHeight) {
+                this.selfRole.footY = this.stageHeight -
+                cell * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
+            } else {
+                this.selfRole.footY = this.stageHeight -
+                (cell - 1) * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
+            }
+        }
+        if (this.selfRole.jumpSpeed <= 0) {
+            for (ladder of this.floors) {
+                if (btmY >= ladder.y &&
+                    ladder.y >= this.selfRole.footY &&
+                    (this.selfRole.x + this.selfRole.width >= ladder.x || this.selfRole.x <= ladder.x + ladder.width)) {
+                    clearInterval(this.selfRole.jumpTimer);
+                    this.selfRole.jumpTimer = undefined;
+                    break;
+                }
+            }
+            if (btmY >= this.stageHeight - this.floorHeight) {
+                clearInterval(this.selfRole.jumpTimer);
+                this.selfRole.jumpTimer = undefined;
+            }
+        }
     }
 }
 
