@@ -116,11 +116,11 @@ class Main {
                     this.selfRole.leftTimer = undefined;
                     break;
                 case 83:
-                    clearInterval(this.selfRole.leftTimer);
+                    clearInterval(this.selfRole.downTimer);
                     this.selfRole.downTimer = undefined;
                     break;
                 case 74:
-                    clearInterval(this.selfRole.leftTimer);
+                    clearInterval(this.selfRole.upTimer);
                     this.selfRole.upTimer = undefined;
                     break;
             }
