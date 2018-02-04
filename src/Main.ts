@@ -26,7 +26,7 @@ class Main {
         this.stage.height = this.stageHeight;
         const groundY = this.stageHeight - this.floorHeight;
         let y: number = groundY - this.verticalSpacing - this.floorHeight;
-        for (; y > 0; y -= (this.verticalSpacing + this.floorHeight)) {
+        for (; y > 0; y -= this.verticalSpacing) {
             let rs: number = Math.floor(Math.random() * 200);
             while (rs < this.stageWidth) {
                 let re = rs + Math.floor(Math.random() * 800) + 300;
@@ -57,7 +57,7 @@ class Main {
     }
 
     private createRole(groundY: number) {
-        const random = Math.floor(Math.random() * this.floors.length);
+        const random = Math.floor(Math.random() * (this.floors.length - 1));
         const bornFloor: Floor = this.floors[random];
         this.selfRole = new Role(bornFloor, 0, "#66ccff");
         this.stage.add(this.selfRole.element);
@@ -137,10 +137,10 @@ class Main {
         } else if (e.keyCode === 38) {
             if (this.selfRole.jumpTimer === undefined) {
                 this.selfRole.jumpSpeed = this.selfRole.power;
-                // this.selfRole.jumpTimer = setInterval(
-                //     () => this.selfRoleJump(),
-                //     this.interval,
-                // );
+                this.selfRole.jumpTimer = setInterval(
+                    () => this.selfRoleJump(),
+                    this.interval,
+                );
             }
         }
     }
@@ -172,57 +172,106 @@ class Main {
     //     this.selfRole.y = nextY;
     // }
 
-    // private selfRoleJump() {
-    //     let ladder: Floor;
-    //     let btmY: number;
-    //     let nextY: number;
-    //     nextY = this.selfRole.y - this.selfRole.jumpSpeed;
-    //     this.selfRole.jumpSpeed -= this.selfRole.weight;
-    //     btmY = nextY + this.selfRole.height;
-    //     /*
-    //     calcualte footY
-    //     */
-    //     if (this.selfRole.jumpSpeed === 0) {
-    //         let cell: number;
-    //         let re: number;
-    //         cell = (this.stageHeight - btmY) / (this.verticalSpacing + this.floorHeight);
-    //         re = (this.stageHeight - btmY) % (this.verticalSpacing + this.floorHeight);
-    //         if (re > this.floorHeight) {
-    //             this.selfRole.footY = this.stageHeight -
-    //             cell * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
-    //         } else {
-    //             this.selfRole.footY = this.stageHeight -
-    //             (cell - 1) * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
-    //         }
-    //     }
-    //     /*
-    //     hit
-    //     */
-    //     if (this.selfRole.jumpSpeed <= 0) {
-    //         for (ladder of this.floors) {
-    //             if (btmY >= ladder.y &&
-    //                 ladder.y >= this.selfRole.footY &&
-    //                 this.selfRole.x + this.selfRole.width >= ladder.x &&
-    //                 this.selfRole.x <= ladder.x + ladder.width) {
-    //                 // deal data deviation
-    //                 this.selfRole.y = ladder.y - this.selfRole.height;
-    //                 clearInterval(this.selfRole.jumpTimer);
-    //                 this.selfRole.jumpTimer = undefined;
-    //                 break;
-    //             } else {
-    //                 this.selfRole.y = nextY;
-    //             }
-    //         }
-    //         if (btmY >= this.stageHeight - this.floorHeight) {
-    //             clearInterval(this.selfRole.jumpTimer);
-    //             this.selfRole.jumpTimer = undefined;
-    //         } else {
-    //             this.selfRole.y = nextY;
-    //         }
-    //     } else {
-    //         this.selfRole.y = nextY;
-    //     }
-    // }
+    private selfRoleJump() {
+        let nextY: number = this.selfRole.y - this.selfRole.jumpSpeed;
+        this.selfRole.jumpSpeed -= this.selfRole.weight;
+        // console.log(this.selfRole.y);
+        // console.log(this.selfRole.jumpSpeed);
+        if (this.selfRole.jumpSpeed > 0) {
+            if (
+                nextY <=
+                this.selfRole.ladderY - this.verticalSpacing + this.floorHeight
+            ) {
+                let isFind: boolean = false;
+                for (const floor of this.floors) {
+                    if (
+                        this.selfRole.x < floor.x + floor.width &&
+                        this.selfRole.x - this.selfRole.width > floor.x &&
+                        this.selfRole.y > floor.y &&
+                        nextY <= floor.y + this.floorHeight
+                    ) {
+                        this.selfRole.jumpSpeed = -this.selfRole.jumpSpeed;
+                        this.selfRole.jumpSpeed -= 2 * this.selfRole.weight;
+                        isFind = true;
+                        return;
+                    }
+                }
+                // if (!isFind) {
+                //     this.selfRole.ladderY -= this.verticalSpacing;
+                // }
+            }
+            this.selfRole.y = nextY;
+        } else if (this.selfRole.jumpSpeed <= 0) {
+        /*
+        calcualte footY
+        */
+        // if (this.selfRole.jumpSpeed === 0) {
+        //     let cell: number;
+        //     let re: number;
+        //     cell = (this.stageHeight - this.selfRole.footY) / (this.verticalSpacing + this.floorHeight);
+        //     re = (this.stageHeight - this.selfRole.footY) % (this.verticalSpacing + this.floorHeight);
+        //     if (re > this.floorHeight) {
+        //         this.selfRole.footY = this.stageHeight -
+        //         cell * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
+        //     } else {
+        //         this.selfRole.footY = this.stageHeight -
+        //         (cell - 1) * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
+        //     }
+        // }
+        /*
+        hit
+        */
+            // if (
+            //     nextY + this.selfRole.height >=
+            //     this.selfRole.ladderY + this.verticalSpacing
+            // ) {
+            //     let isFind: boolean = false;
+            //     for (const floor of this.floors) {
+            //         if (
+            //             this.selfRole.x < floor.x + floor.width &&
+            //             this.selfRole.x - this.selfRole.width > floor.x
+            //         ) {
+            //             nextY = floor.y - this.selfRole.height;
+            //             isFind = true;
+            //             clearInterval(this.selfRole.jumpTimer);
+            //             this.selfRole.jumpTimer = undefined;
+            //             break;
+            //         }
+            //     }
+            //     if (!isFind) {
+            //         this.selfRole.ladderY += this.verticalSpacing;
+            //     }
+            // }
+            this.selfRole.y = nextY;
+            // for (ladder of this.floors) {
+            //     if (this.selfRole.footY >= ladder.y &&
+            //         ladder.y >= this.selfRole.footY &&
+            //         this.selfRole.x + this.selfRole.width >= ladder.x &&
+            //         this.selfRole.x <= ladder.x + ladder.width) {
+            //         // deal data deviation
+            //         this.selfRole.y = ladder.y - this.selfRole.height;
+            //         clearInterval(this.selfRole.jumpTimer);
+            //         this.selfRole.jumpTimer = undefined;
+            //         break;
+            //     } else {
+            //         this.selfRole.y = nextY;
+            //     }
+            // }
+            // if (this.selfRole.footY >= this.stageHeight - this.floorHeight) {
+            //     clearInterval(this.selfRole.jumpTimer);
+            //     this.selfRole.jumpTimer = undefined;
+            // } else {
+            //     this.selfRole.y = nextY;
+            // }
+        } else {
+            this.selfRole.y = nextY;
+        }
+        if (this.selfRole.jumpSpeed === -this.selfRole.power) {
+            this.selfRole.y -= this.selfRole.jumpSpeed;
+            clearInterval(this.selfRole.jumpTimer);
+            this.selfRole.jumpTimer = undefined;
+        }
+    }
 }
 
 window.onload = () => {

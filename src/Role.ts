@@ -15,6 +15,7 @@ export default class Role {
     public fallTimer: number;
     public weapon: number;
     public floor: Floor;
+    public ladderY: number;
     private type: number;
     private selfX: number;
     private selfY: number;
@@ -28,10 +29,11 @@ export default class Role {
             this.selfWidth = 20;
             this.selfHeight = 60;
             this.weight = 1;
-            this.jumpSpeed = this.power = 30;
-            this.moveSpeed = 3;
+            this.jumpSpeed = this.power = 24;
+            this.moveSpeed = 5;
         }
         this.floor = floor;
+        this.ladderY = floor.y;
         this.selfX = this.floor.x +
         Math.floor(Math.random() * (this.floor.width - this.selfWidth));
         this.selfY = this.floor.y - this.selfHeight;
