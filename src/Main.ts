@@ -27,9 +27,9 @@ class Main {
         const groundY = this.stageHeight - this.floorHeight;
         let y: number = groundY - this.verticalSpacing - this.floorHeight;
         for (; y > 0; y -= (this.verticalSpacing + this.floorHeight)) {
-            let rs: number = Math.random() * 200;
+            let rs: number = Math.floor(Math.random() * 200);
             while (rs < this.stageWidth) {
-                let re = rs + Math.random() * 800 + 300;
+                let re = rs + Math.floor(Math.random() * 800) + 300;
                 if (re > this.stageWidth) {
                     re = this.stageWidth;
                     if (re - rs < 200) {
@@ -42,7 +42,7 @@ class Main {
                 floor.setStroke("#000000", 2);
                 this.floors.push(floor);
                 this.stage.add(floor.element);
-                rs = re + Math.random() * 300 + 200;
+                rs = re + Math.floor(Math.random() * 300) + 200;
             }
         }
         const ground: Floor = new Floor(0, groundY, this.stageWidth, this.floorHeight, "basic");
