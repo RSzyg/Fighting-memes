@@ -129,11 +129,11 @@ class Main {
 
     private selfRoleMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
-            const moveX: number = this.selfRole.x + this.selfRole.moveSpeed;
-            this.selfRole.x = moveX % this.stageWidth;
+            const nextX: number = this.selfRole.x + this.selfRole.moveSpeed;
+            this.selfRole.x = nextX % this.stageWidth;
         } else if (e.keyCode === 37) {
-            const moveX: number = this.selfRole.x - this.selfRole.moveSpeed;
-            this.selfRole.x = (moveX + this.stageWidth) % this.stageWidth;
+            const nextX: number = this.selfRole.x - this.selfRole.moveSpeed;
+            this.selfRole.x = (nextX + this.stageWidth) % this.stageWidth;
         } else if (e.keyCode === 38) {
             if (this.selfRole.jumpTimer === undefined) {
                 this.selfRole.jumpSpeed = this.selfRole.power;
