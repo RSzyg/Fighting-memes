@@ -73,28 +73,39 @@ class Main {
         if (e.type === "keydown") {
             switch (e.keyCode) {
                 case 68:
-                    if (this.selfRole.rightTimer === undefined) {
-                        this.selfRole.rightTimer = setInterval(() => this.selfRoleMove(e), this.interval);
+                    if (!this.selfRole.rightTimer) {
+                        this.selfRole.rightTimer = setInterval(
+                            () => this.selfRoleMove(e),
+                            this.interval,
+                        );
                     }
                     break;
                 case 65:
-                    if (this.selfRole.leftTimer === undefined) {
-                        this.selfRole.leftTimer = setInterval(() => this.selfRoleMove(e), this.interval);
+                    if (!this.selfRole.leftTimer) {
+                        this.selfRole.leftTimer = setInterval(
+                            () => this.selfRoleMove(e),
+                            this.interval,
+                        );
                     }
                     break;
                 case 83:
-                    if (this.selfRole.downTimer === undefined) {
-                        this.selfRole.downTimer = setInterval(() => this.selfRoleMove(e), this.interval);
+                    if (!this.selfRole.downTimer) {
+                        this.selfRole.downTimer = setInterval(
+                            () => this.selfRoleMove(e),
+                            this.interval,
+                        );
                     }
                     break;
                 case 74:
-                    if (this.selfRole.upTimer === undefined) {
-                        this.selfRole.upTimer = setInterval(() => this.selfRoleMove(e), this.interval);
+                    if (!this.selfRole.upTimer) {
+                        this.selfRole.upTimer = setInterval(
+                            () => this.selfRoleMove(e),
+                            this.interval,
+                        );
                     }
                     break;
             }
-        }
-        if (e.type === "keyup") {
+        } else if (e.type === "keyup") {
             switch (e.keyCode) {
                 case 68:
                     clearInterval(this.selfRole.rightTimer);
