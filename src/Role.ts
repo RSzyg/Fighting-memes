@@ -27,7 +27,7 @@ export default class Role {
             this.selfWidth = 20;
             this.selfHeight = 60;
             this.weight = 1;
-            this.jumpSpeed = this.power = 10;
+            this.jumpSpeed = this.power = 30;
             this.moveSpeed = 3;
         }
         this.selfX = x;
