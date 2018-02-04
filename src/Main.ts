@@ -175,9 +175,13 @@ class Main {
     // private selfRoleJump() {
     //     let ladder: Floor;
     //     let btmY: number;
-    //     this.selfRole.y -= this.selfRole.jumpSpeed;
+    //     let nextY: number;
+    //     nextY = this.selfRole.y - this.selfRole.jumpSpeed;
     //     this.selfRole.jumpSpeed -= this.selfRole.weight;
-    //     btmY = this.selfRole.y + this.selfRole.height;
+    //     btmY = nextY + this.selfRole.height;
+    //     /*
+    //     calcualte footY
+    //     */
     //     if (this.selfRole.jumpSpeed === 0) {
     //         let cell: number;
     //         let re: number;
@@ -191,20 +195,32 @@ class Main {
     //             (cell - 1) * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
     //         }
     //     }
+    //     /*
+    //     hit
+    //     */
     //     if (this.selfRole.jumpSpeed <= 0) {
     //         for (ladder of this.floors) {
     //             if (btmY >= ladder.y &&
     //                 ladder.y >= this.selfRole.footY &&
-    //                 (this.selfRole.x + this.selfRole.width >= ladder.x || this.selfRole.x <= ladder.x + ladder.width)) {
+    //                 this.selfRole.x + this.selfRole.width >= ladder.x &&
+    //                 this.selfRole.x <= ladder.x + ladder.width) {
+    //                 // deal data deviation
+    //                 this.selfRole.y = ladder.y - this.selfRole.height;
     //                 clearInterval(this.selfRole.jumpTimer);
     //                 this.selfRole.jumpTimer = undefined;
     //                 break;
+    //             } else {
+    //                 this.selfRole.y = nextY;
     //             }
     //         }
     //         if (btmY >= this.stageHeight - this.floorHeight) {
     //             clearInterval(this.selfRole.jumpTimer);
     //             this.selfRole.jumpTimer = undefined;
+    //         } else {
+    //             this.selfRole.y = nextY;
     //         }
+    //     } else {
+    //         this.selfRole.y = nextY;
     //     }
     // }
 }
