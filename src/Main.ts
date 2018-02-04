@@ -57,9 +57,9 @@ class Main {
     }
 
     private createRole(groundY: number) {
-        const roleX: number = Math.random() * this.stageWidth;
-        const roleY: number = groundY;
-        this.selfRole = new Role(roleX, roleY, 0, "#66ccff");
+        const random = Math.floor(Math.random() * this.floors.length);
+        const bornFloor: Floor = this.floors[random];
+        this.selfRole = new Role(bornFloor, 0, "#66ccff");
         this.stage.add(this.selfRole.element);
     }
 /**
@@ -137,76 +137,76 @@ class Main {
         } else if (e.keyCode === 38) {
             if (this.selfRole.jumpTimer === undefined) {
                 this.selfRole.jumpSpeed = this.selfRole.power;
-                this.selfRole.jumpTimer = setInterval(
-                    () => this.selfRoleJump(),
-                    this.interval,
-                );
+                // this.selfRole.jumpTimer = setInterval(
+                //     () => this.selfRoleJump(),
+                //     this.interval,
+                // );
             }
         }
     }
 
-    private selfRoleFall() {
-        this.selfRole.jumpSpeed += this.selfRole.weight;
-        let nextY: number = this.selfRole.y + this.selfRole.jumpSpeed;
-        if (
-            nextY + this.selfRole.height >=
-            this.selfRole.footY + this.verticalSpacing
-        ) {
-            let isFind: boolean = false;
-            for (const floor of this.floors) {
-                if (
-                    this.selfRole.x < floor.x + floor.width &&
-                    this.selfRole.x - this.selfRole.width > floor.x
-                ) {
-                    nextY = floor.y;
-                    isFind = true;
-                    clearInterval(this.selfRole.fallTimer);
-                    this.selfRole.fallTimer = undefined;
-                    break;
-                }
-            }
-            if (!isFind) {
-                this.selfRole.footY += this.verticalSpacing;
-            }
-        }
-        this.selfRole.y = nextY;
-    }
+    // private selfRoleFall() {
+    //     this.selfRole.jumpSpeed += this.selfRole.weight;
+    //     let nextY: number = this.selfRole.y + this.selfRole.jumpSpeed;
+    //     if (
+    //         nextY + this.selfRole.height >=
+    //         this.selfRole.footY + this.verticalSpacing
+    //     ) {
+    //         let isFind: boolean = false;
+    //         for (const floor of this.floors) {
+    //             if (
+    //                 this.selfRole.x < floor.x + floor.width &&
+    //                 this.selfRole.x - this.selfRole.width > floor.x
+    //             ) {
+    //                 nextY = floor.y;
+    //                 isFind = true;
+    //                 clearInterval(this.selfRole.fallTimer);
+    //                 this.selfRole.fallTimer = undefined;
+    //                 break;
+    //             }
+    //         }
+    //         if (!isFind) {
+    //             this.selfRole.footY += this.verticalSpacing;
+    //         }
+    //     }
+    //     this.selfRole.y = nextY;
+    // }
 
-    private selfRoleJump() {
-        let ladder: Floor;
-        let btmY: number;
-        this.selfRole.y -= this.selfRole.jumpSpeed;
-        this.selfRole.jumpSpeed -= this.selfRole.weight;
-        btmY = this.selfRole.y + this.selfRole.height;
-        if (this.selfRole.jumpSpeed === 0) {
-            let cell: number;
-            let re: number;
-            cell = (this.stageHeight - btmY) / (this.verticalSpacing + this.floorHeight);
-            re = (this.stageHeight - btmY) % (this.verticalSpacing + this.floorHeight);
-            if (re > this.floorHeight) {
-                this.selfRole.footY = this.stageHeight -
-                cell * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
-            } else {
-                this.selfRole.footY = this.stageHeight -
-                (cell - 1) * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
-            }
-        }
-        if (this.selfRole.jumpSpeed <= 0) {
-            for (ladder of this.floors) {
-                if (btmY >= ladder.y &&
-                    ladder.y >= this.selfRole.footY &&
-                    (this.selfRole.x + this.selfRole.width >= ladder.x || this.selfRole.x <= ladder.x + ladder.width)) {
-                    clearInterval(this.selfRole.jumpTimer);
-                    this.selfRole.jumpTimer = undefined;
-                    break;
-                }
-            }
-            if (btmY >= this.stageHeight - this.floorHeight) {
-                clearInterval(this.selfRole.jumpTimer);
-                this.selfRole.jumpTimer = undefined;
-            }
-        }
-    }
+    // private selfRoleJump() {
+    //     let ladder: Floor;
+    //     let btmY: number;
+    //     this.selfRole.y -= this.selfRole.jumpSpeed;
+    //     this.selfRole.jumpSpeed -= this.selfRole.weight;
+    //     btmY = this.selfRole.y + this.selfRole.height;
+    //     if (this.selfRole.jumpSpeed === 0) {
+    //         let cell: number;
+    //         let re: number;
+    //         cell = (this.stageHeight - btmY) / (this.verticalSpacing + this.floorHeight);
+    //         re = (this.stageHeight - btmY) % (this.verticalSpacing + this.floorHeight);
+    //         if (re > this.floorHeight) {
+    //             this.selfRole.footY = this.stageHeight -
+    //             cell * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
+    //         } else {
+    //             this.selfRole.footY = this.stageHeight -
+    //             (cell - 1) * (this.verticalSpacing + this.floorHeight) - this.verticalSpacing;
+    //         }
+    //     }
+    //     if (this.selfRole.jumpSpeed <= 0) {
+    //         for (ladder of this.floors) {
+    //             if (btmY >= ladder.y &&
+    //                 ladder.y >= this.selfRole.footY &&
+    //                 (this.selfRole.x + this.selfRole.width >= ladder.x || this.selfRole.x <= ladder.x + ladder.width)) {
+    //                 clearInterval(this.selfRole.jumpTimer);
+    //                 this.selfRole.jumpTimer = undefined;
+    //                 break;
+    //             }
+    //         }
+    //         if (btmY >= this.stageHeight - this.floorHeight) {
+    //             clearInterval(this.selfRole.jumpTimer);
+    //             this.selfRole.jumpTimer = undefined;
+    //         }
+    //     }
+    // }
 }
 
 window.onload = () => {

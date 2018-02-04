@@ -1,3 +1,4 @@
+import Floor from "./Floor";
 import { Rectangle } from "./Shape";
 
 export default class Role {
@@ -13,7 +14,7 @@ export default class Role {
     public jumpTimer: number;
     public fallTimer: number;
     public weapon: number;
-    public footY: number;
+    public floor: Floor;
     private type: number;
     private selfX: number;
     private selfY: number;
@@ -21,7 +22,7 @@ export default class Role {
     private selfHeight: number;
     private fillColor: string;
 
-    constructor(x: number, y: number, type: number, color: string) {
+    constructor(floor: Floor, type: number, color: string) {
         switch (type) {
         case 0:
             this.selfWidth = 20;
@@ -30,8 +31,10 @@ export default class Role {
             this.jumpSpeed = this.power = 30;
             this.moveSpeed = 3;
         }
-        this.selfX = x;
-        this.selfY = this.footY = y - this.selfHeight;
+        this.floor = floor;
+        this.selfX = this.floor.x +
+        Math.floor(Math.random() * (this.floor.width - this.selfWidth));
+        this.selfY = this.floor.y - this.selfHeight;
         this.type = type;
         this.upTimer = undefined;
         this.downTimer = undefined;
@@ -39,7 +42,12 @@ export default class Role {
         this.rightTimer = undefined;
         this.jumpTimer = undefined;
         this.fallTimer = undefined;
-        this.element = new Rectangle(x, this.selfY, this.selfWidth, this.selfHeight);
+        this.element = new Rectangle(
+            this.selfX,
+            this.selfY,
+            this.selfWidth,
+            this.selfHeight,
+        );
         this.element.fill = color;
     }
 
@@ -73,5 +81,9 @@ export default class Role {
 
     public set height(newHeight: number) {
         this.selfHeight = this.element.height = newHeight;
+    }
+
+    public get footY(): number {
+        return this.selfY + this.selfHeight;
     }
 }
