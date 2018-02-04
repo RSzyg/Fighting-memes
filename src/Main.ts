@@ -64,10 +64,10 @@ class Main {
     }
 /**
  * player's action
- * keycode 39 is for "d"/moveright
- * keycode 37 is for "a"/moveleft
- * keycode 40 is for "s"/movedown
- * keycode 38 is for "j"/jump
+ * keycode 39 is for "→"/moveright
+ * keycode 37 is for "←"/moveleft
+ * keycode 40 is for "↓"/movedown
+ * keycode 38 is for "↑"/jump
  */
     private keyboardController(e: KeyboardEvent) {
         if (e.type === "keydown") {
@@ -128,18 +128,15 @@ class Main {
     }
 
     private selfRoleMove(e: KeyboardEvent) {
-        switch (e.keyCode) {
-            case 39:
-                this.selfRole.x += this.selfRole.moveSpeed;
-                break;
-            case 37:
-                this.selfRole.x -= this.selfRole.moveSpeed;
-                break;
-            // case 40:
-            // case 38:
-            //     this.selfRoleJump();
-            //     break;
+        if (e.keyCode === 39) {
+            const moveX: number = this.selfRole.x + this.selfRole.moveSpeed;
+            this.selfRole.x = moveX % this.stageWidth;
+        } else if (e.keyCode === 37) {
+            const moveX: number = this.selfRole.x - this.selfRole.moveSpeed;
+            this.selfRole.x = (moveX + this.stageWidth) % this.stageWidth;
         }
+            // 40
+            // 38
     }
 
     private selfRoleFall() {
