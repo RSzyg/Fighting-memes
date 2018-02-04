@@ -64,15 +64,15 @@ class Main {
     }
 /**
  * player's action
- * keycode 68 is for "d"/moveright
- * keycode 65 is for "a"/moveleft
- * keycode 83 is for "s"/movedown
- * keycode 74 is for "j"/jump
+ * keycode 39 is for "d"/moveright
+ * keycode 37 is for "a"/moveleft
+ * keycode 40 is for "s"/movedown
+ * keycode 38 is for "j"/jump
  */
     private keyboardController(e: KeyboardEvent) {
         if (e.type === "keydown") {
             switch (e.keyCode) {
-                case 68:
+                case 39:
                     if (!this.selfRole.rightTimer) {
                         this.selfRole.rightTimer = setInterval(
                             () => this.selfRoleMove(e),
@@ -80,7 +80,7 @@ class Main {
                         );
                     }
                     break;
-                case 65:
+                case 37:
                     if (!this.selfRole.leftTimer) {
                         this.selfRole.leftTimer = setInterval(
                             () => this.selfRoleMove(e),
@@ -88,7 +88,7 @@ class Main {
                         );
                     }
                     break;
-                case 83:
+                case 40:
                     if (!this.selfRole.downTimer) {
                         this.selfRole.downTimer = setInterval(
                             () => this.selfRoleMove(e),
@@ -96,7 +96,7 @@ class Main {
                         );
                     }
                     break;
-                case 74:
+                case 38:
                     if (!this.selfRole.upTimer) {
                         this.selfRole.upTimer = setInterval(
                             () => this.selfRoleMove(e),
@@ -107,19 +107,19 @@ class Main {
             }
         } else if (e.type === "keyup") {
             switch (e.keyCode) {
-                case 68:
+                case 39:
                     clearInterval(this.selfRole.rightTimer);
                     this.selfRole.rightTimer = undefined;
                     break;
-                case 65:
+                case 37:
                     clearInterval(this.selfRole.leftTimer);
                     this.selfRole.leftTimer = undefined;
                     break;
-                case 83:
+                case 40:
                     clearInterval(this.selfRole.downTimer);
                     this.selfRole.downTimer = undefined;
                     break;
-                case 74:
+                case 38:
                     clearInterval(this.selfRole.upTimer);
                     this.selfRole.upTimer = undefined;
                     break;
@@ -129,14 +129,14 @@ class Main {
 
     private selfRoleMove(e: KeyboardEvent) {
         switch (e.keyCode) {
-            case 68:
+            case 39:
                 this.selfRole.x += this.selfRole.moveSpeed;
                 break;
-            case 65:
+            case 37:
                 this.selfRole.x -= this.selfRole.moveSpeed;
                 break;
-            // case 83:
-            // case 74:
+            // case 40:
+            // case 38:
             //     this.selfRoleJump();
             //     break;
         }
