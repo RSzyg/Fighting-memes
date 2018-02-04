@@ -60,6 +60,33 @@ class Main {
         this.selfRole = new Role(roleX, roleY, 0, "#66ccff");
         this.stage.add(this.selfRole.element);
     }
+
+    private selfRoleFall() {
+        this.selfRole.jumpSpeed += this.selfRole.weight;
+        let nextY: number = this.selfRole.y + this.selfRole.jumpSpeed;
+        if (
+            nextY + this.selfRole.height >=
+            this.selfRole.footY + this.verticalSpacing
+        ) {
+            let isFind: boolean = false;
+            for (const floor of this.floors) {
+                if (
+                    this.selfRole.x < floor.x + floor.width &&
+                    this.selfRole.x - this.selfRole.width > floor.x
+                ) {
+                    nextY = floor.y;
+                    isFind = true;
+                    clearInterval(this.selfRole.fallTimer);
+                    this.selfRole.fallTimer = undefined;
+                    break;
+                }
+            }
+            if (!isFind) {
+                this.selfRole.footY += this.verticalSpacing;
+            }
+        }
+        this.selfRole.y = nextY;
+    }
 }
 
 window.onload = () => {

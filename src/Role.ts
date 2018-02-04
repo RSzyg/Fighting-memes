@@ -11,7 +11,9 @@ export default class Role {
     public leftTimer: number;
     public rightTimer: number;
     public jumpTimer: number;
+    public fallTimer: number;
     public weapon: number;
+    public footY: number;
     private type: number;
     private selfX: number;
     private selfY: number;
@@ -29,13 +31,14 @@ export default class Role {
             this.moveSpeed = 3;
         }
         this.selfX = x;
-        this.selfY = y - this.selfHeight;
+        this.selfY = this.footY = y - this.selfHeight;
         this.type = type;
         this.upTimer = undefined;
         this.downTimer = undefined;
         this.leftTimer = undefined;
         this.rightTimer = undefined;
         this.jumpTimer = undefined;
+        this.fallTimer = undefined;
         this.element = new Rectangle(x, this.selfY, this.selfWidth, this.selfHeight);
         this.element.fill = color;
     }
@@ -70,9 +73,5 @@ export default class Role {
 
     public set height(newHeight: number) {
         this.selfHeight = this.element.height = newHeight;
-    }
-
-    public get footY(): number {
-        return this.y + this.height;
     }
 }
