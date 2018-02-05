@@ -148,9 +148,11 @@ class Main {
         if (e.keyCode === 39) {
             const nextX: number = this.selfRole.x + this.selfRole.moveSpeed;
             this.selfRole.x = nextX % this.stageWidth;
+            this.selfRoleWillFall();
         } else if (e.keyCode === 37) {
             const nextX: number = this.selfRole.x - this.selfRole.moveSpeed;
             this.selfRole.x = (nextX + this.stageWidth) % this.stageWidth;
+            this.selfRoleWillFall();
         } else if (e.keyCode === 38) {
             if (this.selfRole.jumpTimer === undefined) {
                 this.selfRole.jumpSpeed = this.selfRole.power;
@@ -167,6 +169,20 @@ class Main {
                     this.interval,
                 );
             }
+        }
+    }
+
+    private selfRoleWillFall() {
+        if (
+            !this.selfRole.fallTimer &&
+            !this.selfRole.jumpTimer &&
+            (this.selfRole.x > this.selfRole.floor.x + this.selfRole.floor.width ||
+                this.selfRole.x + this.selfRole.width < this.selfRole.floor.x)
+        ) {
+            this.selfRole.fallTimer = setInterval(
+                () => this.selfRoleFall(),
+                this.interval,
+            );
         }
     }
 
@@ -202,7 +218,7 @@ class Main {
     }
 
     private selfRoleJump() {
-        let nextY: number = this.selfRole.y - this.selfRole.jumpSpeed;
+        const nextY: number = this.selfRole.y - this.selfRole.jumpSpeed;
         this.selfRole.jumpSpeed -= this.selfRole.weight;
         // console.log(this.selfRole.y);
         // console.log(this.selfRole.jumpSpeed);
