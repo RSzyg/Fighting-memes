@@ -146,11 +146,13 @@ class Main {
 
     private selfRoleMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
-            const nextX: number = this.selfRole.x + this.selfRole.moveSpeed;
+            let nextX: number = this.selfRole.x + this.selfRole.moveSpeed;
+            nextX = this.selfRoleWillKnockWall(nextX, 1);
             this.selfRole.x = nextX % this.stageWidth;
             this.selfRoleWillFall();
         } else if (e.keyCode === 37) {
-            const nextX: number = this.selfRole.x - this.selfRole.moveSpeed;
+            let nextX: number = this.selfRole.x - this.selfRole.moveSpeed;
+            nextX = this.selfRoleWillKnockWall(nextX, 0);
             this.selfRole.x = (nextX + this.stageWidth) % this.stageWidth;
             this.selfRoleWillFall();
         } else if (e.keyCode === 38) {
@@ -184,6 +186,22 @@ class Main {
                 this.interval,
             );
         }
+    }
+
+    private selfRoleWillKnockWall(nextX: number, isRight: number) {
+        for (const floor of this.floors) {
+            if (
+                this.selfRole.y > floor.y - this.selfRole.height &&
+                this.selfRole.footY < floor.y + this.floorHeight + this.selfRole.height &&
+                nextX + this.selfRole.width > floor.x &&
+                nextX < floor.x + floor.width
+            ) {
+                // return isRight * (floor.x - this.selfRole.width) + (1 - isRight) * (floor.x + floor.width);
+                // theres sth wrong with that method.
+                return this.selfRole.x;
+            }
+        }
+        return nextX;
     }
 
     private selfRoleFall() {
