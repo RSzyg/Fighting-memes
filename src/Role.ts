@@ -13,6 +13,7 @@ export default class Role {
     public rightTimer: number;
     public jumpTimer: number;
     public fallTimer: number;
+    public downTrans: boolean;
     public weapon: number;
     public floor: Floor;
     public ladderY: number;
@@ -30,7 +31,7 @@ export default class Role {
             this.selfHeight = 60;
             this.weight = 1;
             this.jumpSpeed = this.power = 24;
-            this.moveSpeed = 5;
+            this.moveSpeed = 6;
         }
         this.floor = floor;
         this.ladderY = floor.y;
@@ -44,6 +45,7 @@ export default class Role {
         this.rightTimer = undefined;
         this.jumpTimer = undefined;
         this.fallTimer = undefined;
+        this.downTrans = false;
         this.element = new Rectangle(
             this.selfX,
             this.selfY,

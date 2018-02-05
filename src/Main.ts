@@ -27,7 +27,7 @@ class Main {
         this.stage.width = this.stageWidth;
         this.stage.height = this.stageHeight;
         const groundY = this.stageHeight - this.floorHeight;
-        let y: number = groundY - this.verticalSpacing - this.floorHeight;
+        let y: number = groundY - this.verticalSpacing;
         for (; y > 0; y -= this.verticalSpacing) {
             let rs: number = Math.floor(Math.random() * 200);
             while (rs < this.stageWidth) {
@@ -70,6 +70,7 @@ class Main {
  * keycode 37 is for "←"/moveleft
  * keycode 40 is for "↓"/movedown
  * keycode 38 is for "↑"/jump
+ * keycode 88 is for "x"/attack
  */
     private keyboardController(e: KeyboardEvent) {
         if (e.type === "keydown") {
@@ -91,10 +92,10 @@ class Main {
                     }
                     break;
                 case 40:
-                    if (!this.selfRole.downTimer) {
+                    if (!this.selfRole.downTrans) {
                         this.selfRole.height -= this.transferCoef;
                         this.selfRole.width += this.transferCoef;
-                        this.selfRole.downTimer = 1;
+                        this.selfRole.downTrans = true;
                     }
                     break;
                 case 38:
@@ -104,6 +105,16 @@ class Main {
                             this.interval,
                         );
                     }
+                    break;
+                case 88:
+                    if (this.selfRole.downTrans && !this.selfRole.downTimer) {
+                        this.selfRole.downTimer = setInterval(
+                            () => this.selfRoleMove(e),
+                            this.interval,
+                        );
+                    }
+                    break;
+                default:
                     break;
             }
         } else if (e.type === "keyup") {
@@ -117,14 +128,17 @@ class Main {
                     this.selfRole.leftTimer = undefined;
                     break;
                 case 40:
-                    clearInterval(this.selfRole.downTimer);
                     this.selfRole.height += this.transferCoef;
                     this.selfRole.width -= this.transferCoef;
-                    this.selfRole.downTimer = undefined;
+                    this.selfRole.downTrans = false;
                     break;
                 case 38:
                     clearInterval(this.selfRole.upTimer);
                     this.selfRole.upTimer = undefined;
+                    break;
+                case 88:
+                    clearInterval(this.selfRole.downTimer);
+                    this.selfRole.downTimer = undefined;
                     break;
             }
         }
@@ -145,35 +159,47 @@ class Main {
                     this.interval,
                 );
             }
+        } else if (e.keyCode === 88) {
+            if (!this.selfRole.fallTimer) {
+                this.selfRole.jumpSpeed = 0;
+                this.selfRole.fallTimer = setInterval(
+                    () => this.selfRoleFall(),
+                    this.interval,
+                );
+            }
         }
     }
 
-    // private selfRoleFall() {
-    //     this.selfRole.jumpSpeed += this.selfRole.weight;
-    //     let nextY: number = this.selfRole.y + this.selfRole.jumpSpeed;
-    //     if (
-    //         nextY + this.selfRole.height >=
-    //         this.selfRole.footY + this.verticalSpacing
-    //     ) {
-    //         let isFind: boolean = false;
-    //         for (const floor of this.floors) {
-    //             if (
-    //                 this.selfRole.x < floor.x + floor.width &&
-    //                 this.selfRole.x - this.selfRole.width > floor.x
-    //             ) {
-    //                 nextY = floor.y;
-    //                 isFind = true;
-    //                 clearInterval(this.selfRole.fallTimer);
-    //                 this.selfRole.fallTimer = undefined;
-    //                 break;
-    //             }
-    //         }
-    //         if (!isFind) {
-    //             this.selfRole.footY += this.verticalSpacing;
-    //         }
-    //     }
-    //     this.selfRole.y = nextY;
-    // }
+    private selfRoleFall() {
+        this.selfRole.jumpSpeed += this.selfRole.weight;
+        let nextY: number = this.selfRole.y + this.selfRole.jumpSpeed;
+        if (
+            nextY + this.selfRole.height >=
+            this.selfRole.ladderY + this.verticalSpacing
+        ) {
+            let isFind: boolean = false;
+            for (const floor of this.floors) {
+                if (
+                    this.selfRole.x < floor.x + floor.width &&
+                    this.selfRole.x + this.selfRole.width > floor.x &&
+                    this.selfRole.footY < floor.y &&
+                    nextY + this.selfRole.height >= floor.y
+                ) {
+                    nextY = floor.y - this.selfRole.height;
+                    isFind = true;
+                    this.selfRole.floor = floor;
+                    this.selfRole.ladderY = floor.y;
+                    clearInterval(this.selfRole.fallTimer);
+                    this.selfRole.fallTimer = undefined;
+                    break;
+                }
+            }
+            if (!isFind) {
+                this.selfRole.ladderY += this.verticalSpacing;
+            }
+        }
+        this.selfRole.y = nextY;
+    }
 
     private selfRoleJump() {
         let nextY: number = this.selfRole.y - this.selfRole.jumpSpeed;
@@ -189,7 +215,7 @@ class Main {
                 for (const floor of this.floors) {
                     if (
                         this.selfRole.x < floor.x + floor.width &&
-                        this.selfRole.x - this.selfRole.width > floor.x &&
+                        this.selfRole.x + this.selfRole.width > floor.x &&
                         this.selfRole.y > floor.y &&
                         nextY <= floor.y + this.floorHeight
                     ) {
