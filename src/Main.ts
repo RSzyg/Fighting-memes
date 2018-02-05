@@ -11,6 +11,7 @@ class Main {
     private floorHeight: number;
     private interval: number;
     private selfRole: Role;
+    private transferCoef: number;
     constructor() {
         this.stage = new Stage();
         this.floors = [];
@@ -19,6 +20,7 @@ class Main {
         this.verticalSpacing = 200;
         this.floorHeight = 35;
         this.interval = 17;
+        this.transferCoef = 16;
     }
     public createScene() {
         this.stage.color = "#e8e8e8";
@@ -90,10 +92,9 @@ class Main {
                     break;
                 case 40:
                     if (!this.selfRole.downTimer) {
-                        this.selfRole.downTimer = setInterval(
-                            () => this.selfRoleMove(e),
-                            this.interval,
-                        );
+                        this.selfRole.height -= this.transferCoef;
+                        this.selfRole.width += this.transferCoef;
+                        this.selfRole.downTimer = 1;
                     }
                     break;
                 case 38:
@@ -117,6 +118,8 @@ class Main {
                     break;
                 case 40:
                     clearInterval(this.selfRole.downTimer);
+                    this.selfRole.height += this.transferCoef;
+                    this.selfRole.width -= this.transferCoef;
                     this.selfRole.downTimer = undefined;
                     break;
                 case 38:

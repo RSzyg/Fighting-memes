@@ -74,6 +74,8 @@ export default class Role {
     }
 
     public set width(newWidth: number) {
+        this.selfX += (this.selfWidth - newWidth) / 2;
+        this.element.x = this.selfX;
         this.selfWidth = this.element.width = newWidth;
     }
 
@@ -82,6 +84,8 @@ export default class Role {
     }
 
     public set height(newHeight: number) {
+        this.selfY += this.selfHeight - newHeight;
+        this.element.y = this.selfY;
         this.selfHeight = this.element.height = newHeight;
     }
 
