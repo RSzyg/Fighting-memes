@@ -253,8 +253,8 @@ class Main {
                         this.selfRole.y > floor.y &&
                         nextY <= floor.y + this.floorHeight
                     ) {
-                        this.selfRole.jumpSpeed = -this.selfRole.jumpSpeed;
-                        this.selfRole.jumpSpeed -= 2 * this.selfRole.weight;
+                        this.selfRole.jumpSpeed = 0;
+                        nextY = floor.y + this.floorHeight;
                         isFind = true;
                         break;
                     }
