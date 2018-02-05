@@ -164,9 +164,9 @@ class Main {
                 );
             }
         } else if (e.keyCode === 88) {
-            if (!this.selfRole.fallTimer) {
+            if (!this.selfRole.jumpTimer) {
                 this.selfRole.jumpSpeed = 0;
-                this.selfRole.fallTimer = setInterval(
+                this.selfRole.jumpTimer = setInterval(
                     () => this.selfRoleFall(),
                     this.interval,
                 );
@@ -176,12 +176,11 @@ class Main {
 
     private selfRoleWillFall() {
         if (
-            !this.selfRole.fallTimer &&
             !this.selfRole.jumpTimer &&
             (this.selfRole.x > this.selfRole.floor.x + this.selfRole.floor.width ||
                 this.selfRole.x + this.selfRole.width < this.selfRole.floor.x)
         ) {
-            this.selfRole.fallTimer = setInterval(
+            this.selfRole.jumpTimer = setInterval(
                 () => this.selfRoleFall(),
                 this.interval,
             );
@@ -223,8 +222,8 @@ class Main {
                     isFind = true;
                     this.selfRole.floor = floor;
                     this.selfRole.ladderY = floor.y;
-                    clearInterval(this.selfRole.fallTimer);
-                    this.selfRole.fallTimer = undefined;
+                    clearInterval(this.selfRole.jumpTimer);
+                    this.selfRole.jumpTimer = undefined;
                     break;
                 }
             }

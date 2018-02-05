@@ -12,7 +12,6 @@ export default class Role {
     public leftTimer: number;
     public rightTimer: number;
     public jumpTimer: number;
-    public fallTimer: number;
     public downTrans: boolean;
     public weapon: number;
     public floor: Floor;
@@ -44,7 +43,6 @@ export default class Role {
         this.leftTimer = undefined;
         this.rightTimer = undefined;
         this.jumpTimer = undefined;
-        this.fallTimer = undefined;
         this.downTrans = false;
         this.element = new Rectangle(
             this.selfX,
