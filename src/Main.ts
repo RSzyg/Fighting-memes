@@ -180,6 +180,7 @@ class Main {
             (this.selfRole.x > this.selfRole.floor.x + this.selfRole.floor.width ||
                 this.selfRole.x + this.selfRole.width < this.selfRole.floor.x)
         ) {
+            this.selfRole.jumpSpeed = 0;
             this.selfRole.jumpTimer = setInterval(
                 () => this.selfRoleFall(),
                 this.interval,
