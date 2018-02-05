@@ -218,7 +218,7 @@ class Main {
     }
 
     private selfRoleJump() {
-        const nextY: number = this.selfRole.y - this.selfRole.jumpSpeed;
+        let nextY: number = this.selfRole.y - this.selfRole.jumpSpeed;
         this.selfRole.jumpSpeed -= this.selfRole.weight;
         // console.log("ladder" + this.selfRole.ladderY);
         // console.log(this.selfRole.footY);
@@ -241,9 +241,6 @@ class Main {
                         break;
                     }
                 }
-                // if (!isFind) {
-                //     this.selfRole.ladderY -= this.verticalSpacing;
-                // }
             }
             this.selfRole.y = nextY;
         } else if (this.selfRole.jumpSpeed <= 0) {
