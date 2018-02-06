@@ -160,12 +160,12 @@ class Main {
     private RolesMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
             let nextX: number = this.Roles[0].x + this.Roles[0].moveSpeed;
-            // nextX = this.RolesWillImpactWall(nextX, 1);
+            nextX = this.RolesWillImpactWall(nextX, 1);
             this.Roles[0].x = nextX % this.stageWidth;
             this.RolesWillFall();
         } else if (e.keyCode === 37) {
             let nextX: number = this.Roles[0].x - this.Roles[0].moveSpeed;
-            // nextX = this.RolesWillImpactWall(nextX, 0);
+            nextX = this.RolesWillImpactWall(nextX, 0);
             this.Roles[0].x = (nextX + this.stageWidth) % this.stageWidth;
             this.RolesWillFall();
         } else if (e.keyCode === 38) {
@@ -186,6 +186,20 @@ class Main {
                 );
             }
         }
+    }
+
+    private RolesWillImpactWall(nextX: number, isRight: number) {
+        for (const floor of this.floors) {
+            if (
+                this.Roles[0].y > floor.y - this.Roles[0].height &&
+                this.Roles[0].footY < floor.y + this.floorHeight + this.Roles[0].height &&
+                nextX + this.Roles[0].width > floor.x &&
+                nextX < floor.x + floor.width
+            ) {
+                return isRight * (floor.x - this.Roles[0].width) + (1 - isRight) * (floor.x + floor.width);
+            }
+        }
+        return nextX;
     }
 
     private RolesWillFall() {
