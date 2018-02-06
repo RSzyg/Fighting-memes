@@ -1,4 +1,4 @@
-import { Rectangle } from "./Shape";
+import Rectangle from "./Rectangle";
 
 export default class Stage {
     public element: HTMLElement;

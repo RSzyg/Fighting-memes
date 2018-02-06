@@ -1,4 +1,4 @@
-import { Rectangle } from "./Shape";
+import Rectangle from "./Rectangle";
 export default class Floor {
     public element: Rectangle;
     private type: string;
@@ -52,8 +52,8 @@ export default class Floor {
     }
 
     public setStroke(color: string, width: number) {
-        this.strokeColor = this.element.lineColor = color;
-        this.strokeWidth = this.element.lineWidth = width;
+        this.strokeColor = this.element.strokeColor = color;
+        this.strokeWidth = this.element.strokeWidth = width;
     }
 
     public setFillColor(color: string) {

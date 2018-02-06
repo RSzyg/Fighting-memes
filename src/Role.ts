@@ -1,5 +1,5 @@
 import Floor from "./Floor";
-import { Rectangle } from "./Shape";
+import Rectangle from "./Rectangle";
 
 export default class Role {
     public id: number; // unique identification
