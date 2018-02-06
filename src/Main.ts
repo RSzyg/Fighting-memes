@@ -187,6 +187,21 @@ class Main {
             }
         }
     }
+    private RolesWillImpactWall(nextX: number, isRight: number) {
+        for (const floor of this.floors) {
+            if (
+                this.Roles[0].footY > floor.y &&
+                this.Roles[0].y < floor.y + this.floorHeight &&
+                nextX + this.Roles[0].width > floor.x &&
+                nextX < floor.x + floor.width &&
+                ((this.Roles[0].x >= floor.x + floor.width) ||
+                    (this.Roles[0].x + this.Roles[0].width <= floor.x))
+            ) {
+                return isRight * (floor.x - this.Roles[0].width) + (1 - isRight) * (floor.x + floor.width);
+            }
+        }
+        return nextX;
+    }
 
     private RolesWillImpactWall(nextX: number, isRight: number) {
         for (const floor of this.floors) {
