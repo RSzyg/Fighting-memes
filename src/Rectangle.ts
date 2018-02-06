@@ -7,6 +7,7 @@ export default class Rectangle extends Shape {
     constructor(x: number, y: number, width: number, height: number) {
         super();
         this.element = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        this.type = "rect";
         this.x = x;
         this.y = y;
         this.width = width;

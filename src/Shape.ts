@@ -1,5 +1,6 @@
 export default class Shape {
     public element: SVGElement;
+    public type: string;
     private X: number;
     private Y: number;
     private Fill: string;
@@ -15,7 +16,11 @@ export default class Shape {
 
     public set x(newX: number) {
         this.X = newX;
-        this.element.setAttribute("x", `${newX}`);
+        if (this.type === "rect") {
+            this.element.setAttribute("x", `${newX}`);
+        } else if (this.type === "circle") {
+            this.element.setAttribute("cx", `${newX}`);
+        }
     }
 
     /**
@@ -27,7 +32,11 @@ export default class Shape {
 
     public set y(newY: number) {
         this.Y = newY;
-        this.element.setAttribute("y", `${newY}`);
+        if (this.type === "rect") {
+            this.element.setAttribute("y", `${newY}`);
+        } else if (this.type === "circle") {
+            this.element.setAttribute("cy", `${newY}`);
+        }
     }
 
     public get fill(): string {

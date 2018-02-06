@@ -28,7 +28,7 @@ class Main {
      * basic initial
      */
     public createScene() {
-        const circle: Circle = new Circle(0, 0, 100);
+        const circle: Circle = new Circle(100, 0, 100);
         this.stage.add(circle);
         circle.fill = "red";
         this.stage.color = "#e8e8e8";

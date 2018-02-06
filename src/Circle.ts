@@ -5,6 +5,7 @@ export default class Circle extends Shape {
     constructor(x: number, y: number, r: number) {
         super();
         this.element = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        this.type = "circle";
         this.x = x;
         this.y = y;
         this.r = r;
