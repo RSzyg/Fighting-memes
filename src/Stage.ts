@@ -1,4 +1,5 @@
-import { Rectangle } from "./Shape";
+import Rectangle from "./Rectangle";
+import Shape from "./Shape";
 
 export default class Stage {
     public element: HTMLElement;
@@ -11,7 +12,7 @@ export default class Stage {
     /**
      * 添加进场景
      */
-    public add(shape: Rectangle) {
+    public add(shape: Shape) {
         this.element.appendChild(shape.element);
     }
 
