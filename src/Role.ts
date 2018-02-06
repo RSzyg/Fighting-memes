@@ -2,6 +2,7 @@ import Floor from "./Floor";
 import { Rectangle } from "./Shape";
 
 export default class Role {
+    public id: number;
     public element: Rectangle;
     public power: number;
     public weight: number;
