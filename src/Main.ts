@@ -93,10 +93,10 @@ class Main {
                     }
                     break;
                 case 40:
-                    if (!this.Roles[0].downTrans) {
+                    if (!this.Roles[0].squatTrans) {
                         this.Roles[0].height -= this.transferCoef;
                         this.Roles[0].width += this.transferCoef;
-                        this.Roles[0].downTrans = true;
+                        this.Roles[0].squatTrans = true;
                     }
                     break;
                 case 38:
@@ -108,7 +108,7 @@ class Main {
                     }
                     break;
                 case 88:
-                    if (this.Roles[0].downTrans && !this.Roles[0].downTimer) {
+                    if (this.Roles[0].squatTrans && !this.Roles[0].downTimer) {
                         this.Roles[0].downTimer = setInterval(
                             () => this.RolesMove(e),
                             this.interval,
@@ -131,7 +131,7 @@ class Main {
                 case 40:
                     this.Roles[0].height += this.transferCoef;
                     this.Roles[0].width -= this.transferCoef;
-                    this.Roles[0].downTrans = false;
+                    this.Roles[0].squatTrans = false;
                     break;
                 case 38:
                     clearInterval(this.Roles[0].upTimer);
@@ -239,8 +239,6 @@ class Main {
     private RolesJump() {
         let nextY: number = this.Roles[0].y - this.Roles[0].jumpSpeed;
         this.Roles[0].jumpSpeed -= this.Roles[0].weight;
-        // console.log("ladder" + this.Roles[0].ladderY);
-        // console.log(this.Roles[0].footY);
         if (this.Roles[0].jumpSpeed > 0) {
             if (
                 nextY <=

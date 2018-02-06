@@ -2,24 +2,24 @@ import Floor from "./Floor";
 import { Rectangle } from "./Shape";
 
 export default class Role {
-    public id: number;
-    public element: Rectangle;
-    public power: number;
-    public weight: number;
-    public moveSpeed: number;
-    public jumpSpeed: number;
-    public upTimer: number;
-    public downTimer: number;
-    public leftTimer: number;
-    public rightTimer: number;
-    public jumpTimer: number;
-    public downTrans: boolean;
-    public weapon: number;
-    public floor: Floor;
-    public ladderY: number;
-    private type: number;
-    private selfX: number;
-    private selfY: number;
+    public id: number; // unique identification
+    public element: Rectangle; // main part
+    public power: number; // initial velocity
+    public weight: number; // acceleration
+    public moveSpeed: number; // horizontal velocity
+    public jumpSpeed: number; // vertical velocity
+    public upTimer: number; // "up" status recorder
+    public downTimer: number; // "down" status recorder
+    public leftTimer: number; // "left" status recorder
+    public rightTimer: number; // "right" status recorder
+    public squatTrans: boolean; // "squat" status recorder
+    public jumpTimer: number; // jump && fall timer
+    public weapon: number; // weapon type
+    public floor: Floor; // the floor underfoot
+    public ladderY: number; // the ladder be located
+    private type: number; // role type
+    private selfX: number; // x coordinate
+    private selfY: number; // y coordinate
     private selfWidth: number;
     private selfHeight: number;
     private fillColor: string;
@@ -44,7 +44,7 @@ export default class Role {
         this.leftTimer = undefined;
         this.rightTimer = undefined;
         this.jumpTimer = undefined;
-        this.downTrans = false;
+        this.squatTrans = false;
         this.element = new Rectangle(
             this.selfX,
             this.selfY,
@@ -89,7 +89,9 @@ export default class Role {
         this.element.y = this.selfY;
         this.selfHeight = this.element.height = newHeight;
     }
-
+    /**
+     * get y coordinate of foot
+     */
     public get footY(): number {
         return this.selfY + this.selfHeight;
     }
