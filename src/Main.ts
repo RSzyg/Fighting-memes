@@ -18,7 +18,7 @@ class Main {
         this.Roles = [];
         this.stageWidth = 1920;
         this.stageHeight = 1080;
-        this.verticalSpacing = 200;
+        this.verticalSpacing = 250;
         this.floorHeight = 35;
         this.interval = 17;
         this.transferCoef = 16;
@@ -156,27 +156,28 @@ class Main {
     private RolesMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
             let nextX: number = this.Roles[0].x + this.Roles[0].moveSpeed;
-            nextX = this.RolesWillImpactWall(nextX, 1);
+            // nextX = this.RolesWillImpactWall(nextX, 1);
             this.Roles[0].x = nextX % this.stageWidth;
             this.RolesWillFall();
         } else if (e.keyCode === 37) {
             let nextX: number = this.Roles[0].x - this.Roles[0].moveSpeed;
-            nextX = this.RolesWillImpactWall(nextX, 0);
+            // nextX = this.RolesWillImpactWall(nextX, 0);
             this.Roles[0].x = (nextX + this.stageWidth) % this.stageWidth;
             this.RolesWillFall();
         } else if (e.keyCode === 38) {
-            if (this.Roles[0].jumpTimer === undefined) {
+            if (this.Roles[0].verticalTimer === undefined) {
                 this.Roles[0].jumpSpeed = this.Roles[0].power;
-                this.Roles[0].jumpTimer = setInterval(
-                    () => this.RolesJump(),
+                this.Roles[0].verticalTimer = setInterval(
+                    () => this.RolesVerticalMove(),
                     this.interval,
                 );
             }
         } else if (e.keyCode === 88) {
-            if (!this.Roles[0].jumpTimer) {
+            if (!this.Roles[0].verticalTimer) {
                 this.Roles[0].jumpSpeed = 0;
-                this.Roles[0].jumpTimer = setInterval(
-                    () => this.RolesFall(),
+                this.Roles[0].ladderY += this.verticalSpacing;
+                this.Roles[0].verticalTimer = setInterval(
+                    () => this.RolesVerticalMove(),
                     this.interval,
                 );
             }
@@ -185,66 +186,20 @@ class Main {
 
     private RolesWillFall() {
         if (
-            !this.Roles[0].jumpTimer &&
+            !this.Roles[0].verticalTimer &&
             (this.Roles[0].x > this.Roles[0].floor.x + this.Roles[0].floor.width ||
                 this.Roles[0].x + this.Roles[0].width < this.Roles[0].floor.x)
         ) {
             this.Roles[0].jumpSpeed = 0;
-            this.Roles[0].jumpTimer = setInterval(
-                () => this.RolesFall(),
+            this.Roles[0].ladderY += this.verticalSpacing;
+            this.Roles[0].verticalTimer = setInterval(
+                () => this.RolesVerticalMove(),
                 this.interval,
             );
         }
     }
 
-    private RolesWillImpactWall(nextX: number, isRight: number) {
-        for (const floor of this.floors) {
-            if (
-                this.Roles[0].y > floor.y - this.Roles[0].height &&
-                this.Roles[0].footY < floor.y + this.floorHeight + this.Roles[0].height &&
-                nextX + this.Roles[0].width > floor.x &&
-                nextX < floor.x + floor.width
-            ) {
-                // return isRight * (floor.x - this.Roles[0].width) + (1 - isRight) * (floor.x + floor.width);
-                // theres sth wrong with that method.
-                return this.Roles[0].x;
-            }
-        }
-        return nextX;
-    }
-
-    private RolesFall() {
-        this.Roles[0].jumpSpeed += this.Roles[0].weight;
-        let nextY: number = this.Roles[0].y + this.Roles[0].jumpSpeed;
-        if (
-            nextY + this.Roles[0].height >=
-            this.Roles[0].ladderY + this.verticalSpacing
-        ) {
-            let isFind: boolean = false;
-            for (const floor of this.floors) {
-                if (
-                    this.Roles[0].x < floor.x + floor.width &&
-                    this.Roles[0].x + this.Roles[0].width > floor.x &&
-                    this.Roles[0].footY < floor.y &&
-                    nextY + this.Roles[0].height >= floor.y
-                ) {
-                    nextY = floor.y - this.Roles[0].height;
-                    isFind = true;
-                    this.Roles[0].floor = floor;
-                    this.Roles[0].ladderY = floor.y;
-                    clearInterval(this.Roles[0].jumpTimer);
-                    this.Roles[0].jumpTimer = undefined;
-                    break;
-                }
-            }
-            if (!isFind) {
-                this.Roles[0].ladderY += this.verticalSpacing;
-            }
-        }
-        this.Roles[0].y = nextY;
-    }
-
-    private RolesJump() {
+    private RolesVerticalMove() {
         let nextY: number = this.Roles[0].y - this.Roles[0].jumpSpeed;
         this.Roles[0].jumpSpeed -= this.Roles[0].weight;
         if (this.Roles[0].jumpSpeed > 0) {
@@ -266,40 +221,37 @@ class Main {
                         break;
                     }
                 }
-            }
-            this.Roles[0].y = nextY;
-        } else if (this.Roles[0].jumpSpeed <= 0) {
-        /*
-        update ladderY
-        */
-            if (this.Roles[0].jumpSpeed === 0) {
-                if (this.Roles[0].ladderY - this.Roles[0].footY > this.verticalSpacing) {
+                if (!isFind) {
                     this.Roles[0].ladderY -= this.verticalSpacing;
                 }
             }
-        /*
-        hit
-        */
+            this.Roles[0].y = nextY;
+        } else if (this.Roles[0].jumpSpeed <= 0) {
             if (nextY + this.Roles[0].height >= this.Roles[0].ladderY) {
-            let isFind: boolean = false;
-            for (const floor of this.floors) {
-                if (this.Roles[0].x + this.Roles[0].width >= floor.x &&
-                    this.Roles[0].x <= floor.x + floor.width &&
-                    floor.y >= this.Roles[0].ladderY &&
-                    nextY + this.Roles[0].height >= floor.y) {
-                        isFind = true;
+                let isFind: boolean = false;
+                for (const floor of this.floors) {
+                    if (
+                        this.Roles[0].x < floor.x + floor.width &&
+                        this.Roles[0].x + this.Roles[0].width > floor.x &&
+                        this.Roles[0].footY < floor.y &&
+                        nextY + this.Roles[0].height >= floor.y
+                    ) {
                         nextY = floor.y - this.Roles[0].height;
+                        isFind = true;
                         this.Roles[0].floor = floor;
                         this.Roles[0].ladderY = floor.y;
-                        clearInterval(this.Roles[0].jumpTimer);
-                        this.Roles[0].jumpTimer = undefined;
+                        clearInterval(this.Roles[0].verticalTimer);
+                        this.Roles[0].verticalTimer = undefined;
                         break;
+                    }
+                }
+                if (!isFind) {
+                    this.Roles[0].ladderY += this.verticalSpacing;
                 }
             }
-        }
             this.Roles[0].y = nextY;
+        }
     }
-}
 }
 
 window.onload = () => {

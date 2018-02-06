@@ -13,7 +13,7 @@ export default class Role {
     public leftTimer: number; // "left" status recorder
     public rightTimer: number; // "right" status recorder
     public squatTrans: boolean; // "squat" status recorder
-    public jumpTimer: number; // jump && fall timer
+    public verticalTimer: number; // jump && fall timer
     public weapon: number; // weapon type
     public floor: Floor; // the floor underfoot
     public ladderY: number; // the ladder be located
@@ -43,7 +43,7 @@ export default class Role {
         this.downTimer = undefined;
         this.leftTimer = undefined;
         this.rightTimer = undefined;
-        this.jumpTimer = undefined;
+        this.verticalTimer = undefined;
         this.squatTrans = false;
         this.element = new Rectangle(
             this.selfX,
