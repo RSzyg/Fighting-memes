@@ -1,3 +1,4 @@
+import Circle from "./Circle";
 import Floor from "./Floor";
 import Role from "./Role";
 import Stage from "./Stage";
@@ -27,6 +28,9 @@ class Main {
      * basic initial
      */
     public createScene() {
+        const circle: Circle = new Circle(0, 0, 100);
+        this.stage.add(circle);
+        circle.fill = "red";
         this.stage.color = "#e8e8e8";
         this.stage.width = this.stageWidth;
         this.stage.height = this.stageHeight;
