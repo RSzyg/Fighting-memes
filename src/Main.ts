@@ -3,15 +3,15 @@ import Role from "./Role";
 import Stage from "./Stage";
 
 class Main {
-    private stage: Stage;
-    private floors: Floor[];
-    private stageWidth: number;
-    private stageHeight: number;
-    private verticalSpacing: number;
-    private floorHeight: number;
-    private interval: number;
-    private Roles: Role[];
-    private transferCoef: number;
+    private stage: Stage; // the svg element
+    private floors: Floor[]; // all floors
+    private stageWidth: number; // svg width
+    private stageHeight: number; // svg height
+    private verticalSpacing: number; // the vertical spacing of the floors
+    private floorHeight: number; // the height floors
+    private interval: number; // time interval of setInterval
+    private Roles: Role[]; // all roles
+    private transferCoef: number; // roles' transfer coefficient when squating
     constructor() {
         this.stage = new Stage();
         this.floors = [];
@@ -23,6 +23,9 @@ class Main {
         this.interval = 17;
         this.transferCoef = 16;
     }
+    /**
+     * basic initial
+     */
     public createScene() {
         this.stage.color = "#e8e8e8";
         this.stage.width = this.stageWidth;
@@ -58,21 +61,24 @@ class Main {
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
     }
-
+    /**
+     * create a role
+     * @param groundY y coordinate of the first floor
+     */
     private createRole(groundY: number) {
         const random = Math.floor(Math.random() * (this.floors.length - 1));
         const bornFloor: Floor = this.floors[random];
         this.Roles[0] = new Role(bornFloor, 0, "#66ccff");
         this.stage.add(this.Roles[0].element);
     }
-/**
- * player's action
- * keycode 39 is for "→"/moveright
- * keycode 37 is for "←"/moveleft
- * keycode 40 is for "↓"/movedown
- * keycode 38 is for "↑"/jump
- * keycode 88 is for "x"/attack
- */
+    /**
+     * handle the keyboard event
+     * keycode 39 is for "→"/moveright
+     * keycode 37 is for "←"/moveleft
+     * keycode 40 is for "↓"/movedown
+     * keycode 38 is for "↑"/jump
+     * keycode 88 is for "x"/attack
+     */
     private keyboardController(e: KeyboardEvent) {
         if (e.type === "keydown") {
             switch (e.keyCode) {
@@ -144,7 +150,9 @@ class Main {
             }
         }
     }
-
+    /**
+     * handle roles moving
+     */
     private RolesMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
             let nextX: number = this.Roles[0].x + this.Roles[0].moveSpeed;
