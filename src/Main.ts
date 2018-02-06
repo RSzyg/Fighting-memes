@@ -72,7 +72,7 @@ class Main {
         this.stage.add(this.Roles[0].element);
     }
     /**
-     * handle the keyboard event
+     * handling the keyboard event
      * keycode 39 is for "→"/moveright
      * keycode 37 is for "←"/moveleft
      * keycode 40 is for "↓"/movedown
@@ -151,7 +151,7 @@ class Main {
         }
     }
     /**
-     * handle roles moving
+     * handling movement action of roles
      */
     private RolesMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
@@ -198,11 +198,14 @@ class Main {
             );
         }
     }
-
+    /**
+     * handling jumping and falling action of roles
+     */
     private RolesVerticalMove() {
         let nextY: number = this.Roles[0].y - this.Roles[0].jumpSpeed;
         this.Roles[0].jumpSpeed -= this.Roles[0].weight;
         if (this.Roles[0].jumpSpeed > 0) {
+            // rise up part
             if (
                 nextY <=
                 this.Roles[0].ladderY - this.verticalSpacing + this.floorHeight
@@ -222,11 +225,13 @@ class Main {
                     }
                 }
                 if (!isFind) {
+                    // update ladderY
                     this.Roles[0].ladderY -= this.verticalSpacing;
                 }
             }
             this.Roles[0].y = nextY;
         } else if (this.Roles[0].jumpSpeed <= 0) {
+            // fall down part
             if (nextY + this.Roles[0].height >= this.Roles[0].ladderY) {
                 let isFind: boolean = false;
                 for (const floor of this.floors) {
@@ -246,6 +251,7 @@ class Main {
                     }
                 }
                 if (!isFind) {
+                    // update ladderY
                     this.Roles[0].ladderY += this.verticalSpacing;
                 }
             }
