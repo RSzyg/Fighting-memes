@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --watch",
-    "lint": "tslint ./src/Main.ts"
+    "server-start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +26,10 @@
     "tslint-loader": "^3.5.3",
     "typescript": "^2.7.1",
     "webpack": "^3.10.0"
+  },
+  "dependencies": {
+    "@types/socket.io-client": "^1.4.32",
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
   }
 }
