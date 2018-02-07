@@ -13,6 +13,7 @@ class Main {
     private interval: number; // time interval of setInterval
     private Roles: Role[]; // all roles
     private transferCoef: number; // roles' transfer coefficient when squating
+    private socket: SocketIOClient.Socket;
     constructor() {
         this.stage = new Stage();
         this.floors = [];
@@ -28,6 +29,12 @@ class Main {
      * basic initial
      */
     public createScene() {
+        this.socket = io.connect("http://localhost:" + 2333);
+        this.socket.on("news", (data: string) => {
+            console.log(JSON.parse(data));
+            this.socket.emit("my other event", JSON.stringify({ my: "data" }));
+        });
+
         const circle: Circle = new Circle(100, 0, 100);
         this.stage.add(circle);
         circle.fill = "red";
