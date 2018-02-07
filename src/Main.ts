@@ -203,20 +203,6 @@ class Main {
         return nextX;
     }
 
-    private RolesWillImpactWall(nextX: number, isRight: number) {
-        for (const floor of this.floors) {
-            if (
-                this.Roles[0].y > floor.y - this.Roles[0].height &&
-                this.Roles[0].footY < floor.y + this.floorHeight + this.Roles[0].height &&
-                nextX + this.Roles[0].width > floor.x &&
-                nextX < floor.x + floor.width
-            ) {
-                return isRight * (floor.x - this.Roles[0].width) + (1 - isRight) * (floor.x + floor.width);
-            }
-        }
-        return nextX;
-    }
-
     private RolesWillFall() {
         if (
             !this.Roles[0].verticalTimer &&
