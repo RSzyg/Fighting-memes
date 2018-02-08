@@ -8,23 +8,24 @@ class Main {
     private floors: Floor[]; // all floors
     private stageWidth: number; // svg width
     private stageHeight: number; // svg height
-    private verticalSpacing: number; // the vertical spacing of the floors
-    private floorHeight: number; // the height floors
     private interval: number; // time interval of setInterval
     private Roles: Role[]; // all roles
     private transferCoef: number; // roles' transfer coefficient when squating
-    private blockThickness: number;
+    // private verticalSpacing: number; // the vertical spacing of the floors
+    // private floorHeight: number; // the height floors
+    private blockThickness: number; // the height floors = the vertical spacing of the floors
     private map: string[];
+    private socket: SocketIOClient.Socket;
     constructor() {
         this.stage = new Stage();
         this.floors = [];
         this.Roles = [];
         this.stageWidth = 1920;
         this.stageHeight = 1080;
-        // this.verticalSpacing = 250;
-        // this.floorHeight = 35;
         this.interval = 17;
         this.transferCoef = 16;
+        // this.verticalSpacing = 250;
+        // this.floorHeight = 35;
         this.blockThickness = 60;
         this.map = [
             "                                ",
@@ -44,51 +45,23 @@ class Main {
             "   XxxxxxxxxY      XxxxxxxxxY   ",
             "                                ",
             "                                ",
-            "XxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxY",
+            "XxxxxY   XxxxxxxxxxxxY   XxxxxY",
         ];
     }
     /**
      * basic initial
      */
-    // public createScene() {
-    //     const circle: Circle = new Circle(100, 100, 100);
-    //     this.stage.add(circle);
-    //     circle.fill = "red";
-    //     this.stage.color = "#e8e8e8";
-    //     this.stage.width = this.stageWidth;
-    //     this.stage.height = this.stageHeight;
-    //     const groundY = this.stageHeight - this.floorHeight;
-    //     let y: number = groundY - this.verticalSpacing;
-    //     for (; y > 0; y -= this.verticalSpacing) {
-    //         let rs: number = Math.floor(Math.random() * 200);
-    //         while (rs < this.stageWidth) {
-    //             let re = rs + Math.floor(Math.random() * 800) + 300;
-    //             if (re > this.stageWidth) {
-    //                 re = this.stageWidth;
-    //                 if (re - rs < 200) {
-    //                     rs = re;
-    //                     continue;
-    //                 }
-    //             }
-    //             const floor: Floor = new Floor(rs, y, re - rs, this.floorHeight, "basic");
-    //             floor.setFillColor("#ffffff");
-    //             floor.setStroke("#000000", 2);
-    //             this.floors.push(floor);
-    //             this.stage.add(floor.element);
-    //             rs = re + Math.floor(Math.random() * 300) + 200;
-    //         }
-    //     }
-    //     const ground: Floor = new Floor(0, groundY, this.stageWidth, this.floorHeight, "basic");
-    //     ground.setFillColor("#ffffff");
-    //     ground.setStroke("#000000", 2);
-    //     this.floors.push(ground);
-    //     this.stage.add(ground.element);
-
-    //     this.createRole(groundY);
-    //     document.addEventListener("keydown", (e) => this.keyboardController(e));
-    //     document.addEventListener("keyup", (e) => this.keyboardController(e));
-    // }
     public createScene() {
+        this.socket = io.connect("http://localhost:" + 2333);
+        this.socket.on("news", (data: string) => {
+            console.log(JSON.parse(data));
+            this.socket.emit("my other event", JSON.stringify({ my: "data" }));
+        });
+
+        const circle: Circle = new Circle(100, 0, 100);
+        this.stage.add(circle);
+        circle.fill = "red";
+
         this.stage.color = "#e8e8e8";
         this.stage.width = this.stageWidth;
         this.stage.height = this.stageHeight;
@@ -107,9 +80,36 @@ class Main {
             }
         }
         this.createRole(this.map.length * this.blockThickness - this.blockThickness);
+        // const groundY = this.stageHeight - this.floorHeight;
+        // let y: number = groundY - this.verticalSpacing;
+        // for (; y > 0; y -= this.verticalSpacing) {
+        //     let rs: number = Math.floor(Math.random() * 200);
+        //     while (rs < this.stageWidth) {
+        //         let re = rs + Math.floor(Math.random() * 800) + 300;
+        //         if (re > this.stageWidth) {
+        //             re = this.stageWidth;
+        //             if (re - rs < 200) {
+        //                 rs = re;
+        //                 continue;
+        //             }
+        //         }
+        //         const floor: Floor = new Floor(rs, y, re - rs, this.floorHeight, "basic");
+        //         floor.setFillColor("#ffffff");
+        //         floor.setStroke("#000000", 2);
+        //         this.floors.push(floor);
+        //         this.stage.add(floor.element);
+        //         rs = re + Math.floor(Math.random() * 300) + 200;
+        //     }
+        // }
+        // const ground: Floor = new Floor(0, groundY, this.stageWidth, this.floorHeight, "basic");
+        // ground.setFillColor("#ffffff");
+        // ground.setStroke("#000000", 2);
+        // this.floors.push(ground);
+        // this.stage.add(ground.element);
+
+        // this.createRole(groundY);
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
-        console.log("create", this.Roles[0].ladderY);
     }
     /**
      * create a role
@@ -243,7 +243,6 @@ class Main {
         ) {
             this.Roles[0].jumpSpeed = 0;
             this.Roles[0].ladderY += this.blockThickness;
-            // this.Roles[0].ladderY += this.verticalSpacing;
             this.Roles[0].verticalTimer = setInterval(
                 () => this.RolesVerticalMove(),
                 this.interval,
@@ -255,31 +254,33 @@ class Main {
             if (
                 this.Roles[0].y > floor.y - this.Roles[0].height &&
                 this.Roles[0].footY < floor.y + this.blockThickness + this.Roles[0].height &&
-                // this.Roles[0].footY < floor.y + this.floorHeight + this.Roles[0].height &&
                 nextX + this.Roles[0].width > floor.x &&
-                nextX < floor.x + floor.width
+                nextX < floor.x + floor.width &&
+                ((this.Roles[0].x >= floor.x + floor.width) ||
+                    (this.Roles[0].x + this.Roles[0].width <= floor.x))
             ) {
                 return isRight * (floor.x - this.Roles[0].width) + (1 - isRight) * (floor.x + floor.width);
             }
         }
         return nextX;
     }
-
     /**
      * handling jumping and falling action of roles
      */
     private RolesVerticalMove() {
         let nextY: number = this.Roles[0].y - this.Roles[0].jumpSpeed;
+        let cross: boolean = false;
+        if (nextY !== (nextY + this.stageHeight) % this.stageHeight ||
+            nextY + this.Roles[0].height !==
+                (nextY + this.stageHeight + this.Roles[0].height) % this.stageHeight
+    ) {
+            nextY = (nextY + this.stageHeight) % this.stageHeight;
+            cross = true;
+        }
         this.Roles[0].jumpSpeed -= this.Roles[0].weight;
-        console.log("moveReady", this.Roles[0].ladderY);
         if (this.Roles[0].jumpSpeed > 0) {
             // rise up part
-            console.log("jump", this.Roles[0].ladderY);
-            if (
-                nextY <=
-                this.Roles[0].ladderY
-                // this.Roles[0].ladderY - this.verticalSpacing + this.floorHeight
-            ) {
+            {
                 let isFind: boolean = false;
                 for (const floor of this.floors) {
                     if (
@@ -297,10 +298,12 @@ class Main {
                 if (!isFind) {
                     // update ladderY
                     this.Roles[0].ladderY -= this.blockThickness;
-                    // this.Roles[0].ladderY -= this.verticalSpacing;
                 }
             }
             this.Roles[0].y = nextY;
+            if (cross === true) {
+                this.Roles[0].ladderY = this.stageHeight - this.blockThickness;
+            }
         } else if (this.Roles[0].jumpSpeed <= 0) {
             // fall down part
             if (nextY + this.Roles[0].height >= this.Roles[0].ladderY) {
@@ -327,6 +330,9 @@ class Main {
                 }
             }
             this.Roles[0].y = nextY;
+            if (cross === true) {
+                this.Roles[0].ladderY = this.blockThickness;
+            }
         }
     }
 }
