@@ -44,4 +44,14 @@ io.on('connection', (socket) => {
         socket.emit('createRole', JSON.stringify(data));
         socket.broadcast.emit('addRole', JSON.stringify(newRole));
     });
+    
+    socket.on('disconnect', () => {
+        if (newRole) {
+            var data = {
+                id: socket.id
+            }
+            Roles.splice(Roles.indexOf(newRole), 1);
+            socket.broadcast.emit('player left', JSON.stringify(data));
+        }
+    });
 });

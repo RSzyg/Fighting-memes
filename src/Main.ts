@@ -77,13 +77,22 @@ class Main {
                 if (i === allRoles.length - 1) {
                     this.selfId = allRoles[i].id;
                 }
-                console.log(allRoles.length - 1);
                 this.createRole(allRoles[i]);
             }
         });
 
         this.socket.on("addRole", (newRole: string) => {
             this.createRole(JSON.parse(newRole));
+        });
+
+        this.socket.on("disconnect", () => {
+            console.log("you have been diconnect");
+        });
+
+        this.socket.on("player left", (data: string) => {
+            const id = JSON.parse(data).id;
+            this.stage.removeChild(this.Roles[id].element);
+            delete this.Roles[id];
         });
 
         document.addEventListener("keydown", (e) => this.keyboardController(e));
@@ -94,7 +103,6 @@ class Main {
      * @param role role info
      */
     private createRole(role: {[key: string]: any}) {
-        console.log(role);
         const bornFloor: Floor = this.floors[role.random];
         this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
         this.stage.add(this.Roles[role.id].element);
