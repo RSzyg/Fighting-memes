@@ -11,13 +11,14 @@ class Main {
     private verticalSpacing: number; // the vertical spacing of the floors
     private floorHeight: number; // the height floors
     private interval: number; // time interval of setInterval
-    private Roles: Role[]; // all roles
+    private Roles: {[key: string]: Role}; // all roles
+    private selfId: string;
     private transferCoef: number; // roles' transfer coefficient when squating
     private socket: SocketIOClient.Socket;
     constructor() {
         this.stage = new Stage();
         this.floors = [];
-        this.Roles = [];
+        this.Roles = {};
         this.stageWidth = 1920;
         this.stageHeight = 1080;
         this.verticalSpacing = 250;
@@ -68,19 +69,35 @@ class Main {
         this.floors.push(ground);
         this.stage.add(ground.element);
 
-        this.createRole(groundY);
+        this.socket.emit("loaded");
+
+        this.socket.on("createRole", (data: string) => {
+            const allRoles = JSON.parse(data).allRoles;
+            for (let i = allRoles.length - 1; i >= 0; i--) {
+                if (i === allRoles.length - 1) {
+                    this.selfId = allRoles[i].id;
+                }
+                console.log(allRoles.length - 1);
+                this.createRole(allRoles[i]);
+            }
+        });
+
+        this.socket.on("addRole", (newRole: string) => {
+            this.createRole(JSON.parse(newRole));
+        });
+
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
     }
     /**
      * create a role
-     * @param groundY y coordinate of the first floor
+     * @param role role info
      */
-    private createRole(groundY: number) {
-        const random = Math.floor(Math.random() * (this.floors.length - 1));
-        const bornFloor: Floor = this.floors[random];
-        this.Roles[0] = new Role(bornFloor, 0, "#66ccff");
-        this.stage.add(this.Roles[0].element);
+    private createRole(role: {[key: string]: any}) {
+        console.log(role);
+        const bornFloor: Floor = this.floors[role.random];
+        this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
+        this.stage.add(this.Roles[role.id].element);
     }
     /**
      * handling the keyboard event

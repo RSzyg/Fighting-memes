@@ -15,13 +15,33 @@ app.get('/', (req, res) => {
 // Routing
 app.use(express.static(__dirname + '/dist'));
 
-// Say hello
+// main
+var Roles = [];
+
 io.on('connection', (socket) => {
+    var newRole = undefined;
+
     var Hello = {
         hello: "world"
     }
     socket.emit('news', JSON.stringify(Hello));
     socket.on('my other event', (data) => {
-    console.log(JSON.parse(data));
-  });
+        console.log(JSON.parse(data));
+    });
+
+    socket.on('loaded', () => {
+        if (newRole) return;
+        newRole = {
+            id: socket.id,
+            random: Math.floor(Math.random() * 6),
+            type: 0,
+            color: '#66ccff'
+        }
+        Roles.push(newRole);
+        var data = {
+            allRoles: Roles
+        }
+        socket.emit('createRole', JSON.stringify(data));
+        socket.broadcast.emit('addRole', JSON.stringify(newRole));
+    });
 });
