@@ -17,6 +17,13 @@ export default class Stage {
     }
 
     /**
+     * removeChild
+     */
+    public removeChild(shape: Shape) {
+        this.element.removeChild(shape.element);
+    }
+
+    /**
      * this.width get & set
      */
     public get width(): number {
