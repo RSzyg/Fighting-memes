@@ -48,6 +48,10 @@ io.on('connection', (socket) => {
         ++playerNum;
         console.log('There are ' + playerNum + ' players');
     });
+
+    socket.on('to jump', (data) => {
+        socket.broadcast.emit('jump', data);
+    })
     
     socket.on('disconnect', () => {
         if (newRole) {
