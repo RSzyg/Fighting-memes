@@ -2,7 +2,6 @@ import Floor from "./Floor";
 import Rectangle from "./Rectangle";
 
 export default class Role {
-    public id: number; // unique identification
     public element: Rectangle; // main part
     public power: number; // initial velocity
     public weight: number; // acceleration
