@@ -362,7 +362,18 @@ class Main {
         }
         let nextY: number = this.Roles[id].y
         - this.Roles[id].jumpSpeed;
+        let cross: boolean = false;
         this.Roles[id].jumpSpeed -= this.Roles[id].weight;
+        if (nextY !==
+            (nextY + this.stageHeight)
+            % this.stageHeight ||
+            nextY + this.Roles[0].height !==
+            (nextY + this.stageHeight + this.Roles[id].height)
+            % this.stageHeight
+        ) {
+            nextY = (nextY + this.stageHeight) % this.stageHeight;
+            cross = true;
+        }
         if (this.Roles[id].jumpSpeed > 0) {
             // rise up part
             if (nextY <= this.Roles[id].ladderY - 2 * this.blockThickness) {
@@ -389,6 +400,9 @@ class Main {
                 }
             }
             this.Roles[id].y = nextY;
+            if (cross === true) {
+                this.Roles[0].ladderY = this.stageHeight - this.blockThickness;
+            }
         } else if (this.Roles[id].jumpSpeed <= 0) {
             // fall down part
             if (
@@ -421,6 +435,9 @@ class Main {
                 }
             }
             this.Roles[id].y = nextY;
+            if (cross === true) {
+                this.Roles[id].ladderY = this.blockThickness;
+            }
         }
     }
 }
