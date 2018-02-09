@@ -268,14 +268,14 @@ class Main {
             if (isRight === true) {
                 let nextX: number = this.Roles[id].x + this.Roles[id].moveSpeed;
                 nextX = this.RolesWillImpactWall(nextX, 1, id);
-                this.Roles[this.selfId].x = nextX % this.stageWidth;
-                this.RolesWillFall(this.selfId);
+                this.Roles[id].x = nextX % this.stageWidth;
+                this.RolesWillFall(id);
             }
             if (isRight === false) {
-                let nextX: number = this.Roles[this.selfId].x - this.Roles[this.selfId].moveSpeed;
+                let nextX: number = this.Roles[id].x - this.Roles[id].moveSpeed;
                 nextX = this.RolesWillImpactWall(nextX, 0, id);
-                this.Roles[this.selfId].x = (nextX + this.stageWidth) % this.stageWidth;
-                this.RolesWillFall(this.selfId);
+                this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
+                this.RolesWillFall(id);
             }
         }
     }
@@ -337,7 +337,7 @@ class Main {
             this.Roles[id].jumpSpeed = 0;
             this.Roles[id].ladderY += this.blockThickness;
             this.Roles[id].verticalTimer = setInterval(
-                () => this.RolesVerticalMove(this.selfId),
+                () => this.RolesVerticalMove(id),
                 this.interval,
             );
         }
