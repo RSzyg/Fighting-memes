@@ -51,7 +51,15 @@ io.on('connection', (socket) => {
 
     socket.on('to jump', (data) => {
         socket.broadcast.emit('jump', data);
-    })
+    });
+
+    socket.on('to squat', (data) => {
+        socket.broadcast.emit('squat', data);
+    });
+
+    socket.on('to stand', (data) => {
+        socket.broadcast.emit('stand', data);
+    });
     
     socket.on('disconnect', () => {
         if (newRole) {

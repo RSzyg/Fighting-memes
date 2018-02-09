@@ -100,6 +100,14 @@ class Main {
             this.jumpPreTreat(JSON.parse(data).id);
         });
 
+        this.socket.on("squat", (data: string) => {
+            this.squatTreat(JSON.parse(data).id, true);
+        });
+
+        this.socket.on("stand", (data: string) => {
+            this.squatTreat(JSON.parse(data).id, false);
+        });
+
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
     }
@@ -141,9 +149,8 @@ class Main {
                     break;
                 case 40:
                     if (!this.Roles[this.selfId].squatTrans) {
-                        this.Roles[this.selfId].height -= this.transferCoef;
-                        this.Roles[this.selfId].width += this.transferCoef;
-                        this.Roles[this.selfId].squatTrans = true;
+                        this.socket.emit("to squat", JSON.stringify({ id: this.selfId }));
+                        this.squatTreat(this.selfId, true);
                     }
                     break;
                 case 38:
@@ -179,9 +186,8 @@ class Main {
                     this.Roles[0].leftTimer = undefined;
                     break;
                 case 40:
-                    this.Roles[this.selfId].height += this.transferCoef;
-                    this.Roles[this.selfId].width -= this.transferCoef;
-                    this.Roles[this.selfId].squatTrans = false;
+                    this.socket.emit("to stand", JSON.stringify({ id: this.selfId }));
+                    this.squatTreat(this.selfId, false);
                     break;
                 case 38:
                     clearInterval(this.Roles[this.selfId].upTimer);
@@ -235,6 +241,24 @@ class Main {
                 () => this.RolesVerticalMove(id),
                 this.interval,
             );
+        }
+    }
+    /**
+     * squat down and body transfer
+     * @param id id of players' role
+     * @param isDown squat down or stand up
+     */
+    private squatTreat(id: string, isDown: boolean) {
+        if (this.Roles[id]) {
+            if (isDown) {
+                this.Roles[id].height -= this.transferCoef;
+                this.Roles[id].width += this.transferCoef;
+                this.Roles[id].squatTrans = true;
+            } else {
+                this.Roles[id].height += this.transferCoef;
+                this.Roles[id].width -= this.transferCoef;
+                this.Roles[id].squatTrans = false;
+            }
         }
     }
 
