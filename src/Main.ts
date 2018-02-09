@@ -136,16 +136,16 @@ class Main {
         if (e.type === "keydown") {
             switch (e.keyCode) {
                 case 39:
-                    if (!this.Roles[0].rightTimer) {
-                        this.Roles[0].rightTimer = setInterval(
+                    if (!this.Roles[this.selfId].rightTimer) {
+                        this.Roles[this.selfId].rightTimer = setInterval(
                             () => this.RolesMove(e),
                             this.interval,
                         );
                     }
                     break;
                 case 37:
-                    if (!this.Roles[0].leftTimer) {
-                        this.Roles[0].leftTimer = setInterval(
+                    if (!this.Roles[this.selfId].leftTimer) {
+                        this.Roles[this.selfId].leftTimer = setInterval(
                             () => this.RolesMove(e),
                             this.interval,
                         );
@@ -182,12 +182,12 @@ class Main {
         } else if (e.type === "keyup") {
             switch (e.keyCode) {
                 case 39:
-                    clearInterval(this.Roles[0].rightTimer);
-                    this.Roles[0].rightTimer = undefined;
+                    clearInterval(this.Roles[this.selfId].rightTimer);
+                    this.Roles[this.selfId].rightTimer = undefined;
                     break;
                 case 37:
-                    clearInterval(this.Roles[0].leftTimer);
-                    this.Roles[0].leftTimer = undefined;
+                    clearInterval(this.Roles[this.selfId].leftTimer);
+                    this.Roles[this.selfId].leftTimer = undefined;
                     break;
                 case 40:
                     this.socket.emit("to stand", JSON.stringify({ id: this.selfId }));
@@ -209,15 +209,11 @@ class Main {
      */
     private RolesMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
-            let nextX: number = this.Roles[0].x + this.Roles[0].moveSpeed;
-            nextX = this.RolesWillImpactWall(nextX, 1);
-            this.Roles[0].x = nextX % this.stageWidth;
-            this.RolesWillFall();
+            this.socket.emit("to move", JSON.stringify({ id: this.selfId }));
+            this.movePreTreat(this.selfId, true);
         } else if (e.keyCode === 37) {
-            let nextX: number = this.Roles[0].x - this.Roles[0].moveSpeed;
-            nextX = this.RolesWillImpactWall(nextX, 0);
-            this.Roles[0].x = (nextX + this.stageWidth) % this.stageWidth;
-            this.RolesWillFall();
+            this.socket.emit("to move", JSON.stringify({ id: this.selfId }));
+            this.movePreTreat(this.selfId, false);
         } else if (e.keyCode === 38) {
             if (this.Roles[this.selfId].verticalTimer === undefined) {
                 this.socket.emit("to jump", JSON.stringify({ id: this.selfId }));
@@ -241,6 +237,23 @@ class Main {
                 () => this.RolesVerticalMove(id),
                 this.interval,
             );
+        }
+    }
+
+    private movePreTreat(id: string, isRight: boolean) {
+        if (this.Roles[id]) {
+            if (isRight === true) {
+                let nextX: number = this.Roles[id].x + this.Roles[id].moveSpeed;
+                nextX = this.RolesWillImpactWall(nextX, 1, id);
+                this.Roles[this.selfId].x = nextX % this.stageWidth;
+                this.RolesWillFall(this.selfId);
+            }
+            if (isRight === false) {
+                let nextX: number = this.Roles[this.selfId].x - this.Roles[this.selfId].moveSpeed;
+                nextX = this.RolesWillImpactWall(nextX, 0, id);
+                this.Roles[this.selfId].x = (nextX + this.stageWidth) % this.stageWidth;
+                this.RolesWillFall(this.selfId);
+            }
         }
     }
     /**
@@ -276,31 +289,31 @@ class Main {
         }
     }
 
-    private RolesWillImpactWall(nextX: number, isRight: number) {
+    private RolesWillImpactWall(nextX: number, isRight: number, id: string) {
         for (const floor of this.floors) {
             if (
-                this.Roles[0].footY > floor.y &&
-                this.Roles[0].y < floor.y + this.floorHeight &&
-                nextX + this.Roles[0].width > floor.x &&
+                this.Roles[id].footY > floor.y &&
+                this.Roles[id].y < floor.y + this.floorHeight &&
+                nextX + this.Roles[id].width > floor.x &&
                 nextX < floor.x + floor.width &&
-                ((this.Roles[0].x >= floor.x + floor.width) ||
-                    (this.Roles[0].x + this.Roles[0].width <= floor.x))
+                ((this.Roles[id].x >= floor.x + floor.width) ||
+                    (this.Roles[id].x + this.Roles[id].width <= floor.x))
             ) {
-                return isRight * (floor.x - this.Roles[0].width) + (1 - isRight) * (floor.x + floor.width);
+                return isRight * (floor.x - this.Roles[id].width) + (1 - isRight) * (floor.x + floor.width);
             }
         }
         return nextX;
     }
 
-    private RolesWillFall() {
+    private RolesWillFall(id: string) {
         if (
-            !this.Roles[0].verticalTimer &&
-            (this.Roles[0].x > this.Roles[0].floor.x + this.Roles[0].floor.width ||
-                this.Roles[0].x + this.Roles[0].width < this.Roles[0].floor.x)
+            !this.Roles[id].verticalTimer &&
+            (this.Roles[id].x > this.Roles[id].floor.x + this.Roles[id].floor.width ||
+                this.Roles[id].x + this.Roles[id].width < this.Roles[id].floor.x)
         ) {
-            this.Roles[0].jumpSpeed = 0;
-            this.Roles[0].ladderY += this.verticalSpacing;
-            this.Roles[0].verticalTimer = setInterval(
+            this.Roles[id].jumpSpeed = 0;
+            this.Roles[id].ladderY += this.verticalSpacing;
+            this.Roles[id].verticalTimer = setInterval(
                 () => this.RolesVerticalMove(this.selfId),
                 this.interval,
             );
