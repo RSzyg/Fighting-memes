@@ -96,6 +96,10 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('fall', data);
     });
     
+    socket.on('to move', (data) => {
+        socket.broadcast.emit('move', data);
+    });
+
     socket.on('disconnect', () => {
         if (newRole) {
             var data = {
