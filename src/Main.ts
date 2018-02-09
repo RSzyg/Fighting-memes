@@ -23,7 +23,7 @@ class Main {
         this.map = [];
         // this.stageWidth = 1920;
         // this.stageHeight = 1080;
-        // this.verticalSpacing = 250;
+        // this.blockThickness = 250;
         // this.floorHeight = 35;
         // this.interval = 17;
         // this.transferCoef = 16;
@@ -292,7 +292,7 @@ class Main {
     private fallPreTreat(id: string) {
         if (this.Roles[id]) {
             this.Roles[id].jumpSpeed = 0;
-            this.Roles[id].ladderY += this.verticalSpacing;
+            this.Roles[id].ladderY += this.blockThickness;
             this.Roles[id].verticalTimer = setInterval(
                 () => this.RolesVerticalMove(id),
                 this.interval,
@@ -304,7 +304,7 @@ class Main {
         for (const floor of this.floors) {
             if (
                 this.Roles[id].footY > floor.y &&
-                this.Roles[id].y < floor.y + this.floorHeight &&
+                this.Roles[id].y < floor.y + this.blockThickness &&
                 nextX + this.Roles[id].width > floor.x &&
                 nextX < floor.x + floor.width &&
                 ((this.Roles[id].x >= floor.x + floor.width) ||
@@ -323,7 +323,7 @@ class Main {
                 this.Roles[id].x + this.Roles[id].width < this.Roles[id].floor.x)
         ) {
             this.Roles[id].jumpSpeed = 0;
-            this.Roles[id].ladderY += this.verticalSpacing;
+            this.Roles[id].ladderY += this.blockThickness;
             this.Roles[id].verticalTimer = setInterval(
                 () => this.RolesVerticalMove(this.selfId),
                 this.interval,
@@ -342,12 +342,7 @@ class Main {
         this.Roles[id].jumpSpeed -= this.Roles[id].weight;
         if (this.Roles[id].jumpSpeed > 0) {
             // rise up part
-            if (
-                nextY <=
-                this.Roles[id].ladderY -
-                this.verticalSpacing +
-                this.floorHeight
-            ) {
+            if (nextY <= this.Roles[id].ladderY - 2 * this.blockThickness) {
                 let isFind: boolean = false;
                 for (const floor of this.floors) {
                     if (
@@ -357,17 +352,17 @@ class Main {
                         &&
                         this.Roles[id].y > floor.y
                         &&
-                        nextY <= floor.y + this.floorHeight
+                        nextY <= floor.y + this.blockThickness
                     ) {
                         this.Roles[id].jumpSpeed = 0;
-                        nextY = floor.y + this.floorHeight;
+                        nextY = floor.y + this.blockThickness;
                         isFind = true;
                         break;
                     }
                 }
                 if (!isFind) {
                     // update ladderY
-                    this.Roles[id].ladderY -= this.verticalSpacing;
+                    this.Roles[id].ladderY -= this.blockThickness;
                 }
             }
             this.Roles[id].y = nextY;
@@ -399,7 +394,7 @@ class Main {
                 }
                 if (!isFind) {
                     // update ladderY
-                    this.Roles[id].ladderY += this.verticalSpacing;
+                    this.Roles[id].ladderY += this.blockThickness;
                 }
             }
             this.Roles[id].y = nextY;
