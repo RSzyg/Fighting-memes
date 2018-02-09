@@ -60,17 +60,17 @@ class Main {
                 str1 += " ";
                 str2 += " ";
             }
-            for (; floorStart < strLength; floorStart++) {
+            for (; floorStart < strLength;) {
                 const floorLength = (Math.floor((Math.random()) * 2 + 1)) * (Math.floor(Math.random() * 4) + 4);
                 let extra: string;
                 let posS: number;
                 let posE: number;
                 if (floorLength >= 10) {
-                    if (Math.random() >= 0.3) {
+                    if (Math.random() >= 0.7) {
                         extra = "wall";
                         posS = floorStart + Math.floor(floorLength / 2);
                         posE = posS + 1;
-                    } else if (Math.random() >= 0.3) {
+                    } else if (Math.random() >= 0.7) {
                         extra = "fort";
                         posS = floorStart + Math.floor(floorLength / 3);
                         posE = posS + Math.floor(floorLength / 3);
@@ -81,10 +81,16 @@ class Main {
                 let k: number = floorStart + 1;
                 for (; k < Math.min(floorStart + floorLength, strLength) - 1; k++) {
                     str1 += "x";
-                    if (!extra || (k !== posS && k !== posE)) {
+                    if (!extra) {
                         str2 += " ";
                     } else {
-                        str2 += (k === posS) ? "X" : "Y";
+                        if (k > posS && k < posE) {
+                            str2 += "x";
+                        } else if (k === posS || k === posE) {
+                            str2 += (k === posS) ? "X" : "Y";
+                        } else {
+                            str2 += " ";
+                        }
                     }
                 }
                 str1 += "Y";
@@ -101,9 +107,13 @@ class Main {
                 }
                 map[4 * i + 3] = str1;
                 map[4 * i + 2] = str2;
+                if (extra === "wall") {
+                    map[4 * i + 1] = str2;
+                    map[4 * i] = str2;
+                }
             }
-            return map;
         }
+        return map;
     }
     public createScene() {
         this.socket = io.connect("http://localhost:" + 2333);
@@ -122,14 +132,23 @@ class Main {
         this.map = this.newMap();
         for (let i: number = 0; i < this.map.length; i++) {
             for (let j: number = 0; j < this.map[0].length; j++) {
-                if (this.map[i].charAt(j) === "X") {
+                if (this.map[i][j] === "X") {
                     const x: number = j * this.blockThickness;
                     const y: number = i * this.blockThickness;
                     const floorWidth = this.blockThickness * (this.map[i].indexOf("Y", j + 1) - j + 1);
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
+                    this.floors.push(floor);
+                }
+                if (
+                    this.map[i][j] === "X" ||
+                    this.map[i][j] === "x" ||
+                    this.map[i][j] === "Y"
+                ) {
+                    const x: number = j * this.blockThickness;
+                    const y: number = i * this.blockThickness;
+                    const floor: Floor = new Floor(x, y, this.blockThickness, this.blockThickness, "basic");
                     floor.setFillColor("#ffffff");
                     floor.setStroke("#000000", 2);
-                    this.floors.push(floor);
                     this.stage.add(floor.element);
                 }
             }
