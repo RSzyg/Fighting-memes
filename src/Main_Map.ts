@@ -113,6 +113,7 @@ class Main {
                 }
             }
         }
+        console.log(map);
         return map;
     }
     public createScene() {
