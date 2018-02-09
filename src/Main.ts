@@ -83,6 +83,10 @@ class Main {
             this.jumpPreTreat(JSON.parse(data).id);
         });
 
+        this.socket.on("move", (data: string) => {
+            this.movePreTreat(JSON.parse(data).id, JSON.parse(data).isRight);
+        });
+
         this.socket.on("squat", (data: string) => {
             this.squatTreat(JSON.parse(data).id, true);
         });
@@ -220,10 +224,18 @@ class Main {
      */
     private RolesMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
-            this.socket.emit("to move", JSON.stringify({ id: this.selfId }));
+            const data = {
+                id: this.selfId,
+                isRight: true,
+            };
+            this.socket.emit("to move", JSON.stringify(data));
             this.movePreTreat(this.selfId, true);
         } else if (e.keyCode === 37) {
-            this.socket.emit("to move", JSON.stringify({ id: this.selfId }));
+            const data = {
+                id: this.selfId,
+                isRight: false,
+            };
+            this.socket.emit("to move", JSON.stringify(data));
             this.movePreTreat(this.selfId, false);
         } else if (e.keyCode === 38) {
             if (this.Roles[this.selfId].verticalTimer === undefined) {
