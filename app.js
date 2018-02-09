@@ -22,22 +22,42 @@ var maps = [
     [
         '                                ',
         '                                ',
-        'XxY      XY    XY    XY      XxY',
-        '         XY          XY         ',
-        '         XY          XY         ',
-        '      XxxxxxxxxxxxxxxxxxxY      ',
+        'X#x      XxT~~~~~~~~tXx      X#x',
+        '         Xx          Xx         ',
+        '         Xx          Xx         ',
+        '      X##################x      ',
         '                                ',
         '                                ',
-        '  XxxxxY                XxxxxY  ',
-        '              XxxY              ',
-        '            XxxxxxxY            ',
-        'XxxxY     XxxxxxxxxxxY     XxxxY',
+        '  X####x                X####x  ',
+        '              X##x              ',
+        '            X######x            ',
+        'X###x     X##########x     X###x',
         '                                ',
         '                                ',
-        '   XxxxxxxxxY      XxxxxxxxxY   ',
+        '   X########x      X########x   ',
         '                                ',
         '                                ',
-        'XxxxxY   XxxxxxxxxxxxY   XxxxxxY'
+        'X####x   T~~~~~~~~~~~~t   X####x'
+    ],
+    [
+        'X#x                          X#x',
+        'X#x      XxT~~~~~~~~tXx      X#x',
+        '                                ',
+        '                                ',
+        '      X####T~~~~~~~~t####x      ',
+        '                                ',
+        '                                ',
+        'T~~~~~~t      X##x      T~~~~~~t',
+        '              X##x              ',
+        '              X##x              ',
+        'T~~t     X############x     T~~t',
+        '            X######x            ',
+        'T~~~~t                    T~~~~t',
+        '                                ',
+        'T~~~~~~t      X##x      T~~~~~~t',
+        '               Xx               ',
+        '               Xx               ',
+        'X#xT~~~~~~~~~~tXxT~~~~~~~~~~tX#x'
     ]
 ];
 var rand = Math.floor(Math.random() * maps.length);
@@ -95,7 +115,7 @@ io.on('connection', (socket) => {
     socket.on('to fall', (data) => {
         socket.broadcast.emit('fall', data);
     });
-    
+
     socket.on('to move', (data) => {
         socket.broadcast.emit('move', data);
     });

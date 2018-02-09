@@ -108,22 +108,33 @@ class Main {
     private renderMap() {
         for (let i: number = 0; i < this.map.length; i++) {
             for (let j: number = 0; j < this.map[0].length; j++) {
+                const x: number = j * this.blockThickness;
+                const y: number = i * this.blockThickness;
                 if (this.map[i][j] === "X") {
-                    const x: number = j * this.blockThickness;
-                    const y: number = i * this.blockThickness;
                     const floorWidth = this.blockThickness * (this.map[i].indexOf("Y", j + 1) - j + 1);
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
+                    this.floors.push(floor);
+                } else if (this.map[i][j] === "T") {
+                    const floorWidth = this.blockThickness * (this.map[i].indexOf("P", j + 1) - j + 1);
+                    const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "travesable");
                     this.floors.push(floor);
                 }
                 if (
                     this.map[i][j] === "X" ||
-                    this.map[i][j] === "x" ||
-                    this.map[i][j] === "Y"
+                    this.map[i][j] === "#" ||
+                    this.map[i][j] === "x"
                 ) {
-                    const x: number = j * this.blockThickness;
-                    const y: number = i * this.blockThickness;
                     const floor: Floor = new Floor(x, y, this.blockThickness, this.blockThickness, "basic");
                     floor.setFillColor("#ffffff");
+                    floor.setStroke("#000000", 2);
+                    this.stage.add(floor.element);
+                } else if (
+                    this.map[i][j] === "T" ||
+                    this.map[i][j] === "~" ||
+                    this.map[i][j] === "t"
+                ) {
+                    const floor: Floor = new Floor(x, y, this.blockThickness, this.blockThickness, "travesable");
+                    floor.setFillColor("#42426F");
                     floor.setStroke("#000000", 2);
                     this.stage.add(floor.element);
                 }
