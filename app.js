@@ -18,14 +18,45 @@ app.use(express.static(__dirname + '/dist'));
 // main
 var Roles = [];
 var playerNum = 0;
+var maps = [
+    [
+        '                                ',
+        '                                ',
+        'XxY      XY    XY    XY      XxY',
+        '         XY          XY         ',
+        '         XY          XY         ',
+        '      XxxxxxxxxxxxxxxxxxxY      ',
+        '                                ',
+        '                                ',
+        '  XxxxxY                XxxxxY  ',
+        '              XxxY              ',
+        '            XxxxxxxY            ',
+        'XxxxY     XxxxxxxxxxxY     XxxxY',
+        '                                ',
+        '                                ',
+        '   XxxxxxxxxY      XxxxxxxxxY   ',
+        '                                ',
+        '                                ',
+        'XxxxxY   XxxxxxxxxxxxY   XxxxxxY'
+    ]
+];
+var rand = Math.floor(Math.random() * maps.length);
+
+console.log(maps[rand]);
 
 io.on('connection', (socket) => {
     var newRole = undefined;
-
-    var Hello = {
-        hello: "world"
+    var initData = {
+        stageWidth: 1920,
+        stageHeight: 1080,
+        stageColor: '#e8e8e8',
+        interval: 17,
+        transferCoef: 16,
+        blockThickness: 60,
+        map: maps[rand]
     }
-    socket.emit('news', JSON.stringify(Hello));
+
+    socket.emit('init', JSON.stringify(initData));
     socket.on('my other event', (data) => {
         console.log(JSON.parse(data));
     });

@@ -8,66 +8,49 @@ class Main {
     private floors: Floor[]; // all floors
     private stageWidth: number; // svg width
     private stageHeight: number; // svg height
-    private verticalSpacing: number; // the vertical spacing of the floors
-    private floorHeight: number; // the height floors
+    private stageColor: string; // svg background color
+    private blockThickness: number; // the height floors = the vertical spacing of the floors
     private interval: number; // time interval of setInterval
     private Roles: {[key: string]: Role}; // all roles
     private selfId: string;
     private transferCoef: number; // roles' transfer coefficient when squating
+    private map: string[];
     private socket: SocketIOClient.Socket;
     constructor() {
         this.stage = new Stage();
         this.floors = [];
         this.Roles = {};
-        this.stageWidth = 1920;
-        this.stageHeight = 1080;
-        this.verticalSpacing = 250;
-        this.floorHeight = 35;
-        this.interval = 17;
-        this.transferCoef = 16;
+        this.map = [];
+        // this.stageWidth = 1920;
+        // this.stageHeight = 1080;
+        // this.verticalSpacing = 250;
+        // this.floorHeight = 35;
+        // this.interval = 17;
+        // this.transferCoef = 16;
     }
     /**
      * basic initial
      */
     public createScene() {
         this.socket = io.connect("http://localhost:" + 2333);
-        this.socket.on("news", (data: string) => {
-            console.log(JSON.parse(data));
+
+        this.socket.on("init", (data: string) => {
+            const initData = JSON.parse(data);
+            console.log(initData);
+            this.stageWidth = this.stage.width = initData.stageWidth;
+            this.stageHeight = this.stage.height = initData.stageHeight;
+            this.stageColor = this.stage.color = initData.stageColor;
+            this.interval = initData.interval;
+            this.transferCoef = initData.transferCoef;
+            this.blockThickness = initData.blockThickness;
+            this.map = initData.map;
+            this.renderMap();
             this.socket.emit("my other event", JSON.stringify({ my: "data" }));
         });
 
         const circle: Circle = new Circle(100, 0, 100);
         this.stage.add(circle);
         circle.fill = "red";
-        this.stage.color = "#e8e8e8";
-        this.stage.width = this.stageWidth;
-        this.stage.height = this.stageHeight;
-        const groundY = this.stageHeight - this.floorHeight;
-        let y: number = groundY - this.verticalSpacing;
-        for (; y > 0; y -= this.verticalSpacing) {
-            let rs: number = Math.floor(Math.random() * 200);
-            while (rs < this.stageWidth) {
-                let re = rs + Math.floor(Math.random() * 800) + 300;
-                if (re > this.stageWidth) {
-                    re = this.stageWidth;
-                    if (re - rs < 200) {
-                        rs = re;
-                        continue;
-                    }
-                }
-                const floor: Floor = new Floor(rs, y, re - rs, this.floorHeight, "basic");
-                floor.setFillColor("#ffffff");
-                floor.setStroke("#000000", 2);
-                this.floors.push(floor);
-                this.stage.add(floor.element);
-                rs = re + Math.floor(Math.random() * 300) + 200;
-            }
-        }
-        const ground: Floor = new Floor(0, groundY, this.stageWidth, this.floorHeight, "basic");
-        ground.setFillColor("#ffffff");
-        ground.setStroke("#000000", 2);
-        this.floors.push(ground);
-        this.stage.add(ground.element);
 
         this.socket.emit("loaded");
 
@@ -114,6 +97,34 @@ class Main {
 
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
+    }
+    /**
+     * render the map
+     */
+    private renderMap() {
+        for (let i: number = 0; i < this.map.length; i++) {
+            for (let j: number = 0; j < this.map[0].length; j++) {
+                if (this.map[i][j] === "X") {
+                    const x: number = j * this.blockThickness;
+                    const y: number = i * this.blockThickness;
+                    const floorWidth = this.blockThickness * (this.map[i].indexOf("Y", j + 1) - j + 1);
+                    const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
+                    this.floors.push(floor);
+                }
+                if (
+                    this.map[i][j] === "X" ||
+                    this.map[i][j] === "x" ||
+                    this.map[i][j] === "Y"
+                ) {
+                    const x: number = j * this.blockThickness;
+                    const y: number = i * this.blockThickness;
+                    const floor: Floor = new Floor(x, y, this.blockThickness, this.blockThickness, "basic");
+                    floor.setFillColor("#ffffff");
+                    floor.setStroke("#000000", 2);
+                    this.stage.add(floor.element);
+                }
+            }
+        }
     }
     /**
      * create a role
