@@ -21,7 +21,7 @@ class Main {
         this.floors = [];
         this.Roles = [];
         this.stageWidth = 1920;
-        this.stageHeight = 1080;
+        this.stageHeight = 960;
         this.interval = 17;
         this.transferCoef = 16;
         // this.verticalSpacing = 250;
@@ -30,27 +30,92 @@ class Main {
         this.map = [
             "                                ",
             "                                ",
-            "XxY      XY    XY    XY      XxY",
-            "         XY          XY         ",
-            "         XY          XY         ",
-            "      XxxxxxxxxxxxxxxxxxxY      ",
             "                                ",
             "                                ",
-            "  XxxxxY                XxxxxY  ",
-            "              XxxY              ",
-            "            XxxxxxxY            ",
-            "XxxxY     XxxxxxxxxxxY     XxxxY",
             "                                ",
             "                                ",
-            "   XxxxxxxxxY      XxxxxxxxxY   ",
             "                                ",
             "                                ",
-            "XxxxxY   XxxxxxxxxxxxY   XxxxxY",
+            "                                ",
+            "                                ",
+            "                                ",
+            "                                ",
+            "                                ",
+            "                                ",
+            "                                ",
+            "                                ",
         ];
     }
     /**
      * basic initial
      */
+    public newMap() {
+        const map: string[] = this.map;
+        const strLength: number = map[0].length;
+        for (let i: number = 0; i < map.length / 4; i++) {
+            let str1: string = "";
+            let str2: string = "";
+            let floorStart: number = Math.floor(Math.random() * 3);
+            for (let k: number = 0; k < floorStart; k++) {
+                str1 += " ";
+                str2 += " ";
+            }
+            for (; floorStart < strLength;) {
+                const floorLength = (Math.floor((Math.random()) * 2 + 1)) * (Math.floor(Math.random() * 4) + 4);
+                let extra: string;
+                let posS: number;
+                let posE: number;
+                if (floorLength >= 10) {
+                    if (Math.random() >= 0.7) {
+                        extra = "wall";
+                        posS = floorStart + Math.floor(floorLength / 2);
+                        posE = posS + 1;
+                    } else if (Math.random() >= 0.7) {
+                        extra = "fort";
+                        posS = floorStart + Math.floor(floorLength / 3);
+                        posE = posS + Math.floor(floorLength / 3);
+                    }
+                }
+                str1 += "X";
+                str2 += " ";
+                let k: number = floorStart + 1;
+                for (; k < Math.min(floorStart + floorLength, strLength) - 1; k++) {
+                    str1 += "x";
+                    if (!extra) {
+                        str2 += " ";
+                    } else {
+                        if (k > posS && k < posE) {
+                            str2 += "x";
+                        } else if (k === posS || k === posE) {
+                            str2 += (k === posS) ? "X" : "Y";
+                        } else {
+                            str2 += " ";
+                        }
+                    }
+                }
+                str1 += "Y";
+                str2 += " ";
+                floorStart += floorLength + Math.floor(Math.random() * 3) + 1;
+                for (; k < Math.min(floorStart, strLength); k++) {
+                    str1 += " ";
+                    str2 += " ";
+                }
+                if (floorStart >= strLength - 2) {
+                    if (floorStart < strLength) {
+                        break;
+                    }
+                }
+                map[4 * i + 3] = str1;
+                map[4 * i + 2] = str2;
+                if (extra === "wall") {
+                    map[4 * i + 1] = str2;
+                    map[4 * i] = str2;
+                }
+            }
+        }
+        console.log(map);
+        return map;
+    }
     public createScene() {
         this.socket = io.connect("http://localhost:" + 2333);
         this.socket.on("news", (data: string) => {
@@ -65,16 +130,26 @@ class Main {
         this.stage.color = "#e8e8e8";
         this.stage.width = this.stageWidth;
         this.stage.height = this.stageHeight;
+        this.map = this.newMap();
         for (let i: number = 0; i < this.map.length; i++) {
             for (let j: number = 0; j < this.map[0].length; j++) {
-                if (this.map[i].charAt(j) === "X") {
+                if (this.map[i][j] === "X") {
                     const x: number = j * this.blockThickness;
                     const y: number = i * this.blockThickness;
                     const floorWidth = this.blockThickness * (this.map[i].indexOf("Y", j + 1) - j + 1);
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
+                    this.floors.push(floor);
+                }
+                if (
+                    this.map[i][j] === "X" ||
+                    this.map[i][j] === "x" ||
+                    this.map[i][j] === "Y"
+                ) {
+                    const x: number = j * this.blockThickness;
+                    const y: number = i * this.blockThickness;
+                    const floor: Floor = new Floor(x, y, this.blockThickness, this.blockThickness, "basic");
                     floor.setFillColor("#ffffff");
                     floor.setStroke("#000000", 2);
-                    this.floors.push(floor);
                     this.stage.add(floor.element);
                 }
             }
@@ -272,8 +347,8 @@ class Main {
         let cross: boolean = false;
         if (nextY !== (nextY + this.stageHeight) % this.stageHeight ||
             nextY + this.Roles[0].height !==
-                (nextY + this.stageHeight + this.Roles[0].height) % this.stageHeight
-    ) {
+            (nextY + this.stageHeight + this.Roles[0].height) % this.stageHeight
+        ) {
             nextY = (nextY + this.stageHeight) % this.stageHeight;
             cross = true;
         }
