@@ -108,6 +108,10 @@ class Main {
             this.squatTreat(JSON.parse(data).id, false);
         });
 
+        this.socket.on("fall", (data: string) => {
+            this.fallPreTreat(JSON.parse(data).id);
+        });
+
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
     }
@@ -221,12 +225,8 @@ class Main {
             }
         } else if (e.keyCode === 88) {
             if (!this.Roles[this.selfId].verticalTimer) {
-                this.Roles[this.selfId].jumpSpeed = 0;
-                this.Roles[this.selfId].ladderY += this.verticalSpacing;
-                this.Roles[this.selfId].verticalTimer = setInterval(
-                    () => this.RolesVerticalMove(this.selfId),
-                    this.interval,
-                );
+                this.socket.emit("to fall", JSON.stringify({ id: this.selfId }));
+                this.fallPreTreat(this.selfId);
             }
         }
     }
@@ -259,6 +259,20 @@ class Main {
                 this.Roles[id].width -= this.transferCoef;
                 this.Roles[id].squatTrans = false;
             }
+        }
+    }
+    /**
+     * prepare to fall
+     * @param id id of players'role
+     */
+    private fallPreTreat(id: string) {
+        if (this.Roles[id]) {
+            this.Roles[id].jumpSpeed = 0;
+            this.Roles[id].ladderY += this.verticalSpacing;
+            this.Roles[id].verticalTimer = setInterval(
+                () => this.RolesVerticalMove(id),
+                this.interval,
+            );
         }
     }
 

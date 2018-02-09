@@ -60,6 +60,10 @@ io.on('connection', (socket) => {
     socket.on('to stand', (data) => {
         socket.broadcast.emit('stand', data);
     });
+
+    socket.on('to fall', (data) => {
+        socket.broadcast.emit('fall', data);
+    });
     
     socket.on('disconnect', () => {
         if (newRole) {
