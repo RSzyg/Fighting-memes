@@ -1,5 +1,7 @@
 import Floor from "./Floor";
 import Rectangle from "./Rectangle";
+import Weapon from "./Weapon";
+
 
 export default class Role {
     public element: Rectangle; // main part
@@ -13,9 +15,9 @@ export default class Role {
     public rightTimer: number; // "right" status recorder
     public squatTrans: boolean; // "squat" status recorder
     public verticalTimer: number; // jump && fall timer
-    public weapon: number; // weapon type
     public floor: Floor; // the floor underfoot
     public ladderY: number; // the ladder be located
+    public weapon: Weapon; // role's weapon
     private type: number; // role type
     private selfX: number; // x coordinate
     private selfY: number; // y coordinate
@@ -51,6 +53,8 @@ export default class Role {
             this.selfHeight,
         );
         this.element.fill = color;
+        // this.weapon.x = this.x;
+        // this.weapon.y = this.y;
     }
 
     public get x(): number {
@@ -94,4 +98,5 @@ export default class Role {
     public get footY(): number {
         return this.selfY + this.selfHeight;
     }
+    // public addWeapon(newWeapon: Weapon) {}
 }
