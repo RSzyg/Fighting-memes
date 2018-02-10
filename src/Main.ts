@@ -367,7 +367,7 @@ class Main {
         if (nextY !==
             (nextY + this.stageHeight)
             % this.stageHeight ||
-            nextY + this.Roles[0].height !==
+            nextY + this.Roles[id].height !==
             (nextY + this.stageHeight + this.Roles[id].height)
             % this.stageHeight
         ) {
@@ -401,7 +401,7 @@ class Main {
             }
             this.Roles[id].y = nextY;
             if (cross === true) {
-                this.Roles[0].ladderY = this.stageHeight - this.blockThickness;
+                this.Roles[id].ladderY = this.stageHeight - this.blockThickness;
             }
         } else if (this.Roles[id].jumpSpeed <= 0) {
             // fall down part
