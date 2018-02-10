@@ -1,7 +1,7 @@
 import Rectangle from "./Rectangle";
 export default class Floor {
     public element: Rectangle;
-    private type: string;
+    private selfType: string;
     private selfX: number;
     private selfY: number;
     private selfWidth: number;
@@ -16,7 +16,7 @@ export default class Floor {
         this.selfY = y;
         this.selfWidth = width;
         this.selfHeight = height;
-        this.type = type;
+        this.selfType = type;
     }
 
     public get x(): number {
@@ -49,6 +49,14 @@ export default class Floor {
 
     public set height(newHeight: number) {
         this.selfHeight = this.element.height = newHeight;
+    }
+
+    public get type(): string {
+        return this.selfType;
+    }
+
+    public set type(newType: string) {
+        this.selfType = newType;
     }
 
     public setStroke(color: string, width: number) {

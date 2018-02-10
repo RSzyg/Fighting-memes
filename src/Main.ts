@@ -111,7 +111,7 @@ class Main {
                 const x: number = j * this.blockThickness;
                 const y: number = i * this.blockThickness;
                 if (this.map[i][j] === "X") {
-                    const floorWidth = this.blockThickness * (this.map[i].indexOf("T", j + 1) - j + 1);
+                    const floorWidth = this.blockThickness * (this.map[i].indexOf("x", j + 1) - j + 1);
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
                     this.floors.push(floor);
                 } else if (this.map[i][j] === "T") {
@@ -376,7 +376,8 @@ class Main {
         }
         if (this.Roles[id].jumpSpeed > 0) {
             // rise up part
-            if (nextY <= this.Roles[id].ladderY - 2 * this.blockThickness) {
+            if (nextY <= this.Roles[id].ladderY) {
+            // if (nextY <= this.Roles[id].ladderY - 2 * this.blockThickness) probably wrong
                 let isFind: boolean = false;
                 for (const floor of this.floors) {
                     if (
@@ -384,9 +385,11 @@ class Main {
                         &&
                         this.Roles[id].x + this.Roles[id].width > floor.x
                         &&
-                        this.Roles[id].y > floor.y
+                        nextY + this.Roles[id].jumpSpeed > floor.y
                         &&
                         nextY <= floor.y + this.blockThickness
+                        &&
+                        floor.type !== "travesable"
                     ) {
                         this.Roles[id].jumpSpeed = 0;
                         nextY = floor.y + this.blockThickness;
@@ -416,7 +419,8 @@ class Main {
                         &&
                         this.Roles[id].x + this.Roles[id].width > floor.x
                         &&
-                        this.Roles[id].footY < floor.y
+                        nextY + this.Roles[id].jumpSpeed + this.Roles[id].height
+                        < floor.y
                         &&
                         nextY + this.Roles[id].height >= floor.y
                     ) {
