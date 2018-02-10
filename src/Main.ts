@@ -111,11 +111,11 @@ class Main {
                 const x: number = j * this.blockThickness;
                 const y: number = i * this.blockThickness;
                 if (this.map[i][j] === "X") {
-                    const floorWidth = this.blockThickness * (this.map[i].indexOf("Y", j + 1) - j + 1);
+                    const floorWidth = this.blockThickness * (this.map[i].indexOf("T", j + 1) - j + 1);
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
                     this.floors.push(floor);
                 } else if (this.map[i][j] === "T") {
-                    const floorWidth = this.blockThickness * (this.map[i].indexOf("P", j + 1) - j + 1);
+                    const floorWidth = this.blockThickness * (this.map[i].indexOf("t", j + 1) - j + 1);
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "travesable");
                     this.floors.push(floor);
                 }
