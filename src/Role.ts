@@ -38,7 +38,7 @@ export default class Role {
         this.ladderY = floor.y;
         this.selfX = this.floor.x +
         Math.floor(Math.random() * (this.floor.width - this.selfWidth));
-        this.selfY = this.floor.y - this.selfHeight;
+        this.selfY = 0;
         this.type = type;
         this.upTimer = undefined;
         this.downTimer = undefined;

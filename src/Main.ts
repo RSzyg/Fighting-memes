@@ -168,6 +168,21 @@ class Main {
         const bornFloor: Floor = this.floors[role.random];
         this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
         this.stage.add(this.Roles[role.id].element);
+        this.Roles[role.id].jumpSpeed = 0;
+        // update the floor which role land
+        for (const floor of this.floors) {
+            if (floor.y < this.Roles[role.id].floor.y &&
+                this.Roles[role.id].x + this.Roles[role.id].width >= floor.x &&
+                this.Roles[role.id].x <= floor.x + floor.width
+            ) {
+                this.Roles[role.id].floor = floor;
+                this.Roles[role.id].ladderY = floor.y;
+            }
+        }
+        // born fall
+        this.Roles[role.id].verticalTimer = setInterval(
+            () => this.RolesVerticalMove(role.id),
+            this.interval);
     }
     /**
      * handling the keyboard event
