@@ -2,6 +2,7 @@ import Circle from "./Circle";
 import Floor from "./Floor";
 import Role from "./Role";
 import Stage from "./Stage";
+import Weapon from "./Weapon";
 
 class Main {
     private stage: Stage; // the svg element
@@ -188,6 +189,9 @@ class Main {
                     this.Roles[role.id].ladderY = floor.y;
                 }
             }
+            this.Roles[role.id].weapon = new Weapon(0, this.Roles[role.id].x, this.Roles[role.id].y);
+            this.stage.add(this.Roles[role.id].weapon.element);
+            console.log(this.Roles[role.id].weapon.element.element);
             // born fall
             this.Roles[role.id].jumpSpeed = 0;
             this.Roles[role.id].verticalTimer = setInterval(

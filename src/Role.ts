@@ -53,8 +53,6 @@ export default class Role {
             this.selfHeight,
         );
         this.element.fill = color;
-        // this.weapon.x = this.x;
-        // this.weapon.y = this.y;
     }
 
     public get x(): number {

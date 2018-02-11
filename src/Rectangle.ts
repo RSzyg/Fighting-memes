@@ -37,4 +37,10 @@ export default class Rectangle extends Shape {
         this.Height = newHeight;
         this.element.setAttribute("height", `${newHeight}`);
     }
+    /**
+     * add background image of a rect
+     */
+    public add(image: SVGImageElement) {
+        this.element.appendChild(image);
+    }
 }

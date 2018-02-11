@@ -12,7 +12,7 @@ export default class Weapon {
     // public isConsumable: boolean;
     // public isMainWeapon: boolean;
     // public isItem: boolean;
-
+    public image: SVGAElement;
     public imagesrc: string;
 
     private selfType: number; // weapon type
@@ -21,28 +21,30 @@ export default class Weapon {
     private selfWidth: number;
     private selfHeight: number;
 
-    constructor(type: number) {
+    constructor(type: number, x: number, y: number) {
+        const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
         switch (type) {
-            case 0:
-                this.selfWidth = 20;
-                this.selfHeight = 20;
+            case 0 :
+                this.selfY = y;
+                this.selfType = type;
+                this.selfX = x;
+                this.selfWidth = 100;
+                this.selfWidth = 100;
+                this.element = new Rectangle(x, y, this.selfWidth, this.selfWidth);
+                // this.element.fill = "transparent";
                 this.weight = 0;
                 this.xMoveSpeed = this.xPower = 50;
                 this.yMoveSpeed = this.yPower = 0;
-                this.imagesrc = "weapon_zero.jpg";
-                // this.x
-                // this.y
-        }
-    }
-    public image() {
-        return `<image xlink:
-        href = ${this.image}
-        x = ${this.x}
-        y = ${this.y}
-        height = ${this.height}
-        width = ${this.width}
-        />`;
-        // this.element.appendChild(image);
+                this.imagesrc = "resource/weapon/weapon_zero.png";
+                image.setAttribute("xlink:href", this.imagesrc);
+                image.setAttribute("x", `${this.x}px`);
+                image.setAttribute("y", `${this.y}px`);
+                image.setAttribute("width", `${this.width}px`);
+                image.setAttribute("height", `${this.height}px`);
+                break;
+            }
+        console.log(image);
+        this.element.add(image);
     }
 
     public get x(): number {
@@ -60,6 +62,7 @@ export default class Weapon {
     public set y(newY: number) {
         this.selfY = this.element.y = newY;
     }
+
     public get width(): number {
         return this.selfWidth;
     }
