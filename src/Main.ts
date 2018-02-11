@@ -54,20 +54,22 @@ class Main {
         this.stage.add(circle);
         circle.fill = "red";
 
-        this.socket.emit("loaded");
+        this.socket.emit("loaded", JSON.stringify({floorNum: this.floors.length}));
 
         this.socket.on("createRole", (data: string) => {
             const allRoles = JSON.parse(data).allRoles;
             for (let i = allRoles.length - 1; i >= 0; i--) {
                 if (i === allRoles.length - 1) {
                     this.selfId = allRoles[i].id;
+                    this.createRole(allRoles[i], "new");
+                } else {
+                    this.createRole(allRoles[i], "added");
                 }
-                this.createRole(allRoles[i]);
             }
         });
 
         this.socket.on("addRole", (newRole: string) => {
-            this.createRole(JSON.parse(newRole));
+            this.createRole(JSON.parse(newRole), "new");
         });
 
         this.socket.on("disconnect", () => {
@@ -164,25 +166,30 @@ class Main {
      * create a role
      * @param role role info
      */
-    private createRole(role: {[key: string]: any}) {
-        const bornFloor: Floor = this.floors[role.random];
-        this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
-        this.stage.add(this.Roles[role.id].element);
-        this.Roles[role.id].jumpSpeed = 0;
-        // update the floor which role land
-        for (const floor of this.floors) {
-            if (floor.y < this.Roles[role.id].floor.y &&
-                this.Roles[role.id].x + this.Roles[role.id].width >= floor.x &&
-                this.Roles[role.id].x <= floor.x + floor.width
-            ) {
-                this.Roles[role.id].floor = floor;
-                this.Roles[role.id].ladderY = floor.y;
-            }
+    private createRole(role: {[key: string]: any}, type: string) {
+        if (type === "added") {
+            this.stage.add(this.Roles[role.id].element);
         }
-        // born fall
-        this.Roles[role.id].verticalTimer = setInterval(
-            () => this.RolesVerticalMove(role.id),
-            this.interval);
+        if (type === "new") {
+            const bornFloor: Floor = this.floors[role.random];
+            this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
+            this.stage.add(this.Roles[role.id].element);
+            // update the floor which role land
+            for (const floor of this.floors) {
+                if (floor.y < this.Roles[role.id].floor.y &&
+                    this.Roles[role.id].x + this.Roles[role.id].width >= floor.x &&
+                    this.Roles[role.id].x <= floor.x + floor.width
+                ) {
+                    this.Roles[role.id].floor = floor;
+                    this.Roles[role.id].ladderY = floor.y;
+                }
+            }
+            // born fall
+            this.Roles[role.id].jumpSpeed = 0;
+            this.Roles[role.id].verticalTimer = setInterval(
+                () => this.RolesVerticalMove(role.id),
+                this.interval);
+        }
     }
     /**
      * handling the keyboard event

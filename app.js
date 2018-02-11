@@ -81,19 +81,19 @@ io.on('connection', (socket) => {
         console.log(JSON.parse(data));
     });
 
-    socket.on('loaded', () => {
+    socket.on('loaded', (data) => {
         if (newRole) return;
         newRole = {
             id: socket.id,
-            random: Math.floor(Math.random() * 10),
+            random: Math.floor(Math.random() * data.floorNum),
             type: 0,
             color: '#66ccff'
         }
         Roles.push(newRole);
-        var data = {
+        var allRoles = {
             allRoles: Roles
         }
-        socket.emit('createRole', JSON.stringify(data));
+        socket.emit('createRole', JSON.stringify(allRoles));
         socket.broadcast.emit('addRole', JSON.stringify(newRole));
 
         ++playerNum;
