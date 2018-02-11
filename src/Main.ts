@@ -168,11 +168,15 @@ class Main {
      */
     private createRole(role: {[key: string]: any}, type: string) {
         if (type === "added") {
+            const bornFloor: Floor = this.floors[role.random];
+            this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
+            // this.Roles[role.id].y = 0;
             this.stage.add(this.Roles[role.id].element);
         }
         if (type === "new") {
             const bornFloor: Floor = this.floors[role.random];
             this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
+            this.Roles[role.id].y = 0;
             this.stage.add(this.Roles[role.id].element);
             // update the floor which role land
             for (const floor of this.floors) {
