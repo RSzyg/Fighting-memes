@@ -169,13 +169,13 @@ class Main {
      */
     private createRole(role: {[key: string]: any}, type: string) {
         if (type === "added") {
-            const bornFloor: Floor = this.floors[role.random];
+            const bornFloor: Floor = this.blocks[role.random];
             this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
             // this.Roles[role.id].y = 0;
             this.stage.add(this.Roles[role.id].element);
         }
         if (type === "new") {
-            const bornFloor: Floor = this.floors[role.random];
+            const bornFloor: Floor = this.blocks[role.random];
             this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
             this.Roles[role.id].y = 0;
             this.stage.add(this.Roles[role.id].element);
@@ -322,21 +322,18 @@ class Main {
             );
         }
     }
-
+    /**
+     * prepare to move and dicide if fall
+     * @param id id of player's role
+     * @param isRight moveRight or moveLeft
+     */
     private movePreTreat(id: string, isRight: boolean) {
         if (this.Roles[id]) {
-            if (isRight === true) {
-                let nextX: number = this.Roles[id].x + this.Roles[id].moveSpeed;
-                nextX = this.RolesWillImpactWall(nextX, 1, id);
-                this.Roles[id].x = nextX % this.stageWidth;
-                this.RolesWillFall(id);
-            }
-            if (isRight === false) {
-                let nextX: number = this.Roles[id].x - this.Roles[id].moveSpeed;
-                nextX = this.RolesWillImpactWall(nextX, 0, id);
-                this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
-                this.RolesWillFall(id);
-            }
+            const moveSpeed = (2 * Number(isRight) - 1) * this.Roles[id].moveSpeed;
+            let nextX: number = this.Roles[id].x + moveSpeed;
+            nextX = this.RolesWillImpactWall(nextX, this.Roles[id].width, Number(isRight), id);
+            this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
+            this.RolesWillFall(id);
         }
     }
     /**
@@ -346,16 +343,13 @@ class Main {
      */
     private squatTreat(id: string, isDown: boolean) {
         if (this.Roles[id]) {
-            if (isDown) {
-                this.Roles[id].height -= this.transferCoef;
-                this.Roles[id].width += this.transferCoef;
-                this.Roles[id].squatTrans = true;
-            } else {
-                this.Roles[id].height += this.transferCoef;
-                this.Roles[id].width -= this.transferCoef;
-                this.Roles[id].squatTrans = false;
+            const transferCoef: number = (2 * Number(isDown) - 1) * this.transferCoef;
+            this.Roles[id].height -= transferCoef;
+            this.Roles[id].squatTrans = isDown;
+            const nextWidth: number = this.Roles[id].width + transferCoef;
+            this.Roles[id].x = this.RolesWillImpactWall(this.Roles[id].x, nextWidth, 1, id);
+            this.Roles[id].width = nextWidth;
             }
-        }
     }
     /**
      * prepare to fall
@@ -363,26 +357,33 @@ class Main {
      */
     private fallPreTreat(id: string) {
         if (this.Roles[id]) {
-            this.Roles[id].jumpSpeed = 0;
-            this.Roles[id].ladderY += this.blockThickness;
-            this.Roles[id].verticalTimer = setInterval(
-                () => this.RolesVerticalMove(id),
-                this.interval,
-            );
+            const i: number = this.Roles[id].floor.y / this.blockThickness + 1;
+            const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
+            if (
+                this.map[i] === undefined ||
+                this.map[i][j] === " "
+            ) {
+                this.Roles[id].jumpSpeed = 0;
+                this.Roles[id].ladderY += this.blockThickness;
+                this.Roles[id].verticalTimer = setInterval(
+                    () => this.RolesVerticalMove(id),
+                    this.interval,
+                );
+            }
         }
     }
 
-    private RolesWillImpactWall(nextX: number, isRight: number, id: string) {
+    private RolesWillImpactWall(nextX: number, nextWidth: number, isRight: number, id: string) {
         for (const floor of this.floors) {
             if (
                 this.Roles[id].footY > floor.y &&
                 this.Roles[id].y < floor.y + this.blockThickness &&
-                nextX + this.Roles[id].width > floor.x &&
+                nextX + nextWidth > floor.x &&
                 nextX < floor.x + floor.width &&
                 ((this.Roles[id].x >= floor.x + floor.width) ||
                     (this.Roles[id].x + this.Roles[id].width <= floor.x))
             ) {
-                return isRight * (floor.x - this.Roles[id].width) + (1 - isRight) * (floor.x + floor.width);
+                return floor.x - isRight * nextWidth + (1 - isRight) * floor.width;
             }
         }
         return nextX;

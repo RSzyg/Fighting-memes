@@ -76,8 +76,6 @@ export default class Role {
     }
 
     public set width(newWidth: number) {
-        this.selfX += (this.selfWidth - newWidth) / 2;
-        this.element.x = this.selfX;
         this.selfWidth = this.element.width = newWidth;
     }
 
@@ -96,5 +94,4 @@ export default class Role {
     public get footY(): number {
         return this.selfY + this.selfHeight;
     }
-    // public addWeapon(newWeapon: Weapon) {}
 }

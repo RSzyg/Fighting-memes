@@ -29,18 +29,18 @@ export default class Weapon {
                 this.selfType = type;
                 this.selfX = x;
                 this.selfWidth = 100;
-                this.selfWidth = 100;
+                this.selfHeight = 100;
                 this.element = new Rectangle(x, y, this.selfWidth, this.selfWidth);
-                // this.element.fill = "transparent";
+                this.element.fill = "transparent";
                 this.weight = 0;
                 this.xMoveSpeed = this.xPower = 50;
                 this.yMoveSpeed = this.yPower = 0;
                 this.imagesrc = "resource/weapon/weapon_zero.png";
                 image.setAttribute("xlink:href", this.imagesrc);
-                image.setAttribute("x", `${this.x}px`);
-                image.setAttribute("y", `${this.y}px`);
-                image.setAttribute("width", `${this.width}px`);
-                image.setAttribute("height", `${this.height}px`);
+                image.setAttribute("x", `${this.x}`);
+                image.setAttribute("y", `${this.y}`);
+                image.setAttribute("width", `${this.width}`);
+                image.setAttribute("height", `${this.height}`);
                 break;
             }
         console.log(image);
