@@ -1,7 +1,5 @@
-import Rectangle from "./Rectangle";
-
 export default class Weapon {
-    public element: Rectangle; // main part
+    public image: SVGImageElement; // main part
     public attackRange: number; // index deciding if hitting the target
     public damage: number; // index showing how much it hurts
     public xPower: number; // initial horizontal velocity
@@ -12,7 +10,6 @@ export default class Weapon {
     // public isConsumable: boolean;
     // public isMainWeapon: boolean;
     // public isItem: boolean;
-    public image: SVGAElement;
     public imagesrc: string;
 
     private selfType: number; // weapon type
@@ -22,7 +19,7 @@ export default class Weapon {
     private selfHeight: number;
 
     constructor(type: number, x: number, y: number) {
-        const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+        this.image = document.createElementNS("http://www.w3.org/2000/svg", "image");
         switch (type) {
             case 0 :
                 this.selfY = y;
@@ -30,21 +27,17 @@ export default class Weapon {
                 this.selfX = x;
                 this.selfWidth = 100;
                 this.selfHeight = 100;
-                this.element = new Rectangle(x, y, this.selfWidth, this.selfWidth);
-                this.element.fill = "transparent";
                 this.weight = 0;
                 this.xMoveSpeed = this.xPower = 50;
                 this.yMoveSpeed = this.yPower = 0;
-                this.imagesrc = "resource/weapon/weapon_zero.png";
-                image.setAttribute("xlink:href", this.imagesrc);
-                image.setAttribute("x", `${this.x}`);
-                image.setAttribute("y", `${this.y}`);
-                image.setAttribute("width", `${this.width}`);
-                image.setAttribute("height", `${this.height}`);
+                this.imagesrc = "resource/weapon/weapon_zerp.png";
+                this.image.href.baseVal = this.imagesrc;
+                this.image.setAttribute("x", `${this.x}`);
+                this.image.setAttribute("y", `${this.y}`);
+                this.image.setAttribute("width", `${this.selfWidth}`);
+                this.image.setAttribute("height", `${this.selfHeight}`);
                 break;
             }
-        console.log(image);
-        this.element.add(image);
     }
 
     public get x(): number {
@@ -52,7 +45,8 @@ export default class Weapon {
     }
 
     public set x(newX: number) {
-        this.selfX = this.element.x = newX;
+        this.selfX = newX;
+        this.image.setAttribute("x", `${newX}`);
     }
 
     public get y(): number {
@@ -60,17 +54,17 @@ export default class Weapon {
     }
 
     public set y(newY: number) {
-        this.selfY = this.element.y = newY;
-    }
+        this.selfY = newY;
+        this.image.setAttribute("y", `${newY}`);
+        }
 
     public get width(): number {
         return this.selfWidth;
     }
 
     public set width(newWidth: number) {
-        this.selfX += (this.selfWidth - newWidth) / 2;
-        this.element.x = this.selfX;
-        this.selfWidth = this.element.width = newWidth;
+        this.selfWidth  = newWidth;
+        this.image.setAttribute("width", `${newWidth}`);
     }
 
     public get height(): number {
@@ -78,9 +72,8 @@ export default class Weapon {
     }
 
     public set height(newHeight: number) {
-        this.selfY += this.selfHeight - newHeight;
-        this.element.y = this.selfY;
-        this.selfHeight = this.element.height = newHeight;
+        this.selfHeight = newHeight;
+        this.image.setAttribute("height", `${newHeight}`);
     }
 }
 

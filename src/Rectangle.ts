@@ -40,7 +40,4 @@ export default class Rectangle extends Shape {
     /**
      * add background image of a rect
      */
-    public add(image: SVGImageElement) {
-        this.element.appendChild(image);
-    }
 }

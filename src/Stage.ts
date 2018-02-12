@@ -15,6 +15,9 @@ export default class Stage {
     public add(shape: Shape) {
         this.element.appendChild(shape.element);
     }
+    public addImage(image: SVGImageElement) {
+        this.element.appendChild(image);
+    }
 
     /**
      * removeChild
