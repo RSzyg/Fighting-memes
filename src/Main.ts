@@ -190,7 +190,7 @@ class Main {
                 }
             }
             this.Roles[role.id].weapon = new Weapon(0, this.Roles[role.id].x, this.Roles[role.id].y);
-            // this.stage.addImage(this.Roles[role.id].weapon.image);
+            this.stage.addImage(this.Roles[role.id].weapon.image);
             // born fall
             this.Roles[role.id].jumpSpeed = 0;
             this.Roles[role.id].verticalTimer = setInterval(
