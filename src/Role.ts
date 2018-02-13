@@ -25,7 +25,7 @@ export default class Role {
     private selfHeight: number;
     private fillColor: string;
 
-    constructor(floor: Floor, type: number, color: string) {
+    constructor(floor: Floor, type: number, color: string, x: number) {
         switch (type) {
         case 0:
             this.selfWidth = 20;
@@ -36,9 +36,8 @@ export default class Role {
         }
         this.floor = floor;
         this.ladderY = floor.y;
-        this.selfX = this.floor.x +
-        Math.floor(Math.random() * (this.floor.width - this.selfWidth));
-        this.selfY = floor.y - this.height;
+        this.selfX = x;
+        this.selfY = this.floor.y - this.height;
         this.type = type;
         this.upTimer = undefined;
         this.downTimer = undefined;

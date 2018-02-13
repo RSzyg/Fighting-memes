@@ -55,7 +55,7 @@ class Main {
         this.stage.add(circle);
         circle.fill = "red";
 
-        this.socket.emit("loaded", JSON.stringify({floorNum: this.floors.length}));
+        this.socket.emit("loaded", JSON.stringify({blockNum: this.blocks.length}));
 
         this.socket.on("createRole", (data: string) => {
             const allRoles = JSON.parse(data).allRoles;
@@ -69,8 +69,9 @@ class Main {
             }
         });
 
-        this.socket.on("addRole", (newRole: string) => {
-            this.createRole(JSON.parse(newRole), "new");
+        this.socket.on("addRole", (data: string) => {
+            const newRole = JSON.parse(data);
+            this.createRole(newRole, "new");
         });
 
         this.socket.on("disconnect", () => {
@@ -106,6 +107,7 @@ class Main {
 
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
+        console.log(this.blocks.length);
     }
     /**
      * render the map
@@ -169,33 +171,16 @@ class Main {
      */
     private createRole(role: {[key: string]: any}, type: string) {
         if (type === "added") {
-            const bornFloor: Floor = this.blocks[role.random];
-            this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
-            // this.Roles[role.id].y = 0;
+            this.Roles[role.id] = new Role(this.blocks[role.blockId], role.type, role.color, role.x);
             this.stage.add(this.Roles[role.id].element);
         }
         if (type === "new") {
-            const bornFloor: Floor = this.blocks[role.random];
-            this.Roles[role.id] = new Role(bornFloor, role.type, role.color);
-            this.Roles[role.id].y = 0;
+            this.Roles[role.id] = new Role(this.blocks[role.blockId], role.type, role.color, role.x);
+            this.Roles[role.id].x += this.blocks[role.blockId].x;
             this.stage.add(this.Roles[role.id].element);
-            // update the floor which role land
-            for (const floor of this.floors) {
-                if (floor.y < this.Roles[role.id].floor.y &&
-                    this.Roles[role.id].x + this.Roles[role.id].width >= floor.x &&
-                    this.Roles[role.id].x <= floor.x + floor.width
-                ) {
-                    this.Roles[role.id].floor = floor;
-                    this.Roles[role.id].ladderY = floor.y;
-                }
-            }
-            this.Roles[role.id].weapon = new Weapon(0, this.Roles[role.id].x, this.Roles[role.id].y);
-            this.stage.addImage(this.Roles[role.id].weapon.image);
-            // born fall
-            this.Roles[role.id].jumpSpeed = 0;
-            this.Roles[role.id].verticalTimer = setInterval(
-                () => this.RolesVerticalMove(role.id),
-                this.interval);
+
+            // this.Roles[role.id].weapon = new Weapon(0, this.Roles[role.id].x, this.Roles[role.id].y);
+            // this.stage.addImage(this.Roles[role.id].weapon.image);
         }
     }
     /**

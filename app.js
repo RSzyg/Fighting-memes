@@ -85,9 +85,10 @@ io.on('connection', (socket) => {
         if (newRole) return;
         newRole = {
             id: socket.id,
-            random: Math.floor(Math.random() * JSON.parse(data).floorNum),
+            blockId: Math.floor(Math.random() * JSON.parse(data).blockNum),
             type: 0,
-            color: '#66ccff'
+            color: '#66ccff',
+            x: Math.floor(Math.random() * initData.blockThickness),
         }
         Roles.push(newRole);
         var allRoles = {
