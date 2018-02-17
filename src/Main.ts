@@ -110,7 +110,7 @@ class Main {
                 if (this.map[i][j] === "X") {
                     const blocksNum = this.map[i].indexOf("x", j + 1) - j + 1;
                     const floorWidth = this.blockThickness * blocksNum;
-                    const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
+                    const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, 0);
 
                     let block: Block;
                     while (this.map[i][j] !== "x") {
@@ -128,7 +128,7 @@ class Main {
                 } else if (this.map[i][j] === "T") {
                     const blocksNum = this.map[i].indexOf("t", j + 1) - j + 1;
                     const floorWidth = this.blockThickness * blocksNum;
-                    const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "travesable");
+                    const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, 1);
 
                     let block: Block;
                     while (this.map[i][j] !== "t") {
@@ -407,7 +407,7 @@ class Main {
                         &&
                         nextY <= floor.y + this.blockThickness
                         &&
-                        floor.type !== "travesable"
+                        floor.type !== 1
                     ) {
                         this.Roles[id].jumpSpeed = 0;
                         nextY = floor.y + this.blockThickness;

@@ -3,13 +3,14 @@ import Rectangle from "./Rectangle";
 
 export default class Floor {
     private blocks: Block[];
-    private selfType: string;
+    private selfType: number;
     private selfX: number;
     private selfY: number;
     private selfWidth: number;
     private selfHeight: number;
 
-    constructor(x: number, y: number, width: number, height: number, type: string) {
+    // type: [basic, travesable]
+    constructor(x: number, y: number, width: number, height: number, type: number) {
         this.blocks = [];
         this.selfX = x;
         this.selfY = y;
@@ -42,11 +43,11 @@ export default class Floor {
         this.selfHeight = newHeight;
     }
 
-    public get type(): string {
+    public get type(): number {
         return this.selfType;
     }
 
-    public set type(newType: string) {
+    public set type(newType: number) {
         this.selfType = newType;
     }
 
