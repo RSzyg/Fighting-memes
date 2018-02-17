@@ -23,12 +23,6 @@ class Main {
         this.floors = [];
         this.Roles = {};
         this.map = [];
-        // this.stageWidth = 1920;
-        // this.stageHeight = 1080;
-        // this.blockThickness = 250;
-        // this.floorHeight = 35;
-        // this.interval = 17;
-        // this.transferCoef = 16;
     }
     /**
      * basic initial
@@ -38,7 +32,6 @@ class Main {
 
         this.socket.on("init", (data: string) => {
             const initData = JSON.parse(data);
-            console.log(initData);
             this.stageWidth = this.stage.width = initData.stageWidth;
             this.stageHeight = this.stage.height = initData.stageHeight;
             this.stageColor = this.stage.color = initData.stageColor;
