@@ -57,18 +57,19 @@ class Main {
         circle.fill = "red";
 
         this.socket.on("createRole", (data: string) => {
+            this.selfId = JSON.parse(data).selfId;
+
             const allRoles = JSON.parse(data).allRoles;
-            for (let i = allRoles.length - 1; i >= 0; i--) {
-                if (i === allRoles.length - 1) {
-                    this.selfId = allRoles[i].id;
+            for (const key in allRoles) {
+                if (key) {
+                    this.createRole(key, allRoles[key]);
                 }
-                this.createRole(allRoles[i]);
             }
         });
 
         this.socket.on("addRole", (data: string) => {
             const newRole = JSON.parse(data);
-            this.createRole(newRole);
+            this.createRole(newRole.id, newRole);
         });
 
         this.socket.on("disconnect", () => {
@@ -156,22 +157,22 @@ class Main {
      * create a role
      * @param role role info
      */
-    private createRole(role: {[key: string]: any}) {
-        this.Roles[role.id] = new Role(role.type, role.color, role.x, role.y);
-        this.stage.add(this.Roles[role.id].element);
+    private createRole(id: string, role: {[key: string]: any}) {
+        this.Roles[id] = new Role(role.type, role.color, role.x, role.y);
+        this.stage.add(this.Roles[id].element);
         for (const floor of this.floors) {
             if (
-                role.y + this.Roles[role.id].height === floor.y &&
-                role.x + this.Roles[role.id].width > floor.x &&
+                role.y + this.Roles[id].height === floor.y &&
+                role.x + this.Roles[id].width > floor.x &&
                 role.x < floor.x + floor.width
             ) {
-                this.Roles[role.id].floor = floor;
-                this.Roles[role.id].ladderY = floor.y;
+                this.Roles[id].floor = floor;
+                this.Roles[id].ladderY = floor.y;
             }
         }
 
-        // this.Roles[role.id].weapon = new Weapon(0, this.Roles[role.id].x, this.Roles[role.id].y);
-        // this.stage.addImage(this.Roles[role.id].weapon.image);
+        // this.Roles[id].weapon = new Weapon(0, this.Roles[id].x, this.Roles[id].y);
+        // this.stage.addImage(this.Roles[id].weapon.image);
     }
     /**
      * handling the keyboard event

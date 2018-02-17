@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 app.use(express.static(__dirname + '/dist'));
 
 // main
-var Roles = [];
+var Roles = {};
 var playerNum = 0;
 
 // 32 * 18
@@ -103,9 +103,10 @@ io.on('connection', (socket) => {
             x: j * initData.blockThickness,
             y: i * initData.blockThickness
         }
-        Roles.push(newRole);
+        Roles[socket.id] = newRole;
         var allRoles = {
-            allRoles: Roles
+            allRoles: Roles,
+            selfId: socket.id
         }
         socket.emit('createRole', JSON.stringify(allRoles));
         socket.broadcast.emit('addRole', JSON.stringify(newRole));
@@ -139,7 +140,7 @@ io.on('connection', (socket) => {
             var data = {
                 id: socket.id
             }
-            Roles.splice(Roles.indexOf(newRole), 1);
+            delete Roles[socket.id];
             socket.broadcast.emit('player left', JSON.stringify(data));
             --playerNum;
             console.log('There are ' + playerNum + ' players');
