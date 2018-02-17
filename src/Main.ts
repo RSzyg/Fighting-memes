@@ -178,6 +178,16 @@ class Main {
         if (type === "new") {
             this.Roles[role.id] = new Role(role.type, role.color, role.x, role.y);
             this.stage.add(this.Roles[role.id].element);
+            for (const floor of this.floors) {
+                if (
+                    role.y + this.Roles[role.id].height === floor.y &&
+                    role.x + this.Roles[role.id].width > floor.x &&
+                    role.x < floor.x + floor.width
+                ) {
+                    this.Roles[role.id].floor = floor;
+                    this.Roles[role.id].ladderY = floor.y;
+                }
+            }
 
             // this.Roles[role.id].weapon = new Weapon(0, this.Roles[role.id].x, this.Roles[role.id].y);
             // this.stage.addImage(this.Roles[role.id].weapon.image);
