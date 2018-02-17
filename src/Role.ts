@@ -25,7 +25,7 @@ export default class Role {
     private selfHeight: number;
     private fillColor: string;
 
-    constructor(floor: Floor, type: number, color: string, x: number) {
+    constructor(type: number, color: string, x: number, y: number) {
         switch (type) {
         case 0:
             this.selfWidth = 20;
@@ -34,10 +34,8 @@ export default class Role {
             this.jumpSpeed = this.power = 24;
             this.moveSpeed = 6;
         }
-        this.floor = floor;
-        this.ladderY = floor.y;
         this.selfX = x;
-        this.selfY = this.floor.y - this.height;
+        this.selfY = y;
         this.type = type;
         this.upTimer = undefined;
         this.downTimer = undefined;

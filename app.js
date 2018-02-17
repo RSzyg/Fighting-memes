@@ -18,6 +18,8 @@ app.use(express.static(__dirname + '/dist'));
 // main
 var Roles = [];
 var playerNum = 0;
+
+// 32 * 18
 var maps = [
     [
         '                                ',
@@ -61,7 +63,7 @@ var maps = [
     ]
 ];
 var rand = Math.floor(Math.random() * maps.length);
-
+var roomMap = maps[rand];
 console.log(maps[rand]);
 
 io.on('connection', (socket) => {
@@ -73,22 +75,33 @@ io.on('connection', (socket) => {
         interval: 17,
         transferCoef: 16,
         blockThickness: 60,
-        map: maps[rand]
+        map: roomMap
     }
 
     socket.emit('init', JSON.stringify(initData));
-    socket.on('my other event', (data) => {
-        console.log(JSON.parse(data));
-    });
 
-    socket.on('loaded', (data) => {
+    var i = Math.floor(Math.random() * 17);
+    var j = Math.floor(Math.random() * 32);
+    while (roomMap[i][j] !== ' ' || roomMap[i + 1][j] === ' ') {
+        var direct = Math.floor(Math.random() * 4);
+        if (direct === 0 || direct === 2) {
+            i = Math.floor(Math.random() * 17);
+        } else {
+            j = Math.floor(Math.random() * 32);
+        }
+    }
+
+    console.log(i, j);
+
+    socket.on('loaded', () => {
         if (newRole) return;
+
         newRole = {
             id: socket.id,
-            blockId: Math.floor(Math.random() * JSON.parse(data).blockNum),
             type: 0,
             color: '#66ccff',
-            x: Math.floor(Math.random() * initData.blockThickness),
+            x: j * initData.blockThickness,
+            y: i * initData.blockThickness
         }
         Roles.push(newRole);
         var allRoles = {

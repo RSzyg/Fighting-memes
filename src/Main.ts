@@ -48,15 +48,15 @@ class Main {
             this.transferCoef = initData.transferCoef;
             this.blockThickness = initData.blockThickness;
             this.map = initData.map;
+
             this.renderMap();
-            this.socket.emit("my other event", JSON.stringify({ my: "data" }));
+
+            this.socket.emit("loaded");
         });
 
         const circle: Circle = new Circle(100, 0, 100);
         this.stage.add(circle);
         circle.fill = "red";
-
-        this.socket.emit("loaded", JSON.stringify({blockNum: this.blocks.length}));
 
         this.socket.on("createRole", (data: string) => {
             const allRoles = JSON.parse(data).allRoles;
@@ -172,12 +172,11 @@ class Main {
      */
     private createRole(role: {[key: string]: any}, type: string) {
         if (type === "added") {
-            this.Roles[role.id] = new Role(this.blocks[role.blockId], role.type, role.color, role.x);
+            this.Roles[role.id] = new Role(role.type, role.color, role.x, role.y);
             this.stage.add(this.Roles[role.id].element);
         }
         if (type === "new") {
-            this.Roles[role.id] = new Role(this.blocks[role.blockId], role.type, role.color, role.x);
-            this.Roles[role.id].x += this.blocks[role.blockId].x;
+            this.Roles[role.id] = new Role(role.type, role.color, role.x, role.y);
             this.stage.add(this.Roles[role.id].element);
 
             // this.Roles[role.id].weapon = new Weapon(0, this.Roles[role.id].x, this.Roles[role.id].y);
