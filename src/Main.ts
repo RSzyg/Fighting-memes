@@ -8,7 +8,6 @@ import Weapon from "./Weapon";
 class Main {
     private stage: Stage; // the svg element
     private floors: Floor[]; // all floors
-    private blocks: Floor[]; // floors divided into squares
     private stageWidth: number; // svg width
     private stageHeight: number; // svg height
     private stageColor: string; // svg background color
@@ -22,7 +21,6 @@ class Main {
     constructor() {
         this.stage = new Stage();
         this.floors = [];
-        this.blocks = [];
         this.Roles = {};
         this.map = [];
         // this.stageWidth = 1920;
@@ -106,7 +104,6 @@ class Main {
 
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
-        console.log(this.blocks.length);
     }
     /**
      * render the map
@@ -154,21 +151,6 @@ class Main {
                 }
             }
         }
-        // this.bornFloors();
-    }
-
-    private bornFloors() {
-        const bornFloors: Floor[] = [];
-        for (const floor of this.blocks) {
-            if (floor.y !== 0) {
-                const i = floor.y / this.blockThickness;
-                const j = floor.x / this.blockThickness;
-                if (this.map[i - 1][j] === " ") {
-                    bornFloors.push(floor);
-                }
-            }
-        }
-        this.blocks = bornFloors;
     }
     /**
      * create a role
