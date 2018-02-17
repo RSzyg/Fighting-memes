@@ -1,3 +1,4 @@
+import Block from "./Block";
 import Circle from "./Circle";
 import Floor from "./Floor";
 import Role from "./Role";
@@ -114,42 +115,42 @@ class Main {
      */
     private renderMap() {
         for (let i: number = 0; i < this.map.length; i++) {
+            const y: number = i * this.blockThickness;
             for (let j: number = 0; j < this.map[0].length; j++) {
-                const x: number = j * this.blockThickness;
-                const y: number = i * this.blockThickness;
+                let x: number = j * this.blockThickness;
                 if (this.map[i][j] === "X") {
-                    const floorWidth = this.blockThickness * (this.map[i].indexOf("x", j + 1) - j + 1);
+                    const blocksNum = this.map[i].indexOf("x", j + 1) - j + 1;
+                    const floorWidth = this.blockThickness * blocksNum;
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
+
+                    while (this.map[i][j] !== " " && j < this.map[0].length) {
+                        let block: Block;
+                        x = j * this.blockThickness;
+                        block = floor.addBlock(x, y, "#ffffff", "#000000", 2);
+                        this.stage.add(block.element);
+                        j++;
+                    }
+
                     this.floors.push(floor);
+
                 } else if (this.map[i][j] === "T") {
-                    const floorWidth = this.blockThickness * (this.map[i].indexOf("t", j + 1) - j + 1);
+                    const blocksNum = this.map[i].indexOf("t", j + 1) - j + 1;
+                    const floorWidth = this.blockThickness * blocksNum;
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "travesable");
+
+                    while (this.map[i][j] !== " " && j < this.map[0].length) {
+                        let block: Block;
+                        x = j * this.blockThickness;
+                        block = floor.addBlock(x, y, "#42426F", "#000000", 2);
+                        this.stage.add(block.element);
+                        j++;
+                    }
+
                     this.floors.push(floor);
-                }
-                if (
-                    this.map[i][j] === "X" ||
-                    this.map[i][j] === "#" ||
-                    this.map[i][j] === "x"
-                ) {
-                    const floor: Floor = new Floor(x, y, this.blockThickness, this.blockThickness, "basic");
-                    floor.setFillColor("#ffffff");
-                    floor.setStroke("#000000", 2);
-                    this.blocks.push(floor);
-                    this.stage.add(floor.element);
-                } else if (
-                    this.map[i][j] === "T" ||
-                    this.map[i][j] === "~" ||
-                    this.map[i][j] === "t"
-                ) {
-                    const floor: Floor = new Floor(x, y, this.blockThickness, this.blockThickness, "travesable");
-                    floor.setFillColor("#42426F");
-                    floor.setStroke("#000000", 2);
-                    this.blocks.push(floor);
-                    this.stage.add(floor.element);
                 }
             }
         }
-        this.bornFloors();
+        // this.bornFloors();
     }
 
     private bornFloors() {
