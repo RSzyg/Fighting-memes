@@ -121,13 +121,16 @@ class Main {
                     const floorWidth = this.blockThickness * blocksNum;
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "basic");
 
-                    while (this.map[i][j] !== " " && j < this.map[0].length) {
-                        let block: Block;
+                    let block: Block;
+                    while (this.map[i][j] !== "x") {
                         x = j * this.blockThickness;
                         block = floor.addBlock(x, y, "#ffffff", "#000000", 2);
                         this.stage.add(block.element);
                         j++;
                     }
+                    x = j * this.blockThickness;
+                    block = floor.addBlock(x, y, "#ffffff", "#000000", 2);
+                    this.stage.add(block.element);
 
                     this.floors.push(floor);
 
@@ -136,13 +139,16 @@ class Main {
                     const floorWidth = this.blockThickness * blocksNum;
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, "travesable");
 
-                    while (this.map[i][j] !== " " && j < this.map[0].length) {
-                        let block: Block;
+                    let block: Block;
+                    while (this.map[i][j] !== "t") {
                         x = j * this.blockThickness;
                         block = floor.addBlock(x, y, "#42426F", "#000000", 2);
                         this.stage.add(block.element);
                         j++;
                     }
+                    x = j * this.blockThickness;
+                    block = floor.addBlock(x, y, "#42426F", "#000000", 2);
+                    this.stage.add(block.element);
 
                     this.floors.push(floor);
                 }
