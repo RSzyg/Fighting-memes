@@ -437,8 +437,7 @@ export default class Main {
                         &&
                         this.Roles[id].x + this.Roles[id].width > floor.x
                         &&
-                        nextY + this.Roles[id].jumpSpeed + this.Roles[id].height
-                        < floor.y
+                        nextY + this.Roles[id].jumpSpeed + this.Roles[id].height < floor.y
                         &&
                         nextY + this.Roles[id].height >= floor.y
                     ) {
