@@ -71,14 +71,13 @@ class Main {
 
         this.socket.on("player left", (data: string) => {
             const id = JSON.parse(data).id;
-
-            clearInterval(this.Roles[id].verticalTimer);
-            clearInterval(this.Roles[id].upTimer);
-            clearInterval(this.Roles[id].leftTimer);
-            clearInterval(this.Roles[id].rightTimer);
-            clearInterval(this.Roles[id].downTimer);
-
             this.stage.removeChild(this.Roles[id].element);
+
+            // clear role's timer
+            if (this.Roles[id].verticalTimer) {
+                clearInterval(this.Roles[id].verticalTimer);
+            }
+
             delete this.Roles[id];
         });
 
