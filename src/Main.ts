@@ -308,7 +308,7 @@ class Main {
             let nextX: number = this.Roles[id].x + moveSpeed;
             nextX = this.impactJudge(nextX, this.Roles[id].width, Number(isRight), id);
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
-            this.RolesWillFall(id);
+            this.fallJudge(id);
         }
     }
     /**
@@ -364,7 +364,7 @@ class Main {
         return nextX;
     }
 
-    private RolesWillFall(id: string) {
+    private fallJudge(id: string) {
         if (
             !this.Roles[id].verticalTimer &&
             (this.Roles[id].x > this.Roles[id].floor.x + this.Roles[id].floor.width ||
