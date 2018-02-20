@@ -5,7 +5,7 @@ import Role from "./Role";
 import Stage from "./Stage";
 import Weapon from "./Weapon";
 
-class Main {
+export default class Main {
     private stage: Stage; // the svg element
     private floors: Floor[]; // all floors
     private stageWidth: number; // svg width
@@ -463,8 +463,3 @@ class Main {
         }
     }
 }
-
-window.onload = () => {
-    const main: Main = new Main();
-    main.createScene();
-};
