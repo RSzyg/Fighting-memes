@@ -306,7 +306,7 @@ class Main {
         if (this.Roles[id]) {
             const moveSpeed = (2 * Number(isRight) - 1) * this.Roles[id].moveSpeed;
             let nextX: number = this.Roles[id].x + moveSpeed;
-            nextX = this.RolesWillImpactWall(nextX, this.Roles[id].width, Number(isRight), id);
+            nextX = this.impactJudge(nextX, this.Roles[id].width, Number(isRight), id);
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
             this.RolesWillFall(id);
         }
@@ -322,7 +322,7 @@ class Main {
             this.Roles[id].height -= transferCoef;
             this.Roles[id].squatTrans = isDown;
             const nextWidth: number = this.Roles[id].width + transferCoef;
-            this.Roles[id].x = this.RolesWillImpactWall(this.Roles[id].x, nextWidth, 1, id);
+            this.Roles[id].x = this.impactJudge(this.Roles[id].x, nextWidth, 1, id);
             this.Roles[id].width = nextWidth;
             }
     }
@@ -348,7 +348,7 @@ class Main {
         }
     }
 
-    private RolesWillImpactWall(nextX: number, nextWidth: number, isRight: number, id: string) {
+    private impactJudge(nextX: number, nextWidth: number, isRight: number, id: string) {
         for (const floor of this.floors) {
             if (
                 this.Roles[id].footY > floor.y &&
