@@ -385,17 +385,10 @@ class Main {
         if (!this.Roles[id]) {
             return;
         }
-        let nextY: number = this.Roles[id].y
-        - this.Roles[id].jumpSpeed;
+        let nextY: number = this.Roles[id].y - this.Roles[id].jumpSpeed;
         let cross: boolean = false;
         this.Roles[id].jumpSpeed -= this.Roles[id].weight;
-        if (nextY !==
-            (nextY + this.stageHeight)
-            % this.stageHeight ||
-            nextY + this.Roles[id].height !==
-            (nextY + this.stageHeight + this.Roles[id].height)
-            % this.stageHeight
-        ) {
+        if (nextY < 0 || nextY > this.stageHeight) {
             nextY = (nextY + this.stageHeight) % this.stageHeight;
             cross = true;
         }
