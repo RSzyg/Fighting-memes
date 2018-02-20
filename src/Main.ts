@@ -86,7 +86,7 @@ class Main {
         });
 
         this.socket.on("move", (data: string) => {
-            this.movePreTreat(JSON.parse(data).id, JSON.parse(data).isRight);
+            this.moveTreat(JSON.parse(data).id, JSON.parse(data).isRight);
         });
 
         this.socket.on("squat", (data: string) => {
@@ -264,14 +264,14 @@ class Main {
                 isRight: true,
             };
             this.socket.emit("to move", JSON.stringify(data));
-            this.movePreTreat(this.selfId, true);
+            this.moveTreat(this.selfId, true);
         } else if (e.keyCode === 37) {
             const data = {
                 id: this.selfId,
                 isRight: false,
             };
             this.socket.emit("to move", JSON.stringify(data));
-            this.movePreTreat(this.selfId, false);
+            this.moveTreat(this.selfId, false);
         } else if (e.keyCode === 38) {
             if (this.Roles[this.selfId].verticalTimer === undefined) {
                 this.socket.emit("to jump", JSON.stringify({ id: this.selfId }));
@@ -302,7 +302,7 @@ class Main {
      * @param id id of player's role
      * @param isRight moveRight or moveLeft
      */
-    private movePreTreat(id: string, isRight: boolean) {
+    private moveTreat(id: string, isRight: boolean) {
         if (this.Roles[id]) {
             const moveSpeed = (2 * Number(isRight) - 1) * this.Roles[id].moveSpeed;
             let nextX: number = this.Roles[id].x + moveSpeed;
