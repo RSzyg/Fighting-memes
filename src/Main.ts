@@ -244,6 +244,8 @@ class Main {
                     clearInterval(this.Roles[this.selfId].downTimer);
                     this.Roles[this.selfId].downTimer = undefined;
                     break;
+                default:
+                    break;
             }
         }
     }
