@@ -1,3 +1,4 @@
+var path = require('path');
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -9,11 +10,11 @@ server.listen(port, () => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.resolve(__dirname, '../index.html'));
 });
 
 // Routing
-app.use(express.static(__dirname + '/dist'));
+app.use(express.static(path.resolve(__dirname, '../dist/')));
 
 // main
 var Roles = {};

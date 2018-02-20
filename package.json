@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --watch",
-    "server-start": "node app.js"
+    "server-start": "node server/app.js"
   },
   "repository": {
     "type": "git",
