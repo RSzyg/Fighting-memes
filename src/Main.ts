@@ -439,6 +439,7 @@ export default class Main {
                     this.map[i][j1] !== "t")
                     ||
                     (x !== j2 * this.blockThickness &&
+                    this.map[i][j2] !== undefined &&
                     this.map[i][j2] !== " " &&
                     this.map[i][j2] !== "T" &&
                     this.map[i][j2] !== "~" &&
@@ -463,6 +464,7 @@ export default class Main {
                 if (
                     this.map[i][j1] !== " " ||
                     this.map[i][j2] !== " " &&
+                    this.map[i][j2] !== undefined &&
                     x !== j2 * this.blockThickness
                 ) {
                     nextY = (i - 1) * this.blockThickness;
