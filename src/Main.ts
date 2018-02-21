@@ -66,7 +66,7 @@ export default class Main {
         });
 
         this.socket.on("disconnect", () => {
-            console.log("you have been diconnect");
+            alert("you have been diconnect");
         });
 
         this.socket.on("player left", (data: string) => {
