@@ -346,18 +346,44 @@ export default class Main {
     }
 
     private impactJudge(nextX: number, nextWidth: number, isRight: number, id: string) {
-        for (const floor of this.floors) {
-            if (
-                this.Roles[id].footY > floor.y &&
-                this.Roles[id].y < floor.y + this.blockThickness &&
-                nextX + nextWidth > floor.x &&
-                nextX < floor.x + floor.width &&
-                ((this.Roles[id].x >= floor.x + floor.width) ||
-                    (this.Roles[id].x + this.Roles[id].width <= floor.x))
-            ) {
-                return floor.x - isRight * nextWidth + (1 - isRight) * floor.width;
+        if (this.Roles[id]) {
+            let x: number = nextX;
+            // head block
+            const i1: number = Math.floor(this.Roles[id].y / this.blockThickness);
+            // foot block
+            const i2: number = Math.floor(this.Roles[id].footY / this.blockThickness);
+            // left block
+            const j1: number = Math.floor(x / this.blockThickness);
+            // right block
+            x += nextWidth;
+            const j2: number = Math.floor(x / this.blockThickness);
+
+            for (let i = i1; i <= i2; i++) {
+                if (this.map[i] === undefined) {
+                    break;
+                }
+                if (
+                    (this.map[i][j1] === " " && (this.map[i][j2] === "X" || this.map[i][j2] === "x")) ||
+                    ((this.map[i][j1] === "X" || this.map[i][j1] === "x") && this.map[i][j2] === " ")
+                ) {
+                    if (this.Roles[id].footY !== i * this.blockThickness) {
+                        return j2 * this.blockThickness - isRight * nextWidth;
+                    }
+                }
             }
         }
+        // for (const floor of this.floors) {
+        //     if (
+        //         this.Roles[id].footY > floor.y &&
+        //         this.Roles[id].y < floor.y + this.blockThickness &&
+        //         nextX + nextWidth > floor.x &&
+        //         nextX < floor.x + floor.width &&
+        //         ((this.Roles[id].x >= floor.x + floor.width) ||
+        //             (this.Roles[id].x + this.Roles[id].width <= floor.x))
+        //     ) {
+        //         return floor.x - isRight * nextWidth + (1 - isRight) * floor.width;
+        //     }
+        // }
         return nextX;
     }
 
