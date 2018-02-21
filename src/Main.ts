@@ -308,7 +308,7 @@ export default class Main {
             let nextX: number = this.Roles[id].x + moveSpeed;
             nextX = this.impactJudge(nextX, this.Roles[id].width, Number(isRight), id);
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
-            this.fallJudge(id);
+            this.fallJudge(id, isRight);
         }
     }
     /**
@@ -334,10 +334,7 @@ export default class Main {
         if (this.Roles[id]) {
             const i: number = this.Roles[id].floor.y / this.blockThickness + 1;
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
-            if (
-                this.map[i] === undefined ||
-                this.map[i][j] === " "
-            ) {
+            if (this.map[i] === undefined || this.map[i][j] === " ") {
                 this.Roles[id].jumpSpeed = 0;
                 this.Roles[id].ladderY += this.blockThickness;
                 this.Roles[id].verticalTimer = setInterval(
@@ -364,18 +361,23 @@ export default class Main {
         return nextX;
     }
 
-    private fallJudge(id: string) {
-        if (
-            !this.Roles[id].verticalTimer &&
-            (this.Roles[id].x > this.Roles[id].floor.x + this.Roles[id].floor.width ||
-                this.Roles[id].x + this.Roles[id].width < this.Roles[id].floor.x)
-        ) {
-            this.Roles[id].jumpSpeed = 0;
-            this.Roles[id].ladderY += this.blockThickness;
-            this.Roles[id].verticalTimer = setInterval(
-                () => this.RolesVerticalMove(id),
-                this.interval,
-            );
+    private fallJudge(id: string, isRight: boolean) {
+        if (this.Roles[id]) {
+            let x: number = this.Roles[id].x;
+            const i: number = Math.floor(this.Roles[id].footY / this.blockThickness);
+            const j1: number = Math.floor(x / this.blockThickness);
+            x += this.Roles[id].width;
+            const j2: number = Math.floor(x / this.blockThickness);
+            if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
+                if (!this.Roles[id].verticalTimer) {
+                    this.Roles[id].jumpSpeed = 0;
+                    this.Roles[id].ladderY += this.blockThickness;
+                    this.Roles[id].verticalTimer = setInterval(
+                        () => this.RolesVerticalMove(id),
+                        this.interval,
+                    );
+                }
+            }
         }
     }
     /**
