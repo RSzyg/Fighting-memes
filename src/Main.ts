@@ -368,6 +368,11 @@ export default class Main {
             const j1: number = Math.floor(x / this.blockThickness);
             x += this.Roles[id].width;
             const j2: number = Math.floor(x / this.blockThickness);
+
+            if (this.map[i] === undefined) {
+                return;
+            }
+
             if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
                 if (!this.Roles[id].verticalTimer) {
                     this.Roles[id].jumpSpeed = 0;
