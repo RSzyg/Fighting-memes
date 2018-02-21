@@ -16,7 +16,6 @@ export default class Role {
     public squatTrans: boolean; // "squat" status recorder
     public verticalTimer: number; // jump && fall timer
     public floor: Floor; // the floor underfoot
-    public ladderY: number; // the ladder be located
     public weapon: Weapon; // role's weapon
     private type: number; // role type
     private selfX: number; // x coordinate

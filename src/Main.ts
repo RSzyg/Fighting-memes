@@ -165,7 +165,6 @@ export default class Main {
                 role.x < floor.x + floor.width
             ) {
                 this.Roles[id].floor = floor;
-                this.Roles[id].ladderY = floor.y;
             }
         }
 
@@ -336,7 +335,6 @@ export default class Main {
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
             if (this.map[i] === undefined || this.map[i][j] === " ") {
                 this.Roles[id].jumpSpeed = 0;
-                this.Roles[id].ladderY += this.blockThickness;
                 this.Roles[id].verticalTimer = setInterval(
                     () => this.RolesVerticalMove(id),
                     this.interval,
@@ -401,7 +399,6 @@ export default class Main {
             if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
                 if (!this.Roles[id].verticalTimer) {
                     this.Roles[id].jumpSpeed = 0;
-                    this.Roles[id].ladderY += this.blockThickness;
                     this.Roles[id].verticalTimer = setInterval(
                         () => this.RolesVerticalMove(id),
                         this.interval,
