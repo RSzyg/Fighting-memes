@@ -398,7 +398,6 @@ export default class Main {
             if (this.map[i] === undefined) {
                 return;
             }
-
             if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
                 if (!this.Roles[id].verticalTimer) {
                     this.Roles[id].jumpSpeed = 0;
@@ -419,79 +418,62 @@ export default class Main {
             return;
         }
         let nextY: number = this.Roles[id].y - this.Roles[id].jumpSpeed;
-        let cross: boolean = false;
+        let x: number = this.Roles[id].x;
         this.Roles[id].jumpSpeed -= this.Roles[id].weight;
         if (nextY < 0 || nextY > this.stageHeight) {
             nextY = (nextY + this.stageHeight) % this.stageHeight;
-            cross = true;
         }
         if (this.Roles[id].jumpSpeed > 0) {
             // rise up part
-            if (nextY <= this.Roles[id].ladderY) {
-            // if (nextY <= this.Roles[id].ladderY - 2 * this.blockThickness) probably wrong
-                let isFind: boolean = false;
-                for (const floor of this.floors) {
-                    if (
-                        this.Roles[id].x < floor.x + floor.width
-                        &&
-                        this.Roles[id].x + this.Roles[id].width > floor.x
-                        &&
-                        nextY + this.Roles[id].jumpSpeed > floor.y
-                        &&
-                        nextY <= floor.y + this.blockThickness
-                        &&
-                        floor.type !== 1
-                    ) {
-                        this.Roles[id].jumpSpeed = 0;
-                        nextY = floor.y + this.blockThickness;
-                        isFind = true;
-                        break;
-                    }
+
+            // head block
+            const i = Math.floor(nextY / this.blockThickness);
+            // left block
+            const j1: number = Math.floor(x / this.blockThickness);
+            // right block
+            x += this.Roles[id].width;
+            const j2: number = Math.floor(x / this.blockThickness);
+
+            if (this.map[i]) {
+                if (
+                    (this.map[i][j1] !== " " &&
+                    this.map[i][j1] !== "T" &&
+                    this.map[i][j1] !== "~" &&
+                    this.map[i][j1] !== "t")
+                    ||
+                    (x !== j2 * this.blockThickness &&
+                    this.map[i][j2] !== " " &&
+                    this.map[i][j2] !== "T" &&
+                    this.map[i][j2] !== "~" &&
+                    this.map[i][j2] !== "t")
+                ) {
+                    this.Roles[id].jumpSpeed = 0;
+                    nextY = (i + 1) * this.blockThickness;
                 }
-                if (!isFind) {
-                    // update ladderY
-                    this.Roles[id].ladderY -= this.blockThickness;
-                }
-            }
-            this.Roles[id].y = nextY;
-            if (cross === true) {
-                this.Roles[id].ladderY = this.stageHeight - this.blockThickness;
             }
         } else if (this.Roles[id].jumpSpeed <= 0) {
             // fall down part
-            if (
-                nextY + this.Roles[id].height >=
-                this.Roles[id].ladderY
-            ) {
-                let isFind: boolean = false;
-                for (const floor of this.floors) {
-                    if (
-                        this.Roles[id].x < floor.x + floor.width
-                        &&
-                        this.Roles[id].x + this.Roles[id].width > floor.x
-                        &&
-                        nextY + this.Roles[id].jumpSpeed + this.Roles[id].height < floor.y
-                        &&
-                        nextY + this.Roles[id].height >= floor.y
-                    ) {
-                        nextY = floor.y - this.Roles[id].height;
-                        isFind = true;
-                        this.Roles[id].floor = floor;
-                        this.Roles[id].ladderY = floor.y;
-                        clearInterval(this.Roles[id].verticalTimer);
-                        this.Roles[id].verticalTimer = undefined;
-                        break;
-                    }
+
+            // foot block
+            const i = Math.floor((nextY + this.Roles[id].height) / this.blockThickness);
+            // left block
+            const j1: number = Math.floor(x / this.blockThickness);
+            // right block
+            x += this.Roles[id].width;
+            const j2: number = Math.floor(x / this.blockThickness);
+
+            if (this.map[i]) {
+                if (
+                    this.map[i][j1] !== " " ||
+                    this.map[i][j2] !== " " &&
+                    x !== j2 * this.blockThickness
+                ) {
+                    nextY = (i - 1) * this.blockThickness;
+                    clearInterval(this.Roles[id].verticalTimer);
+                    this.Roles[id].verticalTimer = undefined;
                 }
-                if (!isFind) {
-                    // update ladderY
-                    this.Roles[id].ladderY += this.blockThickness;
-                }
-            }
-            this.Roles[id].y = nextY;
-            if (cross === true) {
-                this.Roles[id].ladderY = this.blockThickness;
             }
         }
+        this.Roles[id].y = nextY;
     }
 }
