@@ -15,7 +15,6 @@ export default class Role {
     public rightTimer: number; // "right" status recorder
     public squatTrans: boolean; // "squat" status recorder
     public verticalTimer: number; // jump && fall timer
-    public floor: Floor; // the floor underfoot
     public weapon: Weapon; // role's weapon
     private type: number; // role type
     private selfX: number; // x coordinate
@@ -23,6 +22,8 @@ export default class Role {
     private selfWidth: number;
     private selfHeight: number;
     private fillColor: string;
+    private blockX: number;
+    private blockY: number;
 
     constructor(type: number, color: string, x: number, y: number) {
         switch (type) {
@@ -65,6 +66,22 @@ export default class Role {
 
     public set y(newY: number) {
         this.selfY = this.element.y = newY;
+    }
+
+    public get i(): number {
+        return this.blockX;
+    }
+
+    public set i(newX: number) {
+        this.blockX = newX;
+    }
+
+    public get j(): number {
+        return this.blockY;
+    }
+
+    public set j(newY: number) {
+        this.blockY = newY;
     }
 
     public get width(): number {

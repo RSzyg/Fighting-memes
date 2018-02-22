@@ -101,6 +101,10 @@ export default class Main {
             this.fallPreTreat(JSON.parse(data).id);
         });
 
+        setInterval(() => {
+            console.log(this.Roles[this.selfId].i, this.Roles[this.selfId].j);
+        }, 3000);
+
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
     }
@@ -156,17 +160,15 @@ export default class Main {
      * @param role role info
      */
     private createRole(id: string, role: {[key: string]: any}) {
-        this.Roles[id] = new Role(role.type, role.color, role.x, role.y);
+        const y: number = role.i * this.blockThickness;
+        const x: number = role.j * this.blockThickness;
+
+        this.Roles[id] = new Role(role.type, role.color, x, y);
         this.stage.add(this.Roles[id].element);
-        for (const floor of this.floors) {
-            if (
-                role.y + this.Roles[id].height === floor.y &&
-                role.x + this.Roles[id].width > floor.x &&
-                role.x < floor.x + floor.width
-            ) {
-                this.Roles[id].floor = floor;
-            }
-        }
+
+        // add block pos into role
+        this.Roles[id].i = role.i;
+        this.Roles[id].j = role.j;
 
         // this.Roles[id].weapon = new Weapon(0, this.Roles[id].x, this.Roles[id].y);
         // this.stage.addImage(this.Roles[id].weapon.image);
@@ -306,7 +308,14 @@ export default class Main {
             const moveSpeed = (2 * Number(isRight) - 1) * this.Roles[id].moveSpeed;
             let nextX: number = this.Roles[id].x + moveSpeed;
             nextX = this.impactJudge(nextX, this.Roles[id].width, Number(isRight), id);
+
+            // update role's pos
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
+
+            // update role's block pos
+            const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
+            this.Roles[id].j = j;
+
             this.fallJudge(id, isRight);
         }
     }
@@ -331,7 +340,7 @@ export default class Main {
      */
     private fallPreTreat(id: string) {
         if (this.Roles[id]) {
-            const i: number = this.Roles[id].floor.y / this.blockThickness + 1;
+            const i: number = this.Roles[id].footY / this.blockThickness + 1;
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
             if (this.map[i] === undefined || this.map[i][j] === " ") {
                 this.Roles[id].jumpSpeed = 0;
@@ -414,6 +423,7 @@ export default class Main {
         if (!this.Roles[id]) {
             return;
         }
+        let i: number;
         let nextY: number = this.Roles[id].y - this.Roles[id].jumpSpeed;
         let x: number = this.Roles[id].x;
         this.Roles[id].jumpSpeed -= this.Roles[id].weight;
@@ -424,7 +434,7 @@ export default class Main {
             // rise up part
 
             // head block
-            const i = Math.floor(nextY / this.blockThickness);
+            i = Math.floor(nextY / this.blockThickness);
             // left block
             const j1: number = Math.floor(x / this.blockThickness);
             // right block
@@ -453,7 +463,7 @@ export default class Main {
             // fall down part
 
             // foot block
-            const i = Math.floor((nextY + this.Roles[id].height) / this.blockThickness);
+            i = Math.floor((nextY + this.Roles[id].height) / this.blockThickness);
             // left block
             const j1: number = Math.floor(x / this.blockThickness);
             // right block
@@ -474,5 +484,9 @@ export default class Main {
             }
         }
         this.Roles[id].y = nextY;
+
+        // update role's block pos
+        i = Math.floor(this.Roles[id].y / this.blockThickness);
+        this.Roles[id].i = i;
     }
 }
