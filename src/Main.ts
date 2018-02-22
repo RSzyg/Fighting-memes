@@ -386,11 +386,24 @@ export default class Main {
                     break;
                 }
                 if (
-                    (this.map[i][j1] === " " && (this.map[i][j2] === "X" || this.map[i][j2] === "x")) ||
-                    ((this.map[i][j1] === "X" || this.map[i][j1] === "x") && this.map[i][j2] === " ")
+                    (
+                        this.map[i][j2] !== "T" &&
+                        this.map[i][j2] !== "t" &&
+                        this.map[i][j2] !== " "
+                    )
+                    ||
+                    (
+                        this.map[i][j1] !== "T" &&
+                        this.map[i][j1] !== "t" &&
+                        this.map[i][j1] !== " "
+                    )
                 ) {
                     if (this.Roles[id].footY !== i * this.blockThickness) {
-                        return j2 * this.blockThickness - isRight * nextWidth;
+                        if (this.map[i][j1] !== " " && this.map[i][j2] !== " ") {
+                            return this.Roles[id].x;
+                        } else {
+                            return j2 * this.blockThickness - isRight * nextWidth;
+                        }
                     }
                 }
             }
