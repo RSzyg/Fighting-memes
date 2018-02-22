@@ -341,9 +341,22 @@ export default class Main {
      */
     private fallPreTreat(id: string) {
         if (this.Roles[id]) {
-            const i: number = this.Roles[id].footY / this.blockThickness + 1;
-            const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
-            if (this.map[i] === undefined || this.map[i][j] === " ") {
+            let x: number = this.Roles[id].x;
+            // under foot block
+            const i: number = this.Roles[id].i + 2;
+            // left block
+            const j1: number = Math.floor(x / this.blockThickness);
+            // right block
+            x += this.Roles[id].width;
+            const j2: number = Math.floor(x / this.blockThickness);
+
+            if (
+                this.map[i] === undefined ||
+                (
+                    this.map[i][j1] === " " &&
+                    this.map[i][j1] === this.map[i][j2]
+                )
+            ) {
                 this.Roles[id].jumpSpeed = 0;
                 this.Roles[id].verticalTimer = setInterval(
                     () => this.RolesVerticalMove(id),
