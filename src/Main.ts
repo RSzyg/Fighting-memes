@@ -478,16 +478,18 @@ export default class Main {
                     this.map[i][j2] !== undefined &&
                     x !== j2 * this.blockThickness
                 ) {
-                    nextY = (i - 1) * this.blockThickness;
-                    clearInterval(this.Roles[id].verticalTimer);
-                    this.Roles[id].verticalTimer = undefined;
+                    if (this.Roles[id].i + 1 !== i) {
+                        nextY = i * this.blockThickness - this.Roles[id].height;
+                        clearInterval(this.Roles[id].verticalTimer);
+                        this.Roles[id].verticalTimer = undefined;
+
+                        // update role's block pos
+                        i = Math.floor(this.Roles[id].y / this.blockThickness);
+                        this.Roles[id].i = i;
+                    }
                 }
             }
         }
         this.Roles[id].y = nextY;
-
-        // update role's block pos
-        i = Math.floor(this.Roles[id].y / this.blockThickness);
-        this.Roles[id].i = i;
     }
 }
