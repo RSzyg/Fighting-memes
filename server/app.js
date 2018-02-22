@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
         }
     }
 
-    console.log(i, j);
+    console.log(i + 1, j);
 
     socket.on('loaded', () => {
         if (newRole) return;
@@ -101,7 +101,7 @@ io.on('connection', (socket) => {
             id: socket.id,
             type: 0,
             color: '#66ccff',
-            i: i,
+            i: i + 1,
             j: j
         }
         Roles[socket.id] = newRole;

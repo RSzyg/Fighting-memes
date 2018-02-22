@@ -167,7 +167,8 @@ export default class Main {
         this.stage.add(this.Roles[id].element);
 
         // add block pos into role
-        this.Roles[id].i = role.i;
+        const i: number = Math.floor(this.Roles[id].y / this.blockThickness);
+        this.Roles[id].i = i;
         this.Roles[id].j = role.j;
 
         // this.Roles[id].weapon = new Weapon(0, this.Roles[id].x, this.Roles[id].y);
