@@ -357,6 +357,8 @@ export default class Main {
                     this.map[i][j1] === this.map[i][j2]
                 )
             ) {
+                this.Roles[id].i++;
+                this.Roles[id].i %= this.map.length;
                 this.Roles[id].jumpSpeed = 0;
                 this.Roles[id].verticalTimer = setInterval(
                     () => this.RolesVerticalMove(id),
@@ -421,6 +423,8 @@ export default class Main {
             }
             if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
                 if (!this.Roles[id].verticalTimer) {
+                    this.Roles[id].i++;
+                    this.Roles[id].i %= this.map.length;
                     this.Roles[id].jumpSpeed = 0;
                     this.Roles[id].verticalTimer = setInterval(
                         () => this.RolesVerticalMove(id),
@@ -484,25 +488,26 @@ export default class Main {
             x += this.Roles[id].width;
             const j2: number = Math.floor(x / this.blockThickness);
 
-            if (this.map[i]) {
+            if (
+                this.map[i] &&
+                this.Roles[id].footY < i * this.blockThickness
+            ) {
                 if (
                     this.map[i][j1] !== " " ||
                     this.map[i][j2] !== " " &&
                     this.map[i][j2] !== undefined &&
                     x !== j2 * this.blockThickness
                 ) {
-                    if (this.Roles[id].i + 1 !== i) {
-                        nextY = i * this.blockThickness - this.Roles[id].height;
-                        clearInterval(this.Roles[id].verticalTimer);
-                        this.Roles[id].verticalTimer = undefined;
-
-                        // update role's block pos
-                        i = Math.floor(this.Roles[id].y / this.blockThickness);
-                        this.Roles[id].i = i;
-                    }
+                    nextY = i * this.blockThickness - this.Roles[id].height;
+                    clearInterval(this.Roles[id].verticalTimer);
+                    this.Roles[id].verticalTimer = undefined;
                 }
             }
         }
         this.Roles[id].y = nextY;
+
+        // update role's block pos
+        i = Math.floor(this.Roles[id].y / this.blockThickness);
+        this.Roles[id].i = i;
     }
 }
