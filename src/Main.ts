@@ -487,10 +487,13 @@ export default class Main {
             // foot block
             i = Math.floor((nextY + this.Roles[id].height) / this.blockThickness);
             // left block
-            const j1: number = Math.floor(x / this.blockThickness);
+            let j1: number = Math.floor(x / this.blockThickness);
             // right block
             x += this.Roles[id].width;
-            const j2: number = Math.floor(x / this.blockThickness);
+            let j2: number = Math.floor(x / this.blockThickness);
+
+            j1 = (j1 + this.map[0].length) % this.map[0].length;
+            j2 = (j2 + this.map[0].length) % this.map[0].length;
 
             if (
                 this.map[i] &&
@@ -499,7 +502,6 @@ export default class Main {
                 if (
                     this.map[i][j1] !== " " ||
                     this.map[i][j2] !== " " &&
-                    this.map[i][j2] !== undefined &&
                     x !== j2 * this.blockThickness
                 ) {
                     nextY = i * this.blockThickness - this.Roles[id].height;
