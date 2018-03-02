@@ -376,10 +376,10 @@ export default class Main {
             // foot block
             const i2: number = Math.floor(this.Roles[id].footY / this.blockThickness);
             // left block
-            const j1: number = Math.floor(x / this.blockThickness);
+            let j1: number = Math.floor(x / this.blockThickness);
             // right block
             x += nextWidth;
-            const j2: number = Math.floor(x / this.blockThickness);
+            let j2: number = Math.floor(x / this.blockThickness);
 
             for (let i = i1; i <= i2; i++) {
                 if (this.map[i] === undefined) {
@@ -399,8 +399,13 @@ export default class Main {
                     )
                 ) {
                     if (this.Roles[id].footY !== i * this.blockThickness) {
+                        j1 = (j1 + this.map[i].length) % this.map[i].length;
+                        j2 = (j2 + this.map[i].length) % this.map[i].length;
+
                         if (this.map[i][j1] !== " " && this.map[i][j2] !== " ") {
                             return this.Roles[id].x;
+                        } else if (j1 !== j2 - 1) {
+                            return nextX;
                         } else {
                             return j2 * this.blockThickness - isRight * nextWidth;
                         }
