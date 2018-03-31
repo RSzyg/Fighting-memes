@@ -136,6 +136,16 @@ io.on('connection', (socket) => {
 
     socket.on('to move', (data) => {
         socket.broadcast.emit('move', data);
+        var info = JSON.parse(data);
+        try {
+            if (Roles[info.id] === undefined) {
+                throw "no such id";
+            }
+            console.log(info);
+        } catch(e) {
+            console.log(e);
+            socket.disconnect(true);
+        }
     });
 
     socket.on('disconnect', () => {
