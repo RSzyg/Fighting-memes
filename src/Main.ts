@@ -28,7 +28,7 @@ export default class Main {
      * basic initial
      */
     public createScene() {
-        this.socket = io.connect("http://localhost:" + 2333);
+        this.socket = io.connect(window.location.host);
 
         this.socket.on("init", (data: string) => {
             const initData = JSON.parse(data);
