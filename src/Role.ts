@@ -31,7 +31,7 @@ export default class Role {
         this.power = type.power;
         this.moveSpeed = type.moveSpeed;
         this.selfX = x;
-        this.selfY = y - this.selfHeight;
+        this.selfY = y;
         this.upTimer = undefined;
         this.downTimer = undefined;
         this.leftTimer = undefined;

@@ -101,9 +101,9 @@ export default class Main {
             this.fallPreTreat(JSON.parse(data).id);
         });
 
-        setInterval(() => {
-            console.log(this.Roles[this.selfId].i, this.Roles[this.selfId].j);
-        }, 3000);
+        // setInterval(() => {
+        //     console.log(this.Roles[this.selfId].i, this.Roles[this.selfId].j);
+        // }, 3000);
 
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
@@ -312,6 +312,7 @@ export default class Main {
 
             // update role's pos
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
+            console.log(this.Roles[id].x);
 
             // update role's block pos
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);

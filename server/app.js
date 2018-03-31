@@ -114,7 +114,7 @@ io.on('connection', (socket) => {
             i: i + 1,
             j: j,
             x: j * initData.blockThickness,
-            y: (i + 1) * initData.blockThickness
+            y: (i + 1) * initData.blockThickness - roleType[typeRand].height
         }
         Roles[socket.id] = newRole;
         var allRoles = {
@@ -151,7 +151,48 @@ io.on('connection', (socket) => {
             if (Roles[info.id] === undefined) {
                 throw "no such id";
             }
-            console.log(info);
+            var role = Roles[info.id];
+            if (info.isRight) {
+                role.x += role.type.moveSpeed;
+            } else {
+                role.x -= role.type.moveSpeed;
+            }
+
+            //impactJudge
+            const i1 = Math.floor(role.y / initData.blockThickness);
+            const i2 = Math.floor((role.y + role.type.height) / initData.blockThickness);
+            var j1 = Math.floor(role.x / initData.blockThickness);
+            var j2 = Math.floor((role.x + role.type.width) / initData.blockThickness);
+
+            j1 = (j1 + initData.map[0].length) % initData.map[0].length;
+            j2 = (j2 + initData.map[0].length) % initData.map[0].length;
+
+            const j = info.isRight ? j2 : j1;
+
+            for (var i = i1; i <= i2; i++) {
+                if (initData.map[i] === undefined) {
+                    break;
+                }
+                if (
+                    (
+                        initData.map[i][j] !== "T" &&
+                        initData.map[i][j] !== "t" &&
+                        initData.map[i][j] !== " "
+                    )
+                ) {
+                    if (
+                        (role.y + role.type.height) !== i * initData.blockThickness
+                        &&
+                        j1 === j2 - 1
+                    ) {
+                        if (initData.map[i][j1] === " " || initData.map[i][j2] === " ") {
+                            role.x = j2 * initData.blockThickness - info.isRight * role.type.width;
+                        }
+                    }
+                }
+            }
+            role.x = (role.x + initData.stageWidth) % initData.stageWidth;
+            console.log(role.x);
         } catch(e) {
             console.log(e);
             socket.disconnect(true);
