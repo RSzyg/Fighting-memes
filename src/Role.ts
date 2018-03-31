@@ -16,7 +16,6 @@ export default class Role {
     public squatTrans: boolean; // "squat" status recorder
     public verticalTimer: number; // jump && fall timer
     public weapon: Weapon; // role's weapon
-    private type: number; // role type
     private selfX: number; // x coordinate
     private selfY: number; // y coordinate
     private selfWidth: number;
@@ -25,18 +24,14 @@ export default class Role {
     private blockX: number;
     private blockY: number;
 
-    constructor(type: number, color: string, x: number, y: number) {
-        switch (type) {
-        case 0:
-            this.selfWidth = 20;
-            this.selfHeight = 60;
-            this.weight = 1;
-            this.jumpSpeed = this.power = 24;
-            this.moveSpeed = 6;
-        }
+    constructor(type: {[key: string]: number}, color: string, x: number, y: number) {
+        this.selfWidth = type.width;
+        this.selfHeight = type.height;
+        this.weight = type.weight;
+        this.power = type.power;
+        this.moveSpeed = type.moveSpeed;
         this.selfX = x;
         this.selfY = y - this.selfHeight;
-        this.type = type;
         this.upTimer = undefined;
         this.downTimer = undefined;
         this.leftTimer = undefined;

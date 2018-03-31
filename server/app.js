@@ -63,12 +63,22 @@ var maps = [
         'T~~~~~~~~~~~~~tXxT~~~~~~~~~~~~~t'
     ]
 ];
+var roleType = [
+    {
+        width: 20,
+        height: 60,
+        weight: 1,
+        power: 24,
+        moveSpeed: 6
+    }
+];
 var rand = Math.floor(Math.random() * maps.length);
 var roomMap = maps[rand];
-console.log(maps[rand]);
+console.log(roomMap);
 
 io.on('connection', (socket) => {
     var newRole = undefined;
+    var typeRand = Math.floor(Math.random() * roleType.length);
     var initData = {
         stageWidth: 1920,
         stageHeight: 1080,
@@ -99,7 +109,7 @@ io.on('connection', (socket) => {
 
         newRole = {
             id: socket.id,
-            type: 0,
+            type: roleType[typeRand],
             color: '#66ccff',
             i: i + 1,
             j: j,
