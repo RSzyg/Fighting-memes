@@ -25,7 +25,7 @@ var maps = [
     [
         '                                ',
         '                                ',
-        'X#x      T~~~~~~~~~~~~t      X#x',
+        'X#x      XxT~~~~~~~~tXx      X#x',
         '         Xx          Xx         ',
         '         Xx          Xx         ',
         '      X##################x      ',
@@ -192,7 +192,6 @@ io.on('connection', (socket) => {
                 }
             }
             role.x = (role.x + initData.stageWidth) % initData.stageWidth;
-            console.log(role.x);
         } catch(e) {
             console.log(e);
             socket.disconnect(true);

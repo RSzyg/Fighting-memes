@@ -312,7 +312,6 @@ export default class Main {
 
             // update role's pos
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
-            console.log(this.Roles[id].x);
 
             // update role's block pos
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
@@ -395,6 +394,7 @@ export default class Main {
                     (
                         this.map[i][j] !== "T" &&
                         this.map[i][j] !== "t" &&
+                        this.map[i][j] !== "~" &&
                         this.map[i][j] !== " "
                     )
                 ) {
@@ -403,11 +403,7 @@ export default class Main {
                         &&
                         j1 === j2 - 1
                     ) {
-                        if (this.map[i][j1] !== " " && this.map[i][j2] !== " ") {
-                            return this.Roles[id].x;
-                        } else {
-                            return j2 * this.blockThickness - isRight * nextWidth;
-                        }
+                        return j2 * this.blockThickness - isRight * nextWidth;
                     }
                 }
             }
