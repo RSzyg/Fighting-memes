@@ -116,39 +116,41 @@ export default class Main {
             const y: number = i * this.blockThickness;
             for (let j: number = 0; j < this.map[0].length; j++) {
                 let x: number = j * this.blockThickness;
-                if (this.map[i][j] === "X") {
-                    const blocksNum = this.map[i].indexOf("x", j + 1) - j + 1;
+                if (this.map[i][j] === "#") {
+                    let blocksNum: number = 0;
+                    let pos: number = j;
+                    while (pos < this.map[0].length && this.map[i][pos] === "#") {
+                        blocksNum++;
+                        pos++;
+                    }
                     const floorWidth = this.blockThickness * blocksNum;
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, 0);
 
                     let block: Block;
-                    while (this.map[i][j] !== "x") {
-                        x = j * this.blockThickness;
+                    for (let k: number = j; k < pos; k++) {
+                        x = k * this.blockThickness;
                         block = floor.addBlock(x, y, "#ffffff", "#000000", 2);
                         this.stage.add(block.element);
-                        j++;
                     }
-                    x = j * this.blockThickness;
-                    block = floor.addBlock(x, y, "#ffffff", "#000000", 2);
-                    this.stage.add(block.element);
 
                     this.floors.push(floor);
 
-                } else if (this.map[i][j] === "T") {
-                    const blocksNum = this.map[i].indexOf("t", j + 1) - j + 1;
+                } else if (this.map[i][j] === "~") {
+                    let blocksNum: number = 0;
+                    let pos: number = j;
+                    while (pos < this.map[0].length && this.map[i][pos] === "~") {
+                        blocksNum++;
+                        pos++;
+                    }
                     const floorWidth = this.blockThickness * blocksNum;
                     const floor: Floor = new Floor(x, y, floorWidth, this.blockThickness, 1);
 
                     let block: Block;
-                    while (this.map[i][j] !== "t") {
-                        x = j * this.blockThickness;
-                        block = floor.addBlock(x, y, "#42426F", "#000000", 2);
+                    for (let k: number = j; k < pos; k++) {
+                        x = k * this.blockThickness;
+                        block = floor.addBlock(x, y, "#772002", "#000000", 2);
                         this.stage.add(block.element);
-                        j++;
                     }
-                    x = j * this.blockThickness;
-                    block = floor.addBlock(x, y, "#42426F", "#000000", 2);
-                    this.stage.add(block.element);
 
                     this.floors.push(floor);
                 }
@@ -392,8 +394,6 @@ export default class Main {
                 }
                 if (
                     (
-                        this.map[i][j] !== "T" &&
-                        this.map[i][j] !== "t" &&
                         this.map[i][j] !== "~" &&
                         this.map[i][j] !== " "
                     )
@@ -463,16 +463,12 @@ export default class Main {
             if (this.map[i]) {
                 if (
                     (this.map[i][j1] !== " " &&
-                    this.map[i][j1] !== "T" &&
-                    this.map[i][j1] !== "~" &&
-                    this.map[i][j1] !== "t")
+                    this.map[i][j1] !== "~")
                     ||
                     (x !== j2 * this.blockThickness &&
                     this.map[i][j2] !== undefined &&
                     this.map[i][j2] !== " " &&
-                    this.map[i][j2] !== "T" &&
-                    this.map[i][j2] !== "~" &&
-                    this.map[i][j2] !== "t")
+                    this.map[i][j2] !== "~")
                 ) {
                     this.Roles[id].jumpSpeed = 0;
                     nextY = (i + 1) * this.blockThickness;

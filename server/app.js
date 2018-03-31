@@ -25,53 +25,51 @@ var maps = [
     [
         '                                ',
         '                                ',
-        'X#x      XxT~~~~~~~~tXx      X#x',
-        '         Xx          Xx         ',
-        '         Xx          Xx         ',
-        '      X##################x      ',
+        '###      ##~~~~~~~~~~##      ###',
+        '         ##          ##         ',
+        '         ##          ##         ',
+        '      ####################      ',
         '                                ',
         '                                ',
-        '  X####x                X####x  ',
-        '              X##x              ',
-        '            X######x            ',
-        'X###x     X##########x     X###x',
+        '  ######                ######  ',
+        '              ####              ',
+        '            ########            ',
+        '#####     ############     #####',
         '                                ',
         '                                ',
-        '   X########x      X########x   ',
+        '   ##########      ##########   ',
         '                                ',
         '                                ',
-        'T~~~~t   T~~~~~~~~~~~~t   T~~~~t'
+        '~~~~~~   ~~~~~~~~~~~~~~   ~~~~~~'
     ],
     [
         '                                ',
         '                                ',
-        'X####x                    X####x',
+        '######                    ######',
         '                                ',
-        '         T~~~~~~~~~~~~t         ',
-        '                                ',
-        '                                ',
-        'T~~~~~~t      X##x      T~~~~~~t',
-        '              X##x              ',
-        '              X##x              ',
-        '         X############x         ',
-        'T~~t         X####x         T~~t',
+        '         ~~~~~~~~~~~~~~         ',
         '                                ',
         '                                ',
-        'T~~~~~~t      X##x      T~~~~~~t',
-        '              X##x               ',
-        '              X##x               ',
-        'T~~~~~~~~~~~~~tXxT~~~~~~~~~~~~~t'
+        '~~~~~~~~      ####      ~~~~~~~~',
+        '              ####              ',
+        '              ####              ',
+        '         ##############         ',
+        '~~~~         ######         ~~~~',
+        '                                ',
+        '                                ',
+        '~~~~~~~~      ####      ~~~~~~~~',
+        '              ####               ',
+        '              ####               ',
+        '~~~~~~~~~~~~~~~##~~~~~~~~~~~~~~~'
     ]
 ];
-var roleType = [
-    {
-        width: 20,
-        height: 60,
-        weight: 1,
-        power: 24,
-        moveSpeed: 6
-    }
-];
+var roleType = [{
+    width: 20,
+    height: 60,
+    weight: 1,
+    power: 24,
+    moveSpeed: 6
+}];
 var rand = Math.floor(Math.random() * maps.length);
 var roomMap = maps[rand];
 console.log(roomMap);
@@ -182,8 +180,7 @@ io.on('connection', (socket) => {
                     )
                 ) {
                     if (
-                        (role.y + role.type.height) !== i * initData.blockThickness
-                        &&
+                        (role.y + role.type.height) !== i * initData.blockThickness &&
                         j1 === j2 - 1
                     ) {
                         role.x = j2 * initData.blockThickness - info.isRight * role.type.width;
@@ -191,7 +188,7 @@ io.on('connection', (socket) => {
                 }
             }
             role.x = (role.x + initData.stageWidth) % initData.stageWidth;
-        } catch(e) {
+        } catch (e) {
             console.log(e);
             socket.disconnect(true);
         }
