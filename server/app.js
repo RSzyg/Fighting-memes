@@ -177,6 +177,7 @@ io.on('connection', (socket) => {
                     (
                         initData.map[i][j] !== "T" &&
                         initData.map[i][j] !== "t" &&
+                        initData.map[i][j] !== "~" &&
                         initData.map[i][j] !== " "
                     )
                 ) {
@@ -185,9 +186,7 @@ io.on('connection', (socket) => {
                         &&
                         j1 === j2 - 1
                     ) {
-                        if (initData.map[i][j1] === " " || initData.map[i][j2] === " ") {
-                            role.x = j2 * initData.blockThickness - info.isRight * role.type.width;
-                        }
+                        role.x = j2 * initData.blockThickness - info.isRight * role.type.width;
                     }
                 }
             }
