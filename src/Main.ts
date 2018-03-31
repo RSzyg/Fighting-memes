@@ -160,8 +160,8 @@ export default class Main {
      * @param role role info
      */
     private createRole(id: string, role: {[key: string]: any}) {
-        const y: number = role.i * this.blockThickness;
-        const x: number = role.j * this.blockThickness;
+        const y: number = role.y;
+        const x: number = role.x;
 
         this.Roles[id] = new Role(role.type, role.color, x, y);
         this.stage.add(this.Roles[id].element);

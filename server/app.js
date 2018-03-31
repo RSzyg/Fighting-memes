@@ -102,7 +102,9 @@ io.on('connection', (socket) => {
             type: 0,
             color: '#66ccff',
             i: i + 1,
-            j: j
+            j: j,
+            x: j * initData.blockThickness,
+            y: (i + 1) * initData.blockThickness
         }
         Roles[socket.id] = newRole;
         var allRoles = {
