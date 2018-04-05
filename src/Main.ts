@@ -342,7 +342,7 @@ export default class Main {
             const nextWidth: number = this.Roles[id].width + transferCoef;
             this.Roles[id].x = this.impactJudge(this.Roles[id].x, nextWidth, 1, id);
             this.Roles[id].width = nextWidth;
-            }
+        }
     }
     /**
      * prepare to go down

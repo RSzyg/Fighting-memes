@@ -179,6 +179,17 @@ io.on('connection', (socket) => {
         }
     }
 
+    var squatTreat = function (id, isDown) {
+        if (Roles[id]) {
+            var transferCoef = (2 * Number(isDown) - 1) * initData.transferCoef;
+            Roles[id].height -= transferCoef;
+            Roles[id].squatTrans = isDown;
+            var nextWidth = Roles[id].width + transferCoef;
+            impactJudge(nextWidth, 1, id);
+            Roles[id].width = nextWidth;
+        }
+    }
+
     socket.emit('init', JSON.stringify(initData));
 
     var i = Math.floor(Math.random() * 17);
@@ -228,10 +239,12 @@ io.on('connection', (socket) => {
 
     socket.on('to squat', (data) => {
         socket.broadcast.emit('squat', data);
+        squatTreat(JSON.parse(data).id, true);
     });
 
     socket.on('to stand', (data) => {
         socket.broadcast.emit('stand', data);
+        squatTreat(JSON.parse(data).id, false);
     });
 
     socket.on('to go down', (data) => {
