@@ -63,13 +63,15 @@ var maps = [
         '~~~~~~~~~~~~~~~##~~~~~~~~~~~~~~~'
     ]
 ];
-var roleType = [{
-    width: 20,
-    height: 60,
-    weight: 1,
-    power: 24,
-    moveSpeed: 6
-}];
+var roleType = [
+    {
+        width: 20,
+        height: 60,
+        weight: 1,
+        power: 24,
+        moveSpeed: 6
+    }
+];
 var rand = Math.floor(Math.random() * maps.length);
 var roomMap = maps[rand];
 console.log(roomMap);
@@ -107,7 +109,11 @@ io.on('connection', (socket) => {
 
         newRole = {
             id: socket.id,
-            type: roleType[typeRand],
+            width: roleType[typeRand].width,
+            height: roleType[typeRand].height,
+            weight: roleType[typeRand].weight,
+            power: roleType[typeRand].power,
+            moveSpeed: roleType[typeRand].moveSpeed,
             color: '#66ccff',
             i: i + 1,
             j: j,
@@ -151,16 +157,16 @@ io.on('connection', (socket) => {
             }
             var role = Roles[info.id];
             if (info.isRight) {
-                role.x += role.type.moveSpeed;
+                role.x += role.moveSpeed;
             } else {
-                role.x -= role.type.moveSpeed;
+                role.x -= role.moveSpeed;
             }
 
             //impactJudge
             const i1 = Math.floor(role.y / initData.blockThickness);
-            const i2 = Math.floor((role.y + role.type.height) / initData.blockThickness);
+            const i2 = Math.floor((role.y + role.height) / initData.blockThickness);
             var j1 = Math.floor(role.x / initData.blockThickness);
-            var j2 = Math.floor((role.x + role.type.width) / initData.blockThickness);
+            var j2 = Math.floor((role.x + role.width) / initData.blockThickness);
 
             j1 = (j1 + initData.map[0].length) % initData.map[0].length;
             j2 = (j2 + initData.map[0].length) % initData.map[0].length;
@@ -178,10 +184,10 @@ io.on('connection', (socket) => {
                     )
                 ) {
                     if (
-                        (role.y + role.type.height) !== i * initData.blockThickness &&
+                        (role.y + role.height) !== i * initData.blockThickness &&
                         j1 === j2 - 1
                     ) {
-                        role.x = j2 * initData.blockThickness - info.isRight * role.type.width;
+                        role.x = j2 * initData.blockThickness - info.isRight * role.width;
                     }
                 }
             }

@@ -164,8 +164,15 @@ export default class Main {
     private createRole(id: string, role: {[key: string]: any}) {
         const y: number = role.y;
         const x: number = role.x;
+        const type: {[key: string]: number} = {
+            width: role.width,
+            height: role.height,
+            weight: role.weight,
+            power: role.power,
+            moveSpeed: role.moveSpeed,
+        };
 
-        this.Roles[id] = new Role(role.type, role.color, x, y);
+        this.Roles[id] = new Role(type, role.color, x, y);
         this.stage.add(this.Roles[id].element);
 
         // add block pos into role

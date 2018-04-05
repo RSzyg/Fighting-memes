@@ -8,9 +8,10 @@
         "new-parens": true,
         "no-arg": true,
         "no-bitwise": true,
-	"only-arrow-functions": true,
+	    "only-arrow-functions": true,
         "no-conditional-assignment": true,
         "no-consecutive-blank-lines": false,
+        "object-literal-sort-keys": false,
         "no-console": {
             "severity": "warning",
             "options": [
