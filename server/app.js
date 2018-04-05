@@ -90,35 +90,64 @@ io.on('connection', (socket) => {
     }
 
     var impactJudge = function (nextWidth, isRight, id) {
-        var i1 = Math.floor(Roles[id].y / initData.blockThickness);
-        var i2 = Math.floor((Roles[id].y + Roles[id].height) / initData.blockThickness);
-        var j1 = Math.floor(Roles[id].x / initData.blockThickness);
-        var j2 = Math.floor((Roles[id].x + nextWidth) / initData.blockThickness);
-    
-        j1 = (j1 + roomMap[0].length) % roomMap[0].length;
-        j2 = (j2 + roomMap[0].length) % roomMap[0].length;
-    
-        var j = isRight ? j2 : j1;
-    
-        for (var i = i1; i <= i2; i++) {
-            if (roomMap[i] === undefined) {
-                break;
-            }
-            if (
-                (
-                    roomMap[i][j] !== "~" &&
-                    roomMap[i][j] !== " "
-                )
-            ) {
+        if (Roles[id]) {
+            var i1 = Math.floor(Roles[id].y / initData.blockThickness);
+            var i2 = Math.floor((Roles[id].y + Roles[id].height) / initData.blockThickness);
+            var j1 = Math.floor(Roles[id].x / initData.blockThickness);
+            var j2 = Math.floor((Roles[id].x + nextWidth) / initData.blockThickness);
+
+            j1 = (j1 + roomMap[0].length) % roomMap[0].length;
+            j2 = (j2 + roomMap[0].length) % roomMap[0].length;
+
+            var j = isRight ? j2 : j1;
+
+            for (var i = i1; i <= i2; i++) {
+                if (roomMap[i] === undefined) {
+                    break;
+                }
                 if (
-                    (Roles[id].y + Roles[id].height) !== i * initData.blockThickness &&
-                    j1 === j2 - 1
+                    (
+                        roomMap[i][j] !== "~" &&
+                        roomMap[i][j] !== " "
+                    )
                 ) {
-                    Roles[id].x = j2 * initData.blockThickness - isRight * nextWidth;
+                    if (
+                        (Roles[id].y + Roles[id].height) !== i * initData.blockThickness &&
+                        j1 === j2 - 1
+                    ) {
+                        Roles[id].x = j2 * initData.blockThickness - isRight * nextWidth;
+                    }
+                }
+            }
+            Roles[id].x = (Roles[id].x + initData.stageWidth) % initData.stageWidth;
+        }
+    }
+
+    var fallJudge = function (id) {
+        if (Roles[id]) {
+            var x = Roles[id].x;
+            var i = Math.floor((Roles[id].y + Roles[id].height) / initData.blockThickness);
+            var j1 = Math.floor(x / initData.blockThickness);
+            x += Roles[id].width;
+            var j2 = Math.floor(x / initData.blockThickness);
+
+            if (roomMap[i] === undefined) {
+                return;
+            }
+            if (roomMap[i][j1] === " " && roomMap[i][j1] === roomMap[i][j2]) {
+                if (!Roles[id].verticalTimer) {
+                    console.log("fall true");
+                    return;
+                    Roles[id].i++;
+                    Roles[id].i %= roomMap.length;
+                    Roles[id].jumpSpeed = 0;
+                    Roles[id].verticalTimer = setInterval(
+                        () => RolesVerticalMove(id),
+                        initData.interval
+                    );
                 }
             }
         }
-        Roles[id].x = (Roles[id].x + initData.stageWidth) % initData.stageWidth;
     }
 
     socket.emit('init', JSON.stringify(initData));
@@ -196,8 +225,10 @@ io.on('connection', (socket) => {
 
             //impactJudge
             impactJudge(role.width, info.isRight, role.id);
-            console.log(role.x);
+
+            fallJudge(role.id);
             
+            console.log(role.x, role.y);
         } catch (e) {
             console.log(e);
             socket.disconnect(true);

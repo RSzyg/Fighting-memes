@@ -321,13 +321,13 @@ export default class Main {
 
             // update role's pos
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
-            console.log(this.Roles[id].x);
 
             // update role's block pos
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
             this.Roles[id].j = j;
 
-            this.fallJudge(id, isRight);
+            this.fallJudge(id);
+            console.log(this.Roles[id].x, this.Roles[id].y);
         }
     }
     /**
@@ -419,7 +419,7 @@ export default class Main {
         return nextX;
     }
 
-    private fallJudge(id: string, isRight: boolean) {
+    private fallJudge(id: string) {
         if (this.Roles[id]) {
             let x: number = this.Roles[id].x;
             const i: number = Math.floor(this.Roles[id].footY / this.blockThickness);
