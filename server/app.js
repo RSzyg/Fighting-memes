@@ -138,7 +138,6 @@ io.on('connection', (socket) => {
                 if (!Roles[id].verticalTimer) {
                     console.log("fall true");
                     return;
-                    Roles[id].i++;
                     Roles[id].i %= roomMap.length;
                     Roles[id].jumpSpeed = 0;
                     Roles[id].verticalTimer = setInterval(
@@ -146,6 +145,36 @@ io.on('connection', (socket) => {
                         initData.interval
                     );
                 }
+            }
+        }
+    }
+
+    var goDown = function (id) {
+        if (Roles[id]) {
+            var x = Roles[id].x;
+            // under foot block
+            var i = Roles[id].i + 1;
+            // left block
+            var j1 = Math.floor(x / initData.blockThickness);
+            // right block
+            x += Roles[id].width;
+            var j2 = Math.floor(x / initData.blockThickness);
+
+            if (
+                roomMap[i] === undefined ||
+                (
+                    roomMap[i][j1] === " " &&
+                    roomMap[i][j1] === roomMap[i][j2]
+                )
+            ) {
+                console.log("go down true");
+                return;
+                Roles[id].i %= roomMap.length;
+                Roles[id].jumpSpeed = 0;
+                Roles[id].verticalTimer = setInterval(
+                    () => RolesVerticalMove(id),
+                    initData.interval,
+                );
             }
         }
     }
@@ -205,8 +234,9 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('stand', data);
     });
 
-    socket.on('to fall', (data) => {
-        socket.broadcast.emit('fall', data);
+    socket.on('to go down', (data) => {
+        socket.broadcast.emit('go down', data);
+        goDown(JSON.parse(data).id);
     });
 
     socket.on('to move', (data) => {

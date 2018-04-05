@@ -97,7 +97,7 @@ export default class Main {
             this.squatTreat(JSON.parse(data).id, false);
         });
 
-        this.socket.on("fall", (data: string) => {
+        this.socket.on("go down", (data: string) => {
             this.fallPreTreat(JSON.parse(data).id);
         });
 
@@ -176,8 +176,7 @@ export default class Main {
         this.stage.add(this.Roles[id].element);
 
         // add block pos into role
-        const i: number = Math.floor(this.Roles[id].y / this.blockThickness);
-        this.Roles[id].i = i;
+        this.Roles[id].i = role.i;
         this.Roles[id].j = role.j;
 
         // this.Roles[id].weapon = new Weapon(0, this.Roles[id].x, this.Roles[id].y);
@@ -290,7 +289,7 @@ export default class Main {
             }
         } else if (e.keyCode === 88) {
             if (!this.Roles[this.selfId].verticalTimer) {
-                this.socket.emit("to fall", JSON.stringify({ id: this.selfId }));
+                this.socket.emit("to go down", JSON.stringify({ id: this.selfId }));
                 this.fallPreTreat(this.selfId);
             }
         }
@@ -346,14 +345,14 @@ export default class Main {
             }
     }
     /**
-     * prepare to fall
+     * prepare to go down
      * @param id id of players'role
      */
     private fallPreTreat(id: string) {
         if (this.Roles[id]) {
             let x: number = this.Roles[id].x;
             // under foot block
-            const i: number = this.Roles[id].i + 2;
+            const i: number = this.Roles[id].i + 1;
             // left block
             const j1: number = Math.floor(x / this.blockThickness);
             // right block
@@ -367,7 +366,6 @@ export default class Main {
                     this.map[i][j1] === this.map[i][j2]
                 )
             ) {
-                this.Roles[id].i++;
                 this.Roles[id].i %= this.map.length;
                 this.Roles[id].jumpSpeed = 0;
                 this.Roles[id].verticalTimer = setInterval(
@@ -432,7 +430,6 @@ export default class Main {
             }
             if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
                 if (!this.Roles[id].verticalTimer) {
-                    this.Roles[id].i++;
                     this.Roles[id].i %= this.map.length;
                     this.Roles[id].jumpSpeed = 0;
                     this.Roles[id].verticalTimer = setInterval(
@@ -514,7 +511,7 @@ export default class Main {
         this.Roles[id].y = nextY;
 
         // update role's block pos
-        i = Math.floor(this.Roles[id].y / this.blockThickness);
+        i = Math.floor(this.Roles[id].footY / this.blockThickness);
         this.Roles[id].i = i;
     }
 }
