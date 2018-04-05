@@ -366,6 +366,7 @@ export default class Main {
                     this.map[i][j1] === this.map[i][j2]
                 )
             ) {
+                console.log("go down true", i);
                 this.Roles[id].i %= this.map.length;
                 this.Roles[id].jumpSpeed = 0;
                 this.Roles[id].verticalTimer = setInterval(
@@ -451,9 +452,7 @@ export default class Main {
         let nextY: number = this.Roles[id].y - this.Roles[id].jumpSpeed;
         let x: number = this.Roles[id].x;
         this.Roles[id].jumpSpeed -= this.Roles[id].weight;
-        if (nextY < 0 || nextY > this.stageHeight) {
-            nextY = (nextY + this.stageHeight) % this.stageHeight;
-        }
+        nextY = (nextY + this.stageHeight) % this.stageHeight;
         if (this.Roles[id].jumpSpeed > 0) {
             // rise up part
 
