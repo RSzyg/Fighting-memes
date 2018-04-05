@@ -173,8 +173,6 @@ io.on('connection', (socket) => {
                 }
                 if (
                     (
-                        initData.map[i][j] !== "T" &&
-                        initData.map[i][j] !== "t" &&
                         initData.map[i][j] !== "~" &&
                         initData.map[i][j] !== " "
                     )
