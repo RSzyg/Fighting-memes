@@ -454,9 +454,7 @@ export default class Main {
         let nextY: number = this.Roles[id].y - this.Roles[id].jumpSpeed;
         let x: number = this.Roles[id].x;
         this.Roles[id].jumpSpeed -= this.Roles[id].weight;
-        if (nextY < 0 || nextY > this.stageHeight) {
-            nextY = (nextY + this.stageHeight) % this.stageHeight;
-        }
+        nextY = (nextY + this.stageHeight) % this.stageHeight;
         if (this.Roles[id].jumpSpeed > 0) {
             // rise up part
 

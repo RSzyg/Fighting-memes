@@ -63,15 +63,13 @@ var maps = [
         '~~~~~~~~~~~~~~~##~~~~~~~~~~~~~~~'
     ]
 ];
-var roleType = [
-    {
-        width: 20,
-        height: 60,
-        weight: 1,
-        power: 24,
-        moveSpeed: 6
-    }
-];
+var roleType = [{
+    width: 20,
+    height: 60,
+    weight: 1,
+    power: 24,
+    moveSpeed: 6
+}];
 var rand = Math.floor(Math.random() * maps.length);
 var roomMap = maps[rand];
 console.log(roomMap);
@@ -89,17 +87,17 @@ io.on('connection', (socket) => {
         map: roomMap
     }
 
-    var impactJudge = function (nextWidth, isRight, id) {
+    var impactJudge = function(nextWidth, isRight, id) {
         var i1 = Math.floor(Roles[id].y / initData.blockThickness);
         var i2 = Math.floor((Roles[id].y + Roles[id].height) / initData.blockThickness);
         var j1 = Math.floor(Roles[id].x / initData.blockThickness);
         var j2 = Math.floor((Roles[id].x + nextWidth) / initData.blockThickness);
-    
+
         j1 = (j1 + roomMap[0].length) % roomMap[0].length;
         j2 = (j2 + roomMap[0].length) % roomMap[0].length;
-    
+
         var j = isRight ? j2 : j1;
-    
+
         for (var i = i1; i <= i2; i++) {
             if (roomMap[i] === undefined) {
                 break;
@@ -119,6 +117,63 @@ io.on('connection', (socket) => {
             }
         }
         Roles[id].x = (Roles[id].x + initData.stageWidth) % initData.stageWidth;
+    }
+
+    var verticalMove = function(id) {
+        var i;
+        var nextY = Roles[id].y - Roles[id].jumpSpeed;
+        var x = Roles[id].x;
+        Roles[id].jumpSpeed -= Roles[id].weight;
+        nextY = (nextY + initData.stageHeight) % initData.stageHeight;
+        if (Roles[id].jumpSpeed > 0) {
+            i = Math.floor(nextY / initData.blockThickness);
+            const j1 = Math.floor(x / initData.blockThickness);
+            x += Roles[id].width;
+            const j2 = Math.floor(x / initData.blockThickness);
+
+            if (roomMap[i]) {
+                if (
+                    (roomMap[i][j1] !== " " &&
+                        roomMap[i][j1] !== "~") ||
+                    (x !== j2 * initData.blockThickness &&
+                        roomMap[i][j2] !== undefined &&
+                        roomMap[i][j2] !== " " &&
+                        roomMap[i][j2] !== "~")
+                ) {
+                    Roles[id].jumpSpeed = 0;
+                    nextY = (i + 1) * initData.blockThickness;
+                }
+            }
+        } else if (Roles[id].jumpSpeed <= 0) {
+            i = Math.floor((nextY + Roles[id].height) / initData.blockThickness);
+            var j1 = Math.floor(x / initData.blockThickness);
+            x += Roles[id].width;
+            var j2 = Math.floor(x / initData.blockThickness);
+
+            j1 = (j1 + roomMap[0].length) % roomMap[0].length;
+            j2 = (j2 + roomMap[0].length) % roomMap[0].length;
+
+            if (
+                roomMap[i] &&
+                Roles[id].y + Roles[id].height < i * initData.blockThickness
+            ) {
+                if (
+                    roomMap[i][j1] !== " " ||
+                    roomMap[i][j2] !== " " &&
+                    x !== j2 * initData.blockThickness
+                ) {
+                    nextY = i * initData.blockThickness - Roles[id].height;
+                    clearInterval(Roles[id].verticalTimer);
+                    Roles[id].verticalTimer = undefined;
+                }
+            }
+        }
+        Roles[id].y = nextY;
+
+        // update role's block pos
+        i = Math.floor(Roles[id].y + Roles[id].height / initData.blockThickness);
+        Roles[id].i = i;
+        console.log(Roles[id].y);
     }
 
     socket.emit('init', JSON.stringify(initData));
@@ -153,11 +208,12 @@ io.on('connection', (socket) => {
             y: (i + 1) * initData.blockThickness - roleType[typeRand].height
         }
         Roles[socket.id] = newRole;
-        var allRoles = {
+        var rolesData = {
             allRoles: Roles,
             selfId: socket.id
         }
-        socket.emit('createRole', JSON.stringify(allRoles));
+        console.log(rolesData);
+        socket.emit('createRole', JSON.stringify(rolesData));
         socket.broadcast.emit('addRole', JSON.stringify(newRole));
 
         ++playerNum;
@@ -166,6 +222,15 @@ io.on('connection', (socket) => {
 
     socket.on('to jump', (data) => {
         socket.broadcast.emit('jump', data);
+        var info = JSON.parse(data);
+        //jumpPreTreat
+        if (Roles[info.id] && !Roles[info.id].verticalTimer) {
+            Roles[info.id].jumpSpeed = Roles[info.id].power;
+            Roles[info.id].verticalTimer = setInterval(
+                () => verticalMove(info.id),
+                initData.interval,
+            );
+        }
     });
 
     socket.on('to squat', (data) => {
@@ -197,7 +262,7 @@ io.on('connection', (socket) => {
             //impactJudge
             impactJudge(role.width, info.isRight, role.id);
             console.log(role.x);
-            
+
         } catch (e) {
             console.log(e);
             socket.disconnect(true);
