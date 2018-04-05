@@ -321,6 +321,7 @@ export default class Main {
 
             // update role's pos
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
+            console.log(this.Roles[id].x);
 
             // update role's block pos
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);

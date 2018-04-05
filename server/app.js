@@ -89,6 +89,38 @@ io.on('connection', (socket) => {
         map: roomMap
     }
 
+    var impactJudge = function (nextWidth, isRight, id) {
+        var i1 = Math.floor(Roles[id].y / initData.blockThickness);
+        var i2 = Math.floor((Roles[id].y + Roles[id].height) / initData.blockThickness);
+        var j1 = Math.floor(Roles[id].x / initData.blockThickness);
+        var j2 = Math.floor((Roles[id].x + nextWidth) / initData.blockThickness);
+    
+        j1 = (j1 + roomMap[0].length) % roomMap[0].length;
+        j2 = (j2 + roomMap[0].length) % roomMap[0].length;
+    
+        var j = isRight ? j2 : j1;
+    
+        for (var i = i1; i <= i2; i++) {
+            if (roomMap[i] === undefined) {
+                break;
+            }
+            if (
+                (
+                    roomMap[i][j] !== "~" &&
+                    roomMap[i][j] !== " "
+                )
+            ) {
+                if (
+                    (Roles[id].y + Roles[id].height) !== i * initData.blockThickness &&
+                    j1 === j2 - 1
+                ) {
+                    Roles[id].x = j2 * initData.blockThickness - isRight * nextWidth;
+                }
+            }
+        }
+        Roles[id].x = (Roles[id].x + initData.stageWidth) % initData.stageWidth;
+    }
+
     socket.emit('init', JSON.stringify(initData));
 
     var i = Math.floor(Math.random() * 17);
@@ -163,35 +195,9 @@ io.on('connection', (socket) => {
             }
 
             //impactJudge
-            const i1 = Math.floor(role.y / initData.blockThickness);
-            const i2 = Math.floor((role.y + role.height) / initData.blockThickness);
-            var j1 = Math.floor(role.x / initData.blockThickness);
-            var j2 = Math.floor((role.x + role.width) / initData.blockThickness);
-
-            j1 = (j1 + initData.map[0].length) % initData.map[0].length;
-            j2 = (j2 + initData.map[0].length) % initData.map[0].length;
-
-            const j = info.isRight ? j2 : j1;
-
-            for (var i = i1; i <= i2; i++) {
-                if (initData.map[i] === undefined) {
-                    break;
-                }
-                if (
-                    (
-                        initData.map[i][j] !== "~" &&
-                        initData.map[i][j] !== " "
-                    )
-                ) {
-                    if (
-                        (role.y + role.height) !== i * initData.blockThickness &&
-                        j1 === j2 - 1
-                    ) {
-                        role.x = j2 * initData.blockThickness - info.isRight * role.width;
-                    }
-                }
-            }
-            role.x = (role.x + initData.stageWidth) % initData.stageWidth;
+            impactJudge(role.width, info.isRight, role.id);
+            console.log(role.x);
+            
         } catch (e) {
             console.log(e);
             socket.disconnect(true);
