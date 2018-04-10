@@ -102,7 +102,7 @@ export default class Main {
         });
 
         // setInterval(() => {
-        //     console.log(this.Roles[this.selfId].i, this.Roles[this.selfId].j);
+        //     console.log(this.Roles[this.selfId].x, this.Roles[this.selfId].y);
         // }, 3000);
 
         document.addEventListener("keydown", (e) => this.keyboardController(e));
@@ -325,8 +325,9 @@ export default class Main {
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
             this.Roles[id].j = j;
 
+            // console.log(this.Roles[id].x, this.Roles[id].y);
+
             this.fallJudge(id);
-            console.log(this.Roles[id].x, this.Roles[id].y);
         }
     }
     /**
@@ -368,7 +369,8 @@ export default class Main {
             ) {
                 console.log("go down true", i);
                 this.Roles[id].i %= this.map.length;
-                this.Roles[id].jumpSpeed = 0;
+                this.Roles[id].y += this.Roles[id].weight;
+                this.Roles[id].jumpSpeed = -2 * this.Roles[id].weight;
                 this.Roles[id].verticalTimer = setInterval(
                     () => this.RolesVerticalMove(id),
                     this.interval,
@@ -383,7 +385,7 @@ export default class Main {
             // head block
             const i1: number = Math.floor(this.Roles[id].y / this.blockThickness);
             // foot block
-            const i2: number = Math.floor(this.Roles[id].footY / this.blockThickness);
+            const i2: number = Math.floor((this.Roles[id].footY - 0.1) / this.blockThickness);
             // left block
             let j1: number = Math.floor(x / this.blockThickness);
             // right block
@@ -393,6 +395,8 @@ export default class Main {
             j1 = (j1 + this.map[0].length) % this.map[0].length;
             j2 = (j2 + this.map[0].length) % this.map[0].length;
 
+            console.log(i1, i2);
+
             const j = isRight ? j2 : j1;
 
             for (let i = i1; i <= i2; i++) {
@@ -401,8 +405,7 @@ export default class Main {
                 }
                 if (
                     (
-                        this.map[i][j] !== "~" &&
-                        this.map[i][j] !== " "
+                        this.map[i][j] === "#"
                     )
                 ) {
                     if (
@@ -449,7 +452,6 @@ export default class Main {
         if (!this.Roles[id]) {
             return;
         }
-        console.log("1111111", this.Roles[id].jumpSpeed);
         let i: number;
         let nextY: number = this.Roles[id].y - this.Roles[id].jumpSpeed;
         let x: number = this.Roles[id].x;
@@ -496,7 +498,7 @@ export default class Main {
 
             if (
                 this.map[i] &&
-                this.Roles[id].footY < i * this.blockThickness
+                this.Roles[id].footY <= i * this.blockThickness
             ) {
                 if (
                     this.map[i][j1] !== " " ||
