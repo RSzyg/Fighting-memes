@@ -178,7 +178,7 @@ io.on('connection', (socket) => {
         if (Roles[id]) {
             var transferCoef = (2 * Number(isDown) - 1) * initData.transferCoef;
             Roles[id].height -= transferCoef;
-            Roles[id].squatTrans = isDown;
+            Roles[id].y += transferCoef;
             var nextWidth = Roles[id].width + transferCoef;
             impactJudge(nextWidth, 1, id);
             Roles[id].width = nextWidth;
@@ -186,6 +186,7 @@ io.on('connection', (socket) => {
     }
 
     var verticalMove = function(id) {
+        console.log("111111", Roles[id].jumpSpeed);
         var i;
         var nextY = Roles[id].y - Roles[id].jumpSpeed;
         var x = Roles[id].x;
@@ -328,6 +329,9 @@ io.on('connection', (socket) => {
 
             //impactJudge
             impactJudge(role.width, info.isRight, role.id);
+
+            var j = Math.floor(role.x / initData.blockThickness);
+            role.j = j;
 
             fallJudge(role.id);
             

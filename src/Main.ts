@@ -431,6 +431,7 @@ export default class Main {
             }
             if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
                 if (!this.Roles[id].verticalTimer) {
+                    console.log("fall true");
                     this.Roles[id].i %= this.map.length;
                     this.Roles[id].jumpSpeed = 0;
                     this.Roles[id].verticalTimer = setInterval(
@@ -448,6 +449,7 @@ export default class Main {
         if (!this.Roles[id]) {
             return;
         }
+        console.log("1111111", this.Roles[id].jumpSpeed);
         let i: number;
         let nextY: number = this.Roles[id].y - this.Roles[id].jumpSpeed;
         let x: number = this.Roles[id].x;
