@@ -325,7 +325,7 @@ export default class Main {
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
             this.Roles[id].j = j;
 
-            // console.log(this.Roles[id].x, this.Roles[id].y);
+            console.log(this.Roles[id].x, this.Roles[id].y);
 
             this.fallJudge(id);
         }
@@ -340,6 +340,7 @@ export default class Main {
             const transferCoef: number = (2 * Number(isDown) - 1) * this.transferCoef;
             this.Roles[id].height -= transferCoef;
             this.Roles[id].squatTrans = isDown;
+            console.log("squat", this.Roles[id].x, this.Roles[id].y);
             const nextWidth: number = this.Roles[id].width + transferCoef;
             this.Roles[id].x = this.impactJudge(this.Roles[id].x, nextWidth, 1, id);
             this.Roles[id].width = nextWidth;
@@ -395,8 +396,6 @@ export default class Main {
             j1 = (j1 + this.map[0].length) % this.map[0].length;
             j2 = (j2 + this.map[0].length) % this.map[0].length;
 
-            console.log(i1, i2);
-
             const j = isRight ? j2 : j1;
 
             for (let i = i1; i <= i2; i++) {
@@ -434,7 +433,7 @@ export default class Main {
             }
             if (this.map[i][j1] === " " && this.map[i][j1] === this.map[i][j2]) {
                 if (!this.Roles[id].verticalTimer) {
-                    console.log("fall true");
+                    console.log("fall true", this.Roles[id].x, this.Roles[id].y);
                     this.Roles[id].i %= this.map.length;
                     this.Roles[id].jumpSpeed = 0;
                     this.Roles[id].verticalTimer = setInterval(

@@ -121,6 +121,8 @@ io.on('connection', (socket) => {
                 }
             }
             Roles[id].x = (nextX + initData.stageWidth) % initData.stageWidth;
+
+            console.log(Roles[id].x, Roles[id].y);
         }
     }
 
@@ -136,7 +138,7 @@ io.on('connection', (socket) => {
             }
             if (roomMap[i][j1] === " " && roomMap[i][j1] === roomMap[i][j2]) {
                 if (!Roles[id].verticalTimer) {
-                    console.log("fall true");
+                    console.log("fall true", Roles[id].x, Roles[id].y);
                     Roles[id].i %= roomMap.length;
                     Roles[id].jumpSpeed = 0;
                     Roles[id].verticalTimer = setInterval(
@@ -168,7 +170,7 @@ io.on('connection', (socket) => {
             ) {
                 console.log("go down true", i);
                 Roles[id].i %= roomMap.length;
-                Roles[id].y -= Roles[id].weight;
+                Roles[id].y += Roles[id].weight;
                 Roles[id].jumpSpeed = -2 * Roles[id].weight;
                 Roles[id].verticalTimer = setInterval(
                     () => verticalMove(id),
@@ -183,6 +185,7 @@ io.on('connection', (socket) => {
             var transferCoef = (2 * Number(isDown) - 1) * initData.transferCoef;
             Roles[id].height -= transferCoef;
             Roles[id].y += transferCoef;
+            console.log('squat', Roles[id].x, Roles[id].y);
             var nextWidth = Roles[id].width + transferCoef;
             impactJudge(nextWidth, 1, id);
             Roles[id].width = nextWidth;
@@ -336,8 +339,6 @@ io.on('connection', (socket) => {
 
             var j = Math.floor(role.x / initData.blockThickness);
             role.j = j;
-
-            // console.log(role.x, role.y);
 
             fallJudge(role.id);
         } catch (e) {
