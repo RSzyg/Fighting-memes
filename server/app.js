@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
             }
             Roles[id].x = (nextX + initData.stageWidth) % initData.stageWidth;
 
-            console.log(Roles[id].x, Roles[id].y);
+            // console.log(Roles[id].x, Roles[id].y);
         }
     }
 
@@ -248,6 +248,7 @@ io.on('connection', (socket) => {
         Roles[id].i = i;
     }
 
+    const t1 = new Date().getTime();
     socket.emit('init', JSON.stringify(initData));
 
     var i = Math.floor(Math.random() * 17);
@@ -263,8 +264,13 @@ io.on('connection', (socket) => {
 
     console.log(i + 1, j);
 
-    socket.on('loaded', () => {
+    socket.on('loaded', (data) => {
         if (newRole) return;
+        
+        const t3 = new Date().getTime();
+        const t2 = JSON.parse(data).time;
+        const time_diff = Math.abs((t1 + t2 - 2 * t3) / 2);
+        console.log("C/S 时间差", time_diff);
 
         newRole = {
             id: socket.id,

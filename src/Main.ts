@@ -42,7 +42,7 @@ export default class Main {
 
             this.renderMap();
 
-            this.socket.emit("loaded");
+            this.socket.emit("loaded", JSON.stringify({ time: new Date().getTime() }));
         });
 
         const circle: Circle = new Circle(100, 0, 100);
@@ -101,9 +101,9 @@ export default class Main {
             this.fallPreTreat(JSON.parse(data).id);
         });
 
-        // setInterval(() => {
-        //     console.log(this.Roles[this.selfId].x, this.Roles[this.selfId].y);
-        // }, 3000);
+        this.socket.on("pong", (latency: number) => {
+            console.log("latency", latency);
+        });
 
         document.addEventListener("keydown", (e) => this.keyboardController(e));
         document.addEventListener("keyup", (e) => this.keyboardController(e));
@@ -325,7 +325,7 @@ export default class Main {
             const j: number = Math.floor(this.Roles[id].x / this.blockThickness);
             this.Roles[id].j = j;
 
-            console.log(this.Roles[id].x, this.Roles[id].y);
+            // console.log(this.Roles[id].x, this.Roles[id].y);
 
             this.fallJudge(id);
         }
