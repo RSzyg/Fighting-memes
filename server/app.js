@@ -16,6 +16,87 @@ app.get('/', (req, res) => {
 // Routing
 app.use(express.static(path.resolve(__dirname, '../dist/')));
 
+//define something
+
+//LinkedList
+function Node(data) {
+    this.data = data;
+    this.next = null;
+    this.pre = null;
+}
+
+function DoublyList() {
+    this._length = 0;
+    this.head = null;
+    this.tail = null;
+}
+
+DoublyList.prototype.length = function() {
+    return this._length;
+}
+
+DoublyList.prototype.add = function(data) {
+    let node = new Node(data);
+
+    if (this._length) {
+        this.tail.next = node;
+        node.pre = this.tail;
+        this.tail = node;
+    } else {
+        this.head = node;
+        this.tail = node;
+    }
+
+    this._length++;
+
+    return node;
+}
+
+DoublyList.prototype.search = function(order_id) {
+    let cur = this.tail,
+        length = this._length,
+        message = {failure: 'Failure: non-existent node in this list.'};
+    
+    if (length === 0) {
+        throw new Error(message.failure);
+    }
+
+    while (cur.data.order_id > order_id) {
+        cur = cur.pre;
+    }
+
+    return cur;
+}
+
+DoublyList.prototype.insert = function(cur, data) {
+    let node = new Node(data);
+    
+    node.pre = cur;
+    node.next = cur.next;
+    cur.next.pre = node;
+    cur.next = node;
+
+    this._length++;
+}
+
+DoublyList.prototype.removeHead = function() {
+    let cur = this.head,
+        length = this._length,
+        message = {failure: 'Failure: this list is empty.'};
+
+    if (length === 0) {
+        throw new Error(message.failure);
+    }
+
+    this.head = cur.next;
+
+    if (this.head) {
+        this.head.pre = null;
+    } else {
+        this.tail = null;
+    }
+}
+
 // main
 var Roles = {};
 var playerNum = 0;
@@ -75,6 +156,45 @@ var roomMap = maps[rand];
 console.log(roomMap);
 
 io.on('connection', (socket) => {
+    //DoublyList test start
+    console.log('\nDoublyList test start');
+
+    let op_list = new DoublyList();
+
+    console.log ('op_list.length', op_list.length());
+
+    op_list.add({ order_id: 1 });
+    op_list.add({ order_id: 3 });
+    op_list.add({ order_id: 4 });
+
+    let cur = op_list.head;
+    while (cur) {
+        console.log('1', cur.data);
+        cur = cur.next;
+    }
+
+    let pos = op_list.search(2);
+    console.log('pos', pos.data);
+    
+    op_list.insert(pos, { order_id: 2 });
+
+    cur = op_list.head;
+    while (cur) {
+        console.log('2', cur.data);
+        cur = cur.next;
+    }
+
+    op_list.removeHead();
+
+    cur = op_list.head;
+    while (cur) {
+        console.log('3', cur.data);
+        cur = cur.next;
+    }
+
+    console.log('DoublyList test end\n');
+    //DoublyList test end
+
     // setInterval(() => {
     //     console.log(Roles[socket.id].x, Roles[socket.id].y);
     // }, 3000);
