@@ -352,7 +352,19 @@ export default class Main {
             this.Roles[id].squatTrans = isDown;
             console.log("squat", this.Roles[id].x, this.Roles[id].y);
             const nextWidth: number = this.Roles[id].width + transferCoef;
-            this.Roles[id].x = this.impactJudge(this.Roles[id].x, nextWidth, 1, id);
+            const nextX = this.impactJudge(this.Roles[id].x, nextWidth, 1, id);
+
+            // emit
+            const data = {
+                id: this.selfId,
+                vx: nextX - this.Roles[id].x,
+                vy: 0,
+                time: new Date().getTime(),
+            };
+            this.socket.emit("to move", JSON.stringify(data));
+
+            // update role's pos
+            this.Roles[id].x = nextX;
             this.Roles[id].width = nextWidth;
         }
     }
@@ -535,5 +547,10 @@ export default class Main {
         // update role's block pos
         i = Math.floor(this.Roles[id].footY / this.blockThickness);
         this.Roles[id].i = i;
+    }
+
+    private OthersMoveTreat(data: any) {
+        this.Roles[data.id].x += data.vx;
+        this.Roles[data.id].y += data.vy;
     }
 }
