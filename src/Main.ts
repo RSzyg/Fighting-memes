@@ -83,10 +83,12 @@ export default class Main {
 
         this.socket.on("jump", (data: string) => {
             this.jumpPreTreat(JSON.parse(data).id);
+            // this.OthersMoveTreat(JSON.parse(data));
         });
 
         this.socket.on("move", (data: string) => {
             this.moveTreat(JSON.parse(data).id, JSON.parse(data).isRight);
+            // this.OthersMoveTreat(JSON.parse(data));
         });
 
         this.socket.on("squat", (data: string) => {
@@ -269,27 +271,27 @@ export default class Main {
      */
     private RolesMove(e: KeyboardEvent) {
         if (e.keyCode === 39) {
-            const data = {
-                id: this.selfId,
-                isRight: true,
-            };
-            this.socket.emit("to move", JSON.stringify(data));
+            // const data = {
+            //     id: this.selfId,
+            //     isRight: true,
+            // };
+            // this.socket.emit("to move", JSON.stringify(data));
             this.moveTreat(this.selfId, true);
         } else if (e.keyCode === 37) {
-            const data = {
-                id: this.selfId,
-                isRight: false,
-            };
-            this.socket.emit("to move", JSON.stringify(data));
+            // const data = {
+            //     id: this.selfId,
+            //     isRight: false,
+            // };
+            // this.socket.emit("to move", JSON.stringify(data));
             this.moveTreat(this.selfId, false);
         } else if (e.keyCode === 38) {
             if (this.Roles[this.selfId].verticalTimer === undefined) {
-                this.socket.emit("to jump", JSON.stringify({ id: this.selfId }));
+                // this.socket.emit("to jump", JSON.stringify({ id: this.selfId }));
                 this.jumpPreTreat(this.selfId);
             }
         } else if (e.keyCode === 88) {
             if (!this.Roles[this.selfId].verticalTimer) {
-                this.socket.emit("to go down", JSON.stringify({ id: this.selfId }));
+                // this.socket.emit("to go down", JSON.stringify({ id: this.selfId }));
                 this.fallPreTreat(this.selfId);
             }
         }
@@ -318,6 +320,15 @@ export default class Main {
             let nextX: number = this.Roles[id].x + moveSpeed;
             nextX = this.impactJudge(nextX, this.Roles[id].width, Number(isRight), id);
 
+            // emit
+            const data = {
+                id: this.selfId,
+                vx: nextX - this.Roles[id].x,
+                vy: 0,
+                time: new Date().getTime(),
+            };
+            this.socket.emit("to move", JSON.stringify(data));
+
             // update role's pos
             this.Roles[id].x = (nextX + this.stageWidth) % this.stageWidth;
 
@@ -326,7 +337,6 @@ export default class Main {
             this.Roles[id].j = j;
 
             // console.log(this.Roles[id].x, this.Roles[id].y);
-
             this.fallJudge(id);
         }
     }
@@ -510,6 +520,16 @@ export default class Main {
                 }
             }
         }
+        // emit
+        const data = {
+            id: this.selfId,
+            vx: 0,
+            vy: nextY - this.Roles[id].y,
+            time: new Date().getTime(),
+        };
+        this.socket.emit("to move", JSON.stringify(data));
+
+        // update role's pos
         this.Roles[id].y = nextY;
 
         // update role's block pos
