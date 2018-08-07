@@ -21,11 +21,11 @@
   },
   "homepage": "https://github.com/RSzyh/Fighting-memes#readme",
   "devDependencies": {
-    "ts-loader": "^3.4.0",
+    "ts-loader": "^4.4.2",
     "tslint": "^5.9.1",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.7.1",
-    "webpack": "^3.10.0"
+    "typescript": "^3.0.1",
+    "webpack": "^4.16.5"
   },
   "dependencies": {
     "@types/socket.io-client": "^1.4.32",
